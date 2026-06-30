@@ -26,7 +26,7 @@ function App() {
       </nav>
 
       <main className="main-wrapper">
-        <section className="hero container card-page" style={{ '--stack-index': 1 }}>
+        <section className="hero card-page" style={{ '--stack-index': 1 }}>
           <div className="hero-glow"></div>
           
           <div className="hero-content">
