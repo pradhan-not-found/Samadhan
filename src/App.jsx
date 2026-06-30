@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import './App.css';
 import FeatureCard from './FeatureCard';
@@ -8,45 +8,6 @@ import JoinNow from './JoinNow';
 import DashboardUI from './DashboardUI';
 
 function App() {
-  const sectionsRef = useRef([]);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('animate-fade-in');
-            entry.target.style.opacity = 1;
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-
-    sectionsRef.current.forEach((section) => {
-      if (section) observer.observe(section);
-    });
-
-    return () => observer.disconnect();
-  }, []);
-
-  const addToRefs = (el) => {
-    if (el && !sectionsRef.current.includes(el)) {
-      el.style.opacity = 0;
-      sectionsRef.current.push(el);
-    }
-  };
-
-  const heroRef = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: heroRef,
-    offset: ["start start", "end start"]
-  });
-
-  const heroOpacity = useTransform(scrollYProgress, [0, 1], [1, 0.3]);
-  const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.95]);
-  const heroFilter = useTransform(scrollYProgress, [0, 1], ["blur(0px)", "blur(12px)"]);
-
   return (
     <>
       <nav className="navbar">
@@ -90,7 +51,7 @@ function App() {
         </section>
 
         
-        <section className="section container card-page" ref={addToRefs} style={{ '--stack-index': 2 }}>
+        <section className="section container card-page" style={{ '--stack-index': 2 }}>
           <div style={{ marginBottom: '3rem' }}>
             <h2>AI Platform Dashboard</h2>
             <p className="text-muted">Explore how intelligent automation aids problem solving.</p>
@@ -99,7 +60,7 @@ function App() {
         </section>
 
         
-        <section className="section container card-page" ref={addToRefs} style={{ '--stack-index': 3 }}>
+        <section className="section container card-page" style={{ '--stack-index': 3 }}>
           <div style={{ marginBottom: '3rem' }}>
             <h2>Core Features</h2>
             <p className="text-muted">Discover our community-driven tools.</p>
@@ -116,7 +77,7 @@ function App() {
           </div>
         </section>
       
-        <section className="section container card-page" ref={addToRefs} style={{ '--stack-index': 4 }}>
+        <section className="section container card-page" style={{ '--stack-index': 4 }}>
           <div className="grid-section">
             <div className="grid-content">
               <h2>The vision: <br/>Transparency & Action</h2>
@@ -139,7 +100,7 @@ function App() {
         </section>
 
         
-        <section className="section container card-page" ref={addToRefs} style={{ '--stack-index': 5 }}>
+        <section className="section container card-page" style={{ '--stack-index': 5 }}>
           <div className="grid-section">
             <div className="visual-box">
               <div className="gateway-graphic"></div>
@@ -158,7 +119,7 @@ function App() {
 
         
         
-        <section className="section container card-page" style={{ '--stack-index': 6 }}>
+        <section className="section container card-page join-now-page" style={{ '--stack-index': 6 }}>
           <JoinNow />
         </section>
       
