@@ -131,7 +131,7 @@ function App() {
             <h2>Core Features</h2>
             <p className="text-muted">Explore how intelligent automation aids problem solving.</p>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '2rem' }}>
             {featuresData.map((feature, idx) => (
               <FeatureCard 
                 key={idx} 
@@ -144,7 +144,7 @@ function App() {
         </section>
       </main>
 
-      <footer className="footer container">
+      <footer className="footer container card-page" style={{ '--stack-index': 5 }}>
         <div className="footer-grid">
           <div className="footer-col">
             <div className="logo" style={{ marginBottom: '1.5rem' }}>
