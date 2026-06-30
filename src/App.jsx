@@ -20,7 +20,7 @@ function App() {
             <a href="#">Report Issue</a>
             <a href="#">Track Progress</a>
             <a href="#">Leaderboard</a>
-            <a href="/dashboard" className="text-gradient">Sign in</a>
+            <a href="/login" className="text-gradient">Sign in</a>
           </div>
         </div>
       </nav>

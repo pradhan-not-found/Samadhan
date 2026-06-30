@@ -18,7 +18,7 @@ export default function JoinNow() {
         <div className="join-now-grid-bg"></div>
 
         <div className="join-now-bottom">
-          <a href="/dashboard" className="join-now-btn" style={{ textDecoration: 'none' }}>Sign Up</a>
+          <a href="/login" className="join-now-btn" style={{ textDecoration: 'none' }}>Sign Up</a>
         </div>
       </div>
     </div>
