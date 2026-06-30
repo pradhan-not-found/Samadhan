@@ -100,7 +100,8 @@
 .join-now-page {
   padding-top: 0 !important;
   justify-content: center !important;
-  margin-bottom: 30vh !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 -20px 40px rgba(0,0,0,0.5);
 }
 
 .card-page.bg-indigo {
