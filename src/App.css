@@ -138,6 +138,20 @@
   overflow: hidden;
 }
 
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  background-size: 100px 100px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  /* Optional fade out at the edges */
+  mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+  -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+  z-index: 0;
+  pointer-events: none;
+}
+
 .hero-glow {
   position: absolute;
   top: 0;
