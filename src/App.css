@@ -98,7 +98,9 @@
 }
 
 .join-now-page {
-  margin-bottom: 0 !important;
+  padding-top: 0 !important;
+  justify-content: center !important;
+  margin-bottom: 30vh !important;
 }
 
 .card-page.bg-indigo {
