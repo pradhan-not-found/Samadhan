@@ -88,6 +88,8 @@
   flex-direction: column;
   justify-content: center;
   overflow: hidden;
+  padding-top: 6rem;
+  padding-bottom: 2rem;
   margin-bottom: 75vh;
 }
 
