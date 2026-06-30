@@ -116,9 +116,8 @@
   width: 150vw;
   height: 150vh;
   background: 
-    radial-gradient(ellipse at 50% 30%, rgba(37, 99, 235, 0.25) 0%, transparent 60%),
-    radial-gradient(ellipse at 20% 60%, rgba(249, 115, 22, 0.2) 0%, transparent 60%),
-    radial-gradient(ellipse at 80% 60%, rgba(37, 99, 235, 0.2) 0%, transparent 60%);
+    radial-gradient(ellipse at 10% 40%, rgba(37, 99, 235, 0.4) 0%, transparent 60%),
+    radial-gradient(ellipse at 90% 40%, rgba(249, 115, 22, 0.3) 0%, transparent 60%);
   filter: blur(120px);
   z-index: 0;
   pointer-events: none;

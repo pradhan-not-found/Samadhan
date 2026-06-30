@@ -4,6 +4,7 @@ import './App.css';
 import FeatureCard from './FeatureCard';
 import logoImg from './assets/logo.png';
 import { featuresData } from './featuresData';
+import DashboardUI from './DashboardUI';
 
 function App() {
   const sectionsRef = useRef([]);
@@ -131,16 +132,7 @@ function App() {
             <h2>Core Features</h2>
             <p className="text-muted">Explore how intelligent automation aids problem solving.</p>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '2rem' }}>
-            {featuresData.map((feature, idx) => (
-              <FeatureCard 
-                key={idx} 
-                title={feature.title} 
-                subtitle={feature.subtitle} 
-                svgString={feature.svg} 
-              />
-            ))}
-          </div>
+          <DashboardUI />
         </section>
       </main>
 
