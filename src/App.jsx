@@ -133,8 +133,6 @@ function App() {
           </div>
         </section>
       
-      </main>
-
       <footer className="footer card-page" style={{ '--stack-index': 7 }}>
         <div className="container">
           <div className="footer-grid">
@@ -164,6 +162,7 @@ function App() {
           </div>
         </div>
       </footer>
+      </main>
     </>
   );
 }
