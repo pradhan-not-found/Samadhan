@@ -1,6 +1,8 @@
 import React, { useEffect, useRef } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import './App.css';
 import FeatureCard from './FeatureCard';
+import logoImg from './assets/logo.png';
 import { featuresData } from './featuresData';
 
 function App() {
@@ -33,17 +35,22 @@ function App() {
     }
   };
 
+  const heroRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"]
+  });
+
+  const heroOpacity = useTransform(scrollYProgress, [0, 1], [1, 0.3]);
+  const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.95]);
+  const heroFilter = useTransform(scrollYProgress, [0, 1], ["blur(0px)", "blur(12px)"]);
+
   return (
     <>
       <nav className="navbar">
         <div className="container">
           <a href="#" className="logo">
-            <div className="monogram">
-              <div className="monogram-circle"></div>
-              <div className="monogram-circle"></div>
-              <div className="monogram-circle"></div>
-              <div className="monogram-circle"></div>
-            </div>
+            <img src={logoImg} alt="" className="nav-logo" />
             Samadhan
           </a>
           <div className="nav-links">
@@ -55,8 +62,8 @@ function App() {
         </div>
       </nav>
 
-      <main>
-        <section className="hero container" ref={addToRefs}>
+      <main className="main-wrapper">
+        <section className="hero container card-page" style={{ '--stack-index': 1 }}>
           <div className="hero-glow"></div>
           
           <div className="hero-content">
@@ -80,7 +87,7 @@ function App() {
           </div>
         </section>
 
-        <section className="section container" ref={addToRefs}>
+        <section className="section container card-page" ref={addToRefs} style={{ '--stack-index': 2 }}>
           <div className="grid-section">
             <div className="grid-content">
               <h2>The vision: <br/>Transparency & Action</h2>
@@ -102,7 +109,7 @@ function App() {
           </div>
         </section>
 
-        <section className="section container" ref={addToRefs}>
+        <section className="section container card-page" ref={addToRefs} style={{ '--stack-index': 3 }}>
           <div className="grid-section">
             <div className="visual-box">
               <div className="gateway-graphic"></div>
@@ -119,7 +126,7 @@ function App() {
           </div>
         </section>
 
-        <section className="section container" ref={addToRefs}>
+        <section className="section container card-page" ref={addToRefs} style={{ '--stack-index': 4 }}>
           <div style={{ marginBottom: '3rem' }}>
             <h2>Core Features</h2>
             <p className="text-muted">Explore how intelligent automation aids problem solving.</p>
