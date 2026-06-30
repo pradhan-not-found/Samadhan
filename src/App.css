@@ -91,6 +91,10 @@
   margin-bottom: 75vh;
 }
 
+.card-page:last-of-type {
+  margin-bottom: 0;
+}
+
 .card-page.bg-indigo {
   background: linear-gradient(to bottom, #1e2033 0%, #3a3f5c 100%);
   border-top: 1px solid rgba(255, 255, 255, 0.05);
@@ -393,7 +397,6 @@
 .footer {
   border-top: 1px solid rgba(255, 255, 255, 0.05);
   padding: 4rem 0;
-  margin-top: 4rem;
 }
 
 .footer-grid {

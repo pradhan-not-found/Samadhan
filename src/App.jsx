@@ -129,14 +129,31 @@ function App() {
 
         <section className="section container card-page" ref={addToRefs} style={{ '--stack-index': 4 }}>
           <div style={{ marginBottom: '3rem' }}>
-            <h2>Core Features</h2>
+            <h2>AI Platform Dashboard</h2>
             <p className="text-muted">Explore how intelligent automation aids problem solving.</p>
           </div>
           <DashboardUI />
         </section>
+
+        <section className="section container card-page" ref={addToRefs} style={{ '--stack-index': 5 }}>
+          <div style={{ marginBottom: '3rem' }}>
+            <h2>Core Features</h2>
+            <p className="text-muted">Discover our community-driven tools.</p>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '2rem' }}>
+            {featuresData.map((feature, idx) => (
+              <FeatureCard 
+                key={idx} 
+                title={feature.title} 
+                subtitle={feature.subtitle} 
+                svgString={feature.svg} 
+              />
+            ))}
+          </div>
+        </section>
       </main>
 
-      <footer className="footer container card-page" style={{ '--stack-index': 5 }}>
+      <footer className="footer container card-page" style={{ '--stack-index': 6 }}>
         <div className="footer-grid">
           <div className="footer-col">
             <div className="logo" style={{ marginBottom: '1.5rem' }}>
