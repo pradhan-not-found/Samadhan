@@ -51,7 +51,8 @@ function App() {
         </section>
 
         
-        <section className="section container card-page" style={{ '--stack-index': 2 }}>
+        <section className="section card-page" style={{ '--stack-index': 2 }}>
+          <div className="container">
           <div style={{ marginBottom: '3rem' }}>
             <h2>AI Platform Dashboard</h2>
             <p className="text-muted">Explore how intelligent automation aids problem solving.</p>
@@ -150,6 +151,7 @@ function App() {
               <li><a href="#">Contact Support</a></li>
             </ul>
           </div>
+        </div>
         </div>
       </footer>
     </>
