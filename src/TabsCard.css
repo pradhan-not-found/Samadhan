@@ -1,0 +1,72 @@
+.custom-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.5rem;
+  text-align: left;
+  border-radius: 1rem;
+  transition: all 200ms ease-out;
+  cursor: pointer;
+  background-color: #ffffff;
+  overflow: hidden;
+  border: 1px solid #e0e7ff;
+  text-decoration: none;
+  max-width: 320px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.custom-card:hover {
+  border-color: #c7d2fe;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.card-blob {
+  position: absolute;
+  top: -2rem;
+  right: -2rem;
+  width: 7rem;
+  height: 7rem;
+  pointer-events: none;
+  user-select: none;
+  transition: all 500ms ease-out;
+  opacity: 1;
+  transform: rotate(12deg) scale(1);
+}
+
+.custom-card:hover .card-blob {
+  transform: rotate(25deg) scale(1.15);
+}
+
+.card-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: #818cf8;
+  transition: color 150ms ease-out;
+  margin-bottom: 0.5rem;
+}
+
+.custom-card:hover .card-icon {
+  color: #6366f1;
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.card-title {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 1rem;
+  line-height: 1.375;
+  color: #111827;
+}
+
+.card-subtitle {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  color: #6b7280;
+}
