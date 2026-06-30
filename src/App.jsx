@@ -135,7 +135,7 @@ function App() {
       
       <footer className="footer card-page" style={{ '--stack-index': 7 }}>
         <div className="footer-glow"></div>
-        <div className="container" style={{ position: 'relative', zIndex: 10, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+        <div className="container" style={{ position: 'relative', zIndex: 10, flex: 1, display: 'flex', flexDirection: 'column', paddingBottom: '2rem' }}>
           <div className="footer-grid" style={{ gridTemplateColumns: '2fr repeat(5, 1fr)', gap: '2rem' }}>
             <div className="footer-col">
               <div className="logo" style={{ marginBottom: '0.5rem', fontSize: '1.5rem', fontWeight: 'bold' }}>
@@ -200,9 +200,14 @@ function App() {
             </div>
           </div>
           
-          <div style={{ display: 'flex', justifyContent: 'space-between', padding: '2rem 0', borderTop: '1px solid rgba(255,255,255,0.05)', marginTop: 'auto', fontSize: '0.8rem' }}>
-            <span className="text-muted">© 2026 Samadhan. All rights reserved.</span>
-            <span className="text-muted" style={{ textAlign: 'right' }}>Building a better India, block by block.</span>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', borderTop: '1px solid rgba(255,255,255,0.05)', marginTop: 'auto', paddingTop: '2rem', fontSize: '0.8rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <span className="text-muted">© 2026 Samadhan. All rights reserved.</span>
+              <span className="text-muted" style={{ textAlign: 'right' }}>Building a better India, block by block.</span>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem' }}>
+              <span className="text-muted" style={{ opacity: 0.7 }}>Made by souradeep.me</span>
+            </div>
           </div>
         </div>
       </footer>
