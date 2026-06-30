@@ -20,7 +20,7 @@ function App() {
             <a href="#">Report Issue</a>
             <a href="#">Track Progress</a>
             <a href="#">Leaderboard</a>
-            <a href="#" className="text-gradient">Sign in</a>
+            <a href="/dashboard" className="text-gradient">Sign in</a>
           </div>
         </div>
       </nav>
@@ -45,7 +45,7 @@ function App() {
             
             <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
               <a href="#" className="btn btn-primary">Sign up</a>
-              <a href="#" className="btn btn-secondary">Contact Us</a>
+              <a href="/dashboard" className="btn btn-secondary">View Dashboard</a>
             </div>
           </div>
         </section>
