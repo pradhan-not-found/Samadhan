@@ -94,6 +94,9 @@
 }
 
 .footer.card-page {
+  position: relative !important;
+  min-height: auto !important;
+  padding-top: 4rem !important;
   margin-bottom: 0;
   box-shadow: 0 -20px 40px rgba(0,0,0,0.8);
 }
