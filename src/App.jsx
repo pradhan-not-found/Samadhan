@@ -134,31 +134,75 @@ function App() {
         </section>
       
       <footer className="footer card-page" style={{ '--stack-index': 7 }}>
-        <div className="container">
-          <div className="footer-grid">
+        <div className="footer-glow"></div>
+        <div className="container" style={{ position: 'relative', zIndex: 10, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+          <div className="footer-grid" style={{ gridTemplateColumns: '2fr repeat(5, 1fr)', gap: '2rem' }}>
             <div className="footer-col">
-              <div className="logo" style={{ marginBottom: '1.5rem' }}>
+              <div className="logo" style={{ marginBottom: '0.5rem', fontSize: '1.5rem', fontWeight: 'bold' }}>
                 <img src={logoImg} alt="" className="nav-logo" />
                 Samadhan
               </div>
-              <p className="text-muted" style={{ fontSize: '0.9rem' }}>Community Hero Project.</p>
+              <p className="text-muted" style={{ fontSize: '0.8rem', marginBottom: '2rem' }}>Resolution for India starts here</p>
             </div>
+            
             <div className="footer-col">
-              <h4>Features</h4>
-              <ul>
-                <li><a href="#">Issue Reporting</a></li>
-                <li><a href="#">AI Categorization</a></li>
-                <li><a href="#">Impact Dashboards</a></li>
+              <h4 style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '1.5rem', color: '#fff' }}>Products</h4>
+              <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '0.85rem' }}>
+                <li><a href="#" className="text-muted">Citizen App</a></li>
+                <li><a href="#" className="text-muted">AI Dashboard</a></li>
+                <li><a href="#" className="text-muted">Impact Tracker</a></li>
+                <li><a href="#" className="text-muted">Gov Portal</a></li>
+                <li><a href="#" className="text-muted">Data Insights</a></li>
               </ul>
             </div>
+            
             <div className="footer-col">
-              <h4>About</h4>
-              <ul>
-                <li><a href="#">How it Works</a></li>
-                <li><a href="#">Community Guidelines</a></li>
-                <li><a href="#">Contact Support</a></li>
+              <h4 style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '1.5rem', color: '#fff' }}>APIs</h4>
+              <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '0.85rem' }}>
+                <li><a href="#" className="text-muted">Issue Detection</a></li>
+                <li><a href="#" className="text-muted">Auto-Routing</a></li>
+                <li><a href="#" className="text-muted">Image Analysis</a></li>
+                <li><a href="#" className="text-muted">Predictive Model</a></li>
               </ul>
             </div>
+            
+            <div className="footer-col">
+              <h4 style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '1.5rem', color: '#fff' }}>Developers</h4>
+              <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '0.85rem' }}>
+                <li><a href="#" className="text-muted">Documentation</a></li>
+                <li><a href="#" className="text-muted">API Pricing</a></li>
+                <li><a href="#" className="text-muted">Integrations</a></li>
+              </ul>
+            </div>
+            
+            <div className="footer-col">
+              <h4 style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '1.5rem', color: '#fff' }}>Company</h4>
+              <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '0.85rem' }}>
+                <li><a href="#" className="text-muted">About Us</a></li>
+                <li><a href="#" className="text-muted">Careers</a></li>
+                <li><a href="#" className="text-muted">Contact Us</a></li>
+                <li><a href="#" className="text-muted">Blogs</a></li>
+                <li><a href="#" className="text-muted">Trust Center</a></li>
+                <li><a href="#" className="text-muted">Terms of Service</a></li>
+                <li><a href="#" className="text-muted">Privacy Policy</a></li>
+              </ul>
+            </div>
+            
+            <div className="footer-col">
+              <h4 style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '1.5rem', color: '#fff' }}>Socials</h4>
+              <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '0.85rem' }}>
+                <li><a href="#" className="text-muted">LinkedIn</a></li>
+                <li><a href="#" className="text-muted">X</a></li>
+                <li><a href="#" className="text-muted">YouTube</a></li>
+                <li><a href="#" className="text-muted">GitHub</a></li>
+                <li><a href="#" className="text-muted">Discord</a></li>
+              </ul>
+            </div>
+          </div>
+          
+          <div style={{ display: 'flex', justifyContent: 'space-between', padding: '2rem 0', borderTop: '1px solid rgba(255,255,255,0.05)', marginTop: 'auto', fontSize: '0.8rem' }}>
+            <span className="text-muted">© 2026 Samadhan. All rights reserved.</span>
+            <span className="text-muted" style={{ textAlign: 'right' }}>Building a better India, block by block.</span>
           </div>
         </div>
       </footer>
