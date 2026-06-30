@@ -94,6 +94,10 @@
 }
 
 .footer.card-page {
+  position: relative !important;
+  min-height: auto !important;
+  padding-top: 4rem !important;
+  padding-bottom: 4rem !important;
   margin-bottom: 0;
 }
 
