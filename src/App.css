@@ -88,6 +88,7 @@
   flex-direction: column;
   justify-content: center;
   overflow: hidden;
+  margin-bottom: 75vh;
 }
 
 .card-page.bg-indigo {
@@ -185,7 +186,7 @@
 }
 
 .nav-logo {
-  height: 28px;
+  height: 44px;
   width: auto;
   filter: brightness(0) invert(1);
   transition: transform 0.2s ease;

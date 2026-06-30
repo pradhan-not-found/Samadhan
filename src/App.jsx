@@ -148,12 +148,7 @@ function App() {
         <div className="footer-grid">
           <div className="footer-col">
             <div className="logo" style={{ marginBottom: '1.5rem' }}>
-              <div className="monogram">
-                <div className="monogram-circle"></div>
-                <div className="monogram-circle"></div>
-                <div className="monogram-circle"></div>
-                <div className="monogram-circle"></div>
-              </div>
+              <img src={logoImg} alt="" className="nav-logo" />
               Samadhan
             </div>
             <p className="text-muted" style={{ fontSize: '0.9rem' }}>Community Hero Project.</p>
