@@ -57,7 +57,6 @@ function App() {
 
       <main>
         <section className="hero container" ref={addToRefs}>
-          <img src="https://assets.sarvam.ai/assets/pages/home/hero-gradient.svg" alt="" className="hero-gradient-bg" />
           <div className="hero-glow"></div>
           
           <div className="hero-content">

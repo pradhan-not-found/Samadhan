@@ -85,27 +85,18 @@
 
 .hero-glow {
   position: absolute;
-  top: -20%;
+  top: -40%;
   left: 50%;
   transform: translateX(-50%);
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, rgba(249, 115, 22, 0.1) 40%, transparent 70%);
-  filter: blur(80px);
+  width: 150vw;
+  height: 150vh;
+  background: 
+    radial-gradient(ellipse at 50% 30%, rgba(249, 115, 12, 0.4) 0%, transparent 50%),
+    radial-gradient(ellipse at 30% 60%, rgba(165, 187, 252, 0.3) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 60%, rgba(165, 187, 252, 0.3) 0%, transparent 50%);
+  filter: blur(120px);
   z-index: 0;
   pointer-events: none;
-}
-
-.hero-gradient-bg {
-  position: absolute;
-  top: -120%;
-  left: 50%;
-  transform: translateX(-50%);
-  min-width: 200vw;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.8;
-  mix-blend-mode: screen;
 }
 
 .hero-content {
