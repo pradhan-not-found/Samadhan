@@ -97,6 +97,10 @@
   margin-bottom: 0;
 }
 
+.join-now-page {
+  margin-bottom: 0 !important;
+}
+
 .card-page.bg-indigo {
   background: linear-gradient(to bottom, #1e2033 0%, #3a3f5c 100%);
   border-top: 1px solid rgba(255, 255, 255, 0.05);
