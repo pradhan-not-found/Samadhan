@@ -53,105 +53,115 @@ function App() {
         
         <section className="section card-page" style={{ '--stack-index': 2 }}>
           <div className="container">
-          <div style={{ marginBottom: '3rem' }}>
-            <h2>AI Platform Dashboard</h2>
-            <p className="text-muted">Explore how intelligent automation aids problem solving.</p>
+            <div style={{ marginBottom: '3rem' }}>
+              <h2>AI Platform Dashboard</h2>
+              <p className="text-muted">Explore how intelligent automation aids problem solving.</p>
+            </div>
+            <DashboardUI />
           </div>
-          <DashboardUI />
         </section>
 
         
-        <section className="section container card-page" style={{ '--stack-index': 3 }}>
-          <div style={{ marginBottom: '3rem' }}>
-            <h2>Core Features</h2>
-            <p className="text-muted">Discover our community-driven tools.</p>
-          </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '2rem' }}>
-            {featuresData.map((feature, idx) => (
-              <FeatureCard 
-                key={idx} 
-                title={feature.title} 
-                subtitle={feature.subtitle} 
-                svgString={feature.svg} 
-              />
-            ))}
+        <section className="section card-page" style={{ '--stack-index': 3 }}>
+          <div className="container">
+            <div style={{ marginBottom: '3rem' }}>
+              <h2>Core Features</h2>
+              <p className="text-muted">Discover our community-driven tools.</p>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '2rem' }}>
+              {featuresData.map((feature, idx) => (
+                <FeatureCard 
+                  key={idx} 
+                  title={feature.title} 
+                  subtitle={feature.subtitle} 
+                  svgString={feature.svg} 
+                />
+              ))}
+            </div>
           </div>
         </section>
       
-        <section className="section container card-page" style={{ '--stack-index': 4 }}>
-          <div className="grid-section">
-            <div className="grid-content">
-              <h2>The vision: <br/>Transparency & Action</h2>
-              <p>
-                Samadhan translates to resolution. Our platform brings citizens and authorities closer to resolve hyperlocal problems efficiently.
-              </p>
-              <p>
-                Fragmented reporting and untracked issues lead to public distrust. By combining gamification, predictive insights, and AI categorization, Samadhan transforms complaints into accountable community action.
-              </p>
-            </div>
-            <div className="visual-box">
-              <div className="monogram" style={{ transform: 'scale(4)' }}>
-                <div className="monogram-circle"></div>
-                <div className="monogram-circle"></div>
-                <div className="monogram-circle"></div>
-                <div className="monogram-circle"></div>
+        <section className="section card-page" style={{ '--stack-index': 4 }}>
+          <div className="container">
+            <div className="grid-section">
+              <div className="grid-content">
+                <h2>The vision: <br/>Transparency & Action</h2>
+                <p>
+                  Samadhan translates to resolution. Our platform brings citizens and authorities closer to resolve hyperlocal problems efficiently.
+                </p>
+                <p>
+                  Fragmented reporting and untracked issues lead to public distrust. By combining gamification, predictive insights, and AI categorization, Samadhan transforms complaints into accountable community action.
+                </p>
+              </div>
+              <div className="visual-box">
+                <div className="monogram" style={{ transform: 'scale(4)' }}>
+                  <div className="monogram-circle"></div>
+                  <div className="monogram-circle"></div>
+                  <div className="monogram-circle"></div>
+                  <div className="monogram-circle"></div>
+                </div>
               </div>
             </div>
           </div>
         </section>
 
         
-        <section className="section container card-page" style={{ '--stack-index': 5 }}>
-          <div className="grid-section">
-            <div className="visual-box">
-              <div className="gateway-graphic"></div>
-            </div>
-            <div className="grid-content">
-              <h2>Gamification & Tracking</h2>
-              <p>
-                Community participation shouldn't be a chore. Through an integrated impact dashboard, users earn reputation points for valid reports and successful verifications.
-              </p>
-              <p>
-                Real-time tracking provides a transparent window into issue resolution, connecting the digital report with real-world public infrastructure repair.
-              </p>
+        <section className="section card-page" style={{ '--stack-index': 5 }}>
+          <div className="container">
+            <div className="grid-section">
+              <div className="visual-box">
+                <div className="gateway-graphic"></div>
+              </div>
+              <div className="grid-content">
+                <h2>Gamification & Tracking</h2>
+                <p>
+                  Community participation shouldn't be a chore. Through an integrated impact dashboard, users earn reputation points for valid reports and successful verifications.
+                </p>
+                <p>
+                  Real-time tracking provides a transparent window into issue resolution, connecting the digital report with real-world public infrastructure repair.
+                </p>
+              </div>
             </div>
           </div>
         </section>
 
         
         
-        <section className="section container card-page join-now-page" style={{ '--stack-index': 6 }}>
-          <JoinNow />
+        <section className="section card-page join-now-page" style={{ '--stack-index': 6 }}>
+          <div className="container" style={{ height: "100%" }}>
+            <JoinNow />
+          </div>
         </section>
       
       </main>
 
-      <footer className="footer container card-page" style={{ '--stack-index': 7 }}>
-        <div className="footer-grid">
-          <div className="footer-col">
-            <div className="logo" style={{ marginBottom: '1.5rem' }}>
-              <img src={logoImg} alt="" className="nav-logo" />
-              Samadhan
+      <footer className="footer card-page" style={{ '--stack-index': 7 }}>
+        <div className="container">
+          <div className="footer-grid">
+            <div className="footer-col">
+              <div className="logo" style={{ marginBottom: '1.5rem' }}>
+                <img src={logoImg} alt="" className="nav-logo" />
+                Samadhan
+              </div>
+              <p className="text-muted" style={{ fontSize: '0.9rem' }}>Community Hero Project.</p>
             </div>
-            <p className="text-muted" style={{ fontSize: '0.9rem' }}>Community Hero Project.</p>
+            <div className="footer-col">
+              <h4>Features</h4>
+              <ul>
+                <li><a href="#">Issue Reporting</a></li>
+                <li><a href="#">AI Categorization</a></li>
+                <li><a href="#">Impact Dashboards</a></li>
+              </ul>
+            </div>
+            <div className="footer-col">
+              <h4>About</h4>
+              <ul>
+                <li><a href="#">How it Works</a></li>
+                <li><a href="#">Community Guidelines</a></li>
+                <li><a href="#">Contact Support</a></li>
+              </ul>
+            </div>
           </div>
-          <div className="footer-col">
-            <h4>Features</h4>
-            <ul>
-              <li><a href="#">Issue Reporting</a></li>
-              <li><a href="#">AI Categorization</a></li>
-              <li><a href="#">Impact Dashboards</a></li>
-            </ul>
-          </div>
-          <div className="footer-col">
-            <h4>About</h4>
-            <ul>
-              <li><a href="#">How it Works</a></li>
-              <li><a href="#">Community Guidelines</a></li>
-              <li><a href="#">Contact Support</a></li>
-            </ul>
-          </div>
-        </div>
         </div>
       </footer>
     </>
