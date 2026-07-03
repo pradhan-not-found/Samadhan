@@ -126,7 +126,7 @@ const MyReportsView = () => (
 const ImpactScoreView = () => (
   <div className="animate-fade-in" style={{ padding: '2rem 0' }}>
     <h2 className="section-title">Your Impact Score</h2>
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '2rem' }}>
+    <div className="impact-grid">
       <div className="dashboard-card" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '3rem' }}>
         <div style={{ position: 'relative', width: '150px', height: '150px', borderRadius: '50%', background: 'conic-gradient(var(--color-primary) 70%, var(--border-medium) 0)', display: 'grid', placeItems: 'center' }}>
           <div style={{ position: 'absolute', inset: '8px', backgroundColor: 'var(--bg-card)', borderRadius: '50%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
@@ -211,7 +211,7 @@ const LeaderboardView = () => (
 const AnalyticsView = () => (
   <div className="animate-fade-in" style={{ padding: '2rem 0' }}>
     <h2 className="section-title">Platform Analytics</h2>
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem', marginBottom: '2rem' }}>
+    <div className="analytics-grid">
       <div className="dashboard-card" style={{ padding: '1.5rem' }}>
         <div style={{ color: 'var(--text-faint)', fontSize: '0.85rem', marginBottom: '0.5rem' }}>Total Issues Reported</div>
         <div style={{ fontSize: '2rem', fontFamily: 'var(--font-display)', color: 'var(--text-main)' }}>14,239</div>
@@ -255,7 +255,7 @@ const IssueCategorizationView = () => (
   <div className="animate-fade-in" style={{ padding: '2rem 0' }}>
     <h2 className="section-title">Issue Categorization</h2>
     <div className="dashboard-card" style={{ padding: '2rem' }}>
-      <div style={{ display: 'flex', gap: '2rem' }}>
+      <div className="categorization-flex">
         <div style={{ flex: 1 }}>
           <h3 style={{ fontSize: '1.1rem', marginBottom: '1rem', fontWeight: 500, color: 'var(--text-main)' }}>Recent Report Analysis</h3>
           <div style={{ padding: '1.5rem', backgroundColor: 'var(--glass-bg)', borderRadius: '12px', border: '1px solid var(--border-light)' }}>
@@ -319,7 +319,7 @@ const ImageAnalysisView = () => (
   <div className="animate-fade-in" style={{ padding: '2rem 0' }}>
     <h2 className="section-title">Image Analysis Engine</h2>
     <div className="dashboard-card" style={{ padding: '2rem' }}>
-      <div style={{ display: 'flex', gap: '2rem' }}>
+      <div className="analysis-flex">
         <div style={{ flex: 1.5, position: 'relative', borderRadius: '12px', overflow: 'hidden', border: '1px solid var(--border-medium)', height: '350px', backgroundColor: 'var(--bg-main)', display: 'grid', placeItems: 'center' }}>
           <div style={{ color: 'var(--text-faint)', fontSize: '0.85rem' }}>[Street Camera Image Mock]</div>
           {/* Simulated bounding box */}

@@ -10,19 +10,27 @@ import VisionDashboardUI from './VisionDashboardUI';
 import GamificationDashboardUI from './GamificationDashboardUI';
 
 function App() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
     <>
       <nav className="navbar">
-        <div className="navbar-pill">
+        <div className={`navbar-pill ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
           <div className="nav-logo-container">
             <a href="#" className="logo">
               <img src={logoImg} alt="" className="nav-logo themed-logo" />
               Samadhan
             </a>
+            <button className="mobile-menu-btn" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+              {isMobileMenuOpen ? (
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+              ) : (
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+              )}
+            </button>
           </div>
           
-          <div className="nav-links-center">
+          <div className={`nav-links-center ${isMobileMenuOpen ? 'show' : ''}`}>
             <a href="#">Report Issue</a>
             <a href="#">Track Progress</a>
             <a href="#">Leaderboard</a>
@@ -53,7 +61,7 @@ function App() {
                 Delivering hyperlocal problem resolution.
               </p>
               
-              <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem', justifyContent: 'center' }}>
+              <div className="hero-actions-wrapper">
                 <a href="#" className="btn-hero-dark" style={{ padding: '0.8rem 1.8rem', borderRadius: '30px', fontSize: '1rem' }}>Sign up</a>
                 <a href="/dashboard" className="btn-hero-light" style={{ padding: '0.8rem 1.8rem', borderRadius: '30px', fontSize: '1rem' }}>Contact Us</a>
               </div>
@@ -138,7 +146,7 @@ function App() {
               <h2>Core Features</h2>
               <p className="text-muted">Discover our community-driven tools.</p>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '2rem' }}>
+            <div className="features-grid">
               {featuresData.map((feature, idx) => (
                 <FeatureCard 
                   key={idx} 
@@ -209,7 +217,7 @@ function App() {
       <footer className="footer card-page" style={{ '--stack-index': 7 }}>
         <div className="footer-glow"></div>
         <div className="container" style={{ position: 'relative', zIndex: 10, flex: 1, display: 'flex', flexDirection: 'column', paddingBottom: '2rem' }}>
-          <div className="footer-grid" style={{ gridTemplateColumns: '2fr repeat(5, 1fr)', gap: '2rem' }}>
+          <div className="footer-grid">
             <div className="footer-col">
               <div className="logo" style={{ marginBottom: '0.5rem', fontSize: '1.5rem', fontWeight: 'bold' }}>
                 <img src={logoImg} alt="" className="nav-logo themed-logo" />
@@ -240,7 +248,7 @@ function App() {
             </div>
             
             <div className="footer-col">
-              <h4 style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '1.5rem', color: '#fff' }}>Developers</h4>
+              <h4 style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '1.5rem', color: 'var(--color-text)' }}>Developers</h4>
               <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '0.85rem' }}>
                 <li><a href="#" className="text-muted">Documentation</a></li>
                 <li><a href="#" className="text-muted">API Pricing</a></li>
@@ -249,7 +257,7 @@ function App() {
             </div>
             
             <div className="footer-col">
-              <h4 style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '1.5rem', color: '#fff' }}>Company</h4>
+              <h4 style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '1.5rem', color: 'var(--color-text)' }}>Company</h4>
               <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '0.85rem' }}>
                 <li><a href="#" className="text-muted">About Us</a></li>
                 <li><a href="#" className="text-muted">Careers</a></li>
@@ -262,7 +270,7 @@ function App() {
             </div>
             
             <div className="footer-col">
-              <h4 style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '1.5rem', color: '#fff' }}>Socials</h4>
+              <h4 style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '1.5rem', color: 'var(--color-text)' }}>Socials</h4>
               <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '0.85rem' }}>
                 <li><a href="#" className="text-muted">LinkedIn</a></li>
                 <li><a href="#" className="text-muted">X</a></li>
