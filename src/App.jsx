@@ -281,7 +281,7 @@ function App() {
             </div>
           </div>
           
-          <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '2rem', borderTop: '1px solid rgba(255,255,255,0.05)', marginTop: '4rem', paddingTop: '2rem', fontSize: '0.8rem' }}>
+          <div className="footer-bottom">
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
               <span className="text-muted">© 2026 Samadhan.</span>
               <span className="text-muted">Made by souradeep.me</span>
