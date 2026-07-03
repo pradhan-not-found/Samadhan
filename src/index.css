@@ -1,12 +1,25 @@
 :root {
-  --color-bg: #0a0a0a;
-  --color-text: #f0f0f0;
-  --color-text-muted: #a0a0a0;
-  --color-primary: #3b82f6; /* Blue */
-  --color-secondary: #f97316; /* Orange */
-  --gradient-brand: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  /* Default Theme (Sarvam Light) */
+  --color-bg-dark: #0a0a0a;
+  --color-bg: #FAFAFA;
+  --color-text: #3d3d3d;
+  --color-text-muted: #666666;
+  
+  /* Primary brand colors */
+  --color-primary: #F9730C;
+  --color-secondary: #CBDBFF;
+  
+  /* Dynamic gradient */
+  --gradient-brand: linear-gradient(135deg, rgba(249, 115, 12, 0.2) 0%, rgba(203, 219, 255, 0.2) 100%);
   --font-sans: 'Matter', sans-serif;
   --font-display: 'Season Mix', serif;
+  
+  /* Additional UI Variables */
+  --color-border: rgba(0, 0, 0, 0.1);
+  --color-border-light: rgba(0, 0, 0, 0.05);
+  --color-surface: rgba(255, 255, 255, 0.6);
+  --color-surface-hover: rgba(255, 255, 255, 0.8);
+  --color-glass: rgba(255, 255, 255, 0.75);
 }
 
 @font-face {

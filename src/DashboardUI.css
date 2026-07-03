@@ -2,8 +2,8 @@
   width: 100%;
   max-width: 1100px;
   margin: 0 auto;
-  background-color: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: #ffffff;
+  border: 1px solid var(--color-border);
   border-radius: 24px;
   overflow: hidden;
   font-family: var(--font-sans);
@@ -16,9 +16,18 @@
   display: flex;
   flex-wrap: nowrap;
   overflow-x: auto;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid var(--color-border);
   padding: 0.5rem 1rem;
   scrollbar-width: none;
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+/* On smaller screens, wrap tabs instead of hiding them off screen */
+@media (max-width: 992px) {
+  .dashboard-tabs {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
 }
 
 .dashboard-tabs::-webkit-scrollbar {
@@ -33,7 +42,7 @@
   background: transparent;
   border: none;
   border-radius: 9999px;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--color-text-muted);
   font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
@@ -42,12 +51,12 @@
 }
 
 .dash-tab:hover {
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--color-text);
 }
 
 .dash-tab.active {
-  background-color: rgba(99, 102, 241, 0.1); /* subtle indigo */
-  color: #818cf8;
+  background-color: #f3f4f6;
+  color: var(--color-primary);
 }
 
 .tab-icon {
@@ -62,7 +71,7 @@
   min-height: 400px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 992px) {
   .dashboard-content {
     grid-template-columns: 1fr;
   }
@@ -74,20 +83,21 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  border-right: 1px solid var(--color-border);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 992px) {
   .dash-left {
     border-right: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid var(--color-border);
+    padding: 2rem;
   }
 }
 
 .dash-text-large {
   font-size: 1.5rem;
   line-height: 1.5;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--color-text);
   font-weight: 400;
   margin-bottom: 3rem;
 }
@@ -103,7 +113,7 @@
   flex-direction: column;
   gap: 0.5rem;
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--color-text-muted);
 }
 
 .dash-action-row {
@@ -117,10 +127,10 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid var(--color-border-light);
   border-radius: 9999px;
   font-size: 0.875rem;
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--color-text);
   cursor: pointer;
 }
 
@@ -131,16 +141,16 @@
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background-color: #3b82f6; /* bright blue */
+  background-color: var(--color-primary);
   color: white;
   border: none;
   cursor: pointer;
-  transition: transform 0.2s ease, background-color 0.2s ease;
+  transition: transform 0.2s ease, filter 0.2s ease;
 }
 
 .dash-play-btn:hover {
   transform: scale(1.05);
-  background-color: #2563eb;
+  filter: brightness(0.9);
 }
 
 /* Right Column */
@@ -148,7 +158,7 @@
   padding: 2.5rem;
   display: flex;
   flex-direction: column;
-  background-color: rgba(255, 255, 255, 0.01);
+  background-color: transparent;
 }
 
 .dash-right-header {
@@ -161,14 +171,14 @@
 .dash-right-header h3 {
   font-size: 1.25rem;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--color-text);
   margin: 0;
 }
 
 .view-all-btn {
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.1);
-  color: #818cf8;
+  background: var(--color-surface-hover);
+  border: 1px solid var(--color-border);
+  color: var(--color-primary);
   font-size: 0.75rem;
   font-weight: 500;
   padding: 0.25rem 0.75rem;
@@ -195,8 +205,8 @@
 }
 
 .dash-list-item:hover, .dash-list-item.active {
-  background-color: rgba(255, 255, 255, 0.03);
-  border-color: rgba(255, 255, 255, 0.1);
+  background-color: var(--color-surface-hover);
+  border-color: var(--color-border);
 }
 
 .item-play {
@@ -232,7 +242,7 @@
   gap: 0.5rem;
   font-size: 1rem;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--color-text);
 }
 
 .tag {
@@ -249,7 +259,7 @@
 
 .item-subtitle {
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--color-text-muted);
 }
 
 .dash-cta {
@@ -258,14 +268,14 @@
   justify-content: space-between;
   margin-top: 2rem;
   padding-top: 1.5rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid var(--color-border);
   font-size: 0.875rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--color-text-muted);
 }
 
 .btn-dark {
-  background-color: rgba(255, 255, 255, 0.1);
-  color: white;
+  background-color: var(--color-surface);
+  color: var(--color-text);
   border: none;
   padding: 0.5rem 1rem;
   border-radius: 9999px;
@@ -276,5 +286,5 @@
 }
 
 .btn-dark:hover {
-  background-color: rgba(255, 255, 255, 0.15);
+  background-color: var(--color-surface-hover);
 }

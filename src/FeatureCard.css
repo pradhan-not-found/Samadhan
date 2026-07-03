@@ -8,9 +8,9 @@
   border-radius: 1rem;
   transition: all 200ms ease-out;
   cursor: pointer;
-  background-color: rgba(255, 255, 255, 0.02);
+  background-color: var(--color-surface);
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--color-border-light);
   text-decoration: none;
   max-width: 320px;
   width: 100%;
@@ -18,7 +18,7 @@
 }
 
 .custom-card:hover {
-  border-color: rgba(255, 255, 255, 0.15);
+  border-color: var(--color-border);
   transform: translateY(-2px);
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
 }
