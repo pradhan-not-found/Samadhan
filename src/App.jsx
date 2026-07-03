@@ -155,6 +155,7 @@ function App() {
           <div className="container">
             <div className="grid-section">
               <div className="grid-content">
+                <span className="section-number">01</span>
                 <h2>The vision: <br/>Transparency & Action</h2>
                 <p>
                   Samadhan translates to resolution. Our platform brings citizens and authorities closer to resolve hyperlocal problems efficiently.
@@ -184,6 +185,7 @@ function App() {
                 {/* Empty visual box */}
               </div>
               <div className="grid-content">
+                <span className="section-number">02</span>
                 <h2>Gamification & Tracking</h2>
                 <p>
                   Community participation shouldn't be a chore. Through an integrated impact dashboard, users earn reputation points for valid reports and successful verifications.
