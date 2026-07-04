@@ -435,7 +435,7 @@ const IncomingIssuesView = () => {
                   {ticket.priority || 'Medium'}
                 </span>
               </div>
-              <div style={{ width: '100px', textAlign: 'right', color: 'var(--text-faint)', fontSize: '0.85rem' }}>Just now</div>
+              <div style={{ width: '100px', textAlign: 'right', color: 'var(--text-faint)', fontSize: '0.85rem' }}>{ticket.created_at ? new Date(ticket.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '—'}</div>
             </div>
           ))}
         </div>
@@ -449,16 +449,28 @@ const IssueCategorizationView = () => {
   const [isThinking, setIsThinking] = useState(false);
   const [result, setResult] = useState(null);
   const [isApproved, setIsApproved] = useState(false);
+  const [ticket, setTicket] = useState(null);
+  const [noTickets, setNoTickets] = useState(false);
 
-  // Load the AI results automatically from the backend when this ticket is "opened"
+  // Pull the newest pending ticket from the database and run live triage on it
   React.useEffect(() => {
-    const fetchCategory = async () => {
+    const fetchTicketAndCategorize = async () => {
       setIsThinking(true);
       try {
+        const res = await fetch("http://127.0.0.1:8000/api/reports");
+        const reports = await res.json();
+        const pending = reports.find(r => r.status === 'Pending Triage') || reports[0];
+        if (!pending) {
+          setNoTickets(true);
+          return;
+        }
+        setTicket(pending);
+        setIsApproved(pending.status !== 'Pending Triage');
+
         const response = await fetch("http://127.0.0.1:8000/api/categorize", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ text: "I am standing near the MG Road metro station and there's a huge sinkhole that just appeared. Cars are swerving and it's extremely dangerous." })
+          body: JSON.stringify({ text: pending.text })
         });
         const data = await response.json();
         setResult(data);
@@ -473,20 +485,38 @@ const IssueCategorizationView = () => {
         setIsThinking(false);
       }
     };
-    fetchCategory();
+    fetchTicketAndCategorize();
   }, []);
 
-  const handleApprove = () => {
-    setIsApproved(true);
-    alert("Triage approved. Ticket routed to Road Infrastructure.");
+  const handleApprove = async () => {
+    if (!ticket) return;
+    try {
+      await fetch(`http://127.0.0.1:8000/api/reports/${ticket.ticket_id}/approve`, { method: "POST" });
+      setIsApproved(true);
+      alert(`Triage approved. ${ticket.ticket_id} is ready for department routing.`);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to reach backend.");
+    }
   };
+
+  if (noTickets) {
+    return (
+      <div className="animate-fade-in" style={{ padding: '2rem 0' }}>
+        <h2 className="section-title">Issue Categorization Review</h2>
+        <div className="dashboard-card" style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-faint)' }}>
+          No citizen reports in the queue yet. Submit one from the Citizen Dashboard to see live Gemma triage.
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="animate-fade-in" style={{ padding: '2rem 0' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
         <h2 className="section-title" style={{ marginBottom: 0 }}>Issue Categorization Review</h2>
         <span style={{ backgroundColor: 'var(--glass-bg)', padding: '0.5rem 1rem', borderRadius: '8px', border: '1px solid var(--border-medium)', fontSize: '0.85rem', color: 'var(--text-faint)' }}>
-          Reviewing Ticket: <strong>#TKT-4093</strong>
+          Reviewing Ticket: <strong>{ticket ? ticket.ticket_id : 'Loading…'}</strong>
         </span>
       </div>
       <div className="dashboard-card" style={{ padding: '2rem' }}>
@@ -498,18 +528,24 @@ const IssueCategorizationView = () => {
             <div style={{ width: '100%', height: '150px', padding: '1rem', backgroundColor: 'var(--bg-body)', borderRadius: '12px', border: '1px solid var(--border-medium)', color: 'var(--text-muted)', fontSize: '0.95rem', overflowY: 'auto', marginBottom: '1rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem', color: 'var(--text-faint)', fontSize: '0.8rem' }}>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" x2="12" y1="19" y2="22"></line></svg>
-                Transcribed from Voice Report
+                Citizen Report
               </div>
-              "I am standing near the MG Road metro station and there's a huge sinkhole that just appeared. Cars are swerving and it's extremely dangerous. Someone needs to come look at this immediately before an accident happens."
+              {ticket ? `"${ticket.text}"` : 'Loading report…'}
             </div>
-            
+
+            {ticket?.image_url && (
+              <div style={{ marginBottom: '1rem', borderRadius: '12px', overflow: 'hidden', border: '1px solid var(--border-medium)' }}>
+                <img src={ticket.image_url} alt="Citizen photo evidence" style={{ width: '100%', maxHeight: '160px', objectFit: 'cover', display: 'block' }} />
+              </div>
+            )}
+
             <div style={{ padding: '1rem', backgroundColor: 'var(--glass-bg)', borderRadius: '8px', border: '1px solid var(--border-light)', display: 'flex', alignItems: 'center', gap: '1rem' }}>
               <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: 'var(--border-medium)', display: 'grid', placeItems: 'center' }}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" color="var(--text-muted)"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
               </div>
               <div>
                 <div style={{ color: 'var(--text-main)', fontSize: '0.9rem', fontWeight: 500 }}>Location Data Attached</div>
-                <div style={{ color: 'var(--text-faint)', fontSize: '0.8rem' }}>Coordinates: 22.5726° N, 88.3639° E</div>
+                <div style={{ color: 'var(--text-faint)', fontSize: '0.8rem' }}>{ticket ? `${ticket.ward}, ${ticket.state_region}` : '—'}</div>
               </div>
             </div>
           </div>
@@ -563,34 +599,59 @@ const IssueCategorizationView = () => {
 };
 
 const AutoRoutingView = () => {
-  const [logs, setLogs] = useState([
-    { issue: 'Broken Streetlight (ID: #4092)', dept: 'Electrical Department', status: 'Routed Successfully', time: '10 mins ago', color: '#10b981' },
-    { issue: 'Water Pipe Burst (ID: #4091)', dept: 'Water Board (Jal Board)', status: 'Routed Successfully', time: '25 mins ago', color: '#10b981' },
-    { issue: 'Illegal Dumping (ID: #4090)', dept: 'Sanitation Department', status: 'Pending Approval', time: '1 hour ago', color: '#f97316' },
-  ]);
+  const [logs, setLogs] = useState([]);
+  const [nextTicket, setNextTicket] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
 
-  const handleSimulate = async () => {
+  const refresh = async () => {
+    try {
+      const res = await fetch("http://127.0.0.1:8000/api/reports");
+      const reports = await res.json();
+
+      // Tickets already routed by the agent form the historical log
+      const routed = reports
+        .filter(r => r.status && r.status.startsWith('Routed:'))
+        .map(r => ({
+          issue: `${r.text.length > 60 ? r.text.slice(0, 60) + '…' : r.text} (ID: ${r.ticket_id})`,
+          dept: r.status.replace('Routed: ', ''),
+          status: 'Routed Successfully',
+          time: new Date(r.created_at).toLocaleString(),
+          color: '#10b981',
+        }));
+      setLogs(routed);
+
+      // Next ticket in line for the agent: approved first, then pending
+      const candidate = reports.find(r => r.status === 'Triage Approved')
+        || reports.find(r => r.status === 'Pending Triage');
+      setNextTicket(candidate || null);
+    } catch (err) {
+      console.error("Backend error:", err);
+    }
+  };
+
+  React.useEffect(() => { refresh(); }, []);
+
+  const handleRoute = async () => {
+    if (!nextTicket) return alert("No tickets waiting for routing. Approve a triage first.");
     setIsProcessing(true);
-    
+
     try {
       const response = await fetch("http://127.0.0.1:8000/api/auto-route", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ issue_id: "#4093" })
+        body: JSON.stringify({ issue_id: nextTicket.ticket_id })
       });
       const data = await response.json();
-      
+
       setTimeout(() => {
         setIsProcessing(false);
-        setLogs([data, ...logs]);
-      }, 2500);
+        setLogs(prev => [data, ...prev]);
+        refresh();
+      }, 1500);
     } catch (err) {
       console.error("Backend error:", err);
-      setTimeout(() => {
-        setIsProcessing(false);
-        setLogs([{ issue: 'Massive Sinkhole (ID: #4093)', dept: 'Emergency Response / PWD', status: 'Agent Routed', time: 'Just now', color: '#3b82f6' }, ...logs]);
-      }, 2500);
+      setIsProcessing(false);
+      alert("Failed to reach Gemma backend.");
     }
   };
 
@@ -598,8 +659,8 @@ const AutoRoutingView = () => {
     <div className="animate-fade-in" style={{ padding: '2rem 0' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
         <h2 className="section-title" style={{ marginBottom: 0 }}>Auto-Routing Log</h2>
-        <button onClick={handleSimulate} disabled={isProcessing} style={{ padding: '0.6rem 1.2rem', background: '#1e293b', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 500, cursor: isProcessing ? 'not-allowed' : 'pointer', opacity: isProcessing ? 0.7 : 1, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          {isProcessing ? 'Gemma Agent Executing...' : 'Trigger Gemma Agent Route'}
+        <button onClick={handleRoute} disabled={isProcessing || !nextTicket} style={{ padding: '0.6rem 1.2rem', background: '#1e293b', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 500, cursor: (isProcessing || !nextTicket) ? 'not-allowed' : 'pointer', opacity: (isProcessing || !nextTicket) ? 0.7 : 1, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          {isProcessing ? 'Gemma Agent Executing...' : nextTicket ? `Route Ticket ${nextTicket.ticket_id}` : 'No Tickets Waiting'}
         </button>
       </div>
       <div className="dashboard-card" style={{ padding: '2rem' }}>
@@ -607,7 +668,12 @@ const AutoRoutingView = () => {
           {isProcessing && (
             <div style={{ padding: '1rem', backgroundColor: '#f1f5f9', border: '1px dashed #cbd5e1', borderRadius: '12px', color: '#475569', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
                <svg className="animate-spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>
-               Gemma 4 calling function: <code>route_issue_to_dept(issue_id="#4093", category="Hazard")</code>
+               Gemma 4 calling function: <code>route_issue_to_dept(issue_id="{nextTicket?.ticket_id}", category="{nextTicket?.category}")</code>
+            </div>
+          )}
+          {!isProcessing && logs.length === 0 && (
+            <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-faint)', fontSize: '0.9rem' }}>
+              No routing history yet. Approve a triage, then trigger the Gemma agent to route it.
             </div>
           )}
           {logs.map((log, i) => (
@@ -635,38 +701,77 @@ const ImageAnalysisView = () => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [results, setResults] = useState(null);
   const [isApproved, setIsApproved] = useState(false);
-  // Simulating an incoming image from a citizen report
-  const simulatedImage = "https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?auto=format&fit=crop&q=80&w=800";
+  const [evidence, setEvidence] = useState([]);   // real reports that carry photos
+  const [selected, setSelected] = useState(null); // { image_url, ticket_id }
 
   React.useEffect(() => {
-    const fetchAnalysis = async () => {
-      setIsAnalyzing(true);
+    const loadEvidence = async () => {
       try {
-        const formData = new FormData();
-        formData.append("file", new Blob(["dummy content"], { type: 'text/plain' }), "dummy.txt");
-        const response = await fetch("http://127.0.0.1:8000/api/analyze-image", {
-          method: "POST",
-          body: formData
-        });
-        const data = await response.json();
-        setResults(data);
+        const res = await fetch("http://127.0.0.1:8000/api/reports");
+        const reports = await res.json();
+        const withImages = reports.filter(r => r.image_url);
+        setEvidence(withImages);
+        if (withImages.length > 0) {
+          setSelected({ image_url: withImages[0].image_url, ticket_id: withImages[0].ticket_id });
+        }
       } catch (err) {
         console.error("Backend error:", err);
-        setResults({
-          pothole: '98.2% (Fallback)',
-          water: '12.4%',
-          faded: '4.1%'
-        });
-      } finally {
-        setIsAnalyzing(false);
       }
     };
-    fetchAnalysis();
+    loadEvidence();
   }, []);
+
+  const analyze = async (target) => {
+    setIsAnalyzing(true);
+    setResults(null);
+    setIsApproved(false);
+    try {
+      const response = await fetch("http://127.0.0.1:8000/api/analyze-report-image", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ image_url: target.image_url })
+      });
+      const data = await response.json();
+      if (data.error) {
+        alert(data.error);
+      } else {
+        setResults(data);
+      }
+    } catch (err) {
+      console.error("Backend error:", err);
+      alert("Failed to reach Gemma backend.");
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
+
+  const handleDirectUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setIsAnalyzing(true);
+    setResults(null);
+    setIsApproved(false);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const response = await fetch("http://127.0.0.1:8000/api/analyze-image", {
+        method: "POST",
+        body: formData
+      });
+      const data = await response.json();
+      setSelected({ image_url: data.image_url, ticket_id: 'Direct Upload' });
+      setResults(data);
+    } catch (err) {
+      console.error("Backend error:", err);
+      alert("Failed to reach Gemma backend.");
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
 
   const handleApprove = () => {
     setIsApproved(true);
-    alert("Image evidence verified. Attached to TKT-4093.");
+    alert(`Image evidence verified${selected?.ticket_id ? ` for ${selected.ticket_id}` : ''}.`);
   };
 
   return (
@@ -674,30 +779,62 @@ const ImageAnalysisView = () => {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
         <h2 className="section-title" style={{ marginBottom: 0 }}>Visual Evidence Engine</h2>
         <span style={{ backgroundColor: 'var(--glass-bg)', padding: '0.5rem 1rem', borderRadius: '8px', border: '1px solid var(--border-medium)', fontSize: '0.85rem', color: 'var(--text-faint)' }}>
-          Reviewing Evidence for: <strong>#TKT-4093</strong>
+          Reviewing Evidence for: <strong>{selected ? selected.ticket_id : 'No evidence selected'}</strong>
         </span>
       </div>
       <div className="dashboard-card" style={{ padding: '2rem' }}>
         <div className="analysis-flex" style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
-          
+
           <div style={{ flex: 1.5, minWidth: '300px' }}>
-            <h3 style={{ fontSize: '1.1rem', fontWeight: 500, color: 'var(--text-main)', marginBottom: '1rem' }}>Attached Photo</h3>
-            
-            <div style={{ position: 'relative', borderRadius: '12px', overflow: 'hidden', border: '1px solid var(--border-medium)', height: '350px', backgroundColor: 'var(--glass-bg)', display: 'grid', placeItems: 'center', backgroundImage: `url(${simulatedImage})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+              <h3 style={{ fontSize: '1.1rem', fontWeight: 500, color: 'var(--text-main)', margin: 0 }}>Attached Photo</h3>
+              <div style={{ display: 'flex', gap: '0.5rem' }}>
+                <label style={{ padding: '0.45rem 0.9rem', backgroundColor: 'transparent', color: 'var(--text-main)', border: '1px solid var(--border-medium)', borderRadius: '8px', fontSize: '0.8rem', fontWeight: 500, cursor: 'pointer' }}>
+                  <input type="file" accept="image/*" style={{ display: 'none' }} onChange={handleDirectUpload} />
+                  Upload New
+                </label>
+                <button
+                  onClick={() => selected && analyze(selected)}
+                  disabled={!selected || isAnalyzing}
+                  style={{ padding: '0.45rem 0.9rem', background: 'linear-gradient(to right, #4f46e5, #7c3aed)', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '0.8rem', fontWeight: 500, cursor: (!selected || isAnalyzing) ? 'not-allowed' : 'pointer', opacity: (!selected || isAnalyzing) ? 0.6 : 1 }}
+                >
+                  {isAnalyzing ? 'Scanning…' : 'Scan with Gemma'}
+                </button>
+              </div>
+            </div>
+
+            <div style={{ position: 'relative', borderRadius: '12px', overflow: 'hidden', border: '1px solid var(--border-medium)', height: '350px', backgroundColor: 'var(--glass-bg)', display: 'grid', placeItems: 'center', backgroundImage: selected ? `url(${selected.image_url})` : 'none', backgroundSize: 'cover', backgroundPosition: 'center' }}>
+              {!selected && (
+                <div style={{ color: 'var(--text-faint)', fontSize: '0.9rem', textAlign: 'center', padding: '2rem' }}>
+                  No photo evidence in the queue yet.<br />Upload an image or submit a citizen report with a photo.
+                </div>
+              )}
               {isAnalyzing && (
                 <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: 'white' }}>
                   <svg className="animate-spin" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ marginBottom: '1rem' }}><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>
-                  Processing Image...
+                  Gemma is scanning the image…
                 </div>
               )}
-              {results && (
-                <div style={{ position: 'absolute', top: '40%', left: '30%', width: '150px', height: '100px', border: '3px solid #ef4444', backgroundColor: 'rgba(239,68,68,0.2)', borderRadius: '4px', boxShadow: '0 0 15px rgba(239,68,68,0.5)' }}>
-                  <div style={{ position: 'absolute', top: '-28px', left: '-3px', backgroundColor: '#ef4444', color: '#fff', fontSize: '0.8rem', fontWeight: 'bold', padding: '0.2rem 0.6rem', borderRadius: '4px 4px 0 0' }}>
-                    Pothole {results.pothole}
-                  </div>
+              {results && !isAnalyzing && (
+                <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, padding: '1rem', background: 'linear-gradient(transparent, rgba(0,0,0,0.85))', color: '#fff' }}>
+                  <div style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '1px', opacity: 0.7, marginBottom: '0.3rem' }}>Gemma 4 Vision Analysis</div>
+                  <div style={{ fontSize: '0.9rem', fontWeight: 500 }}>{results.description}</div>
                 </div>
               )}
             </div>
+
+            {evidence.length > 1 && (
+              <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.75rem', overflowX: 'auto', paddingBottom: '0.25rem' }}>
+                {evidence.map((r) => (
+                  <div
+                    key={r.ticket_id}
+                    onClick={() => { setSelected({ image_url: r.image_url, ticket_id: r.ticket_id }); setResults(null); setIsApproved(false); }}
+                    title={r.ticket_id}
+                    style={{ width: '64px', height: '48px', flexShrink: 0, borderRadius: '8px', backgroundImage: `url(${r.image_url})`, backgroundSize: 'cover', backgroundPosition: 'center', cursor: 'pointer', border: selected?.ticket_id === r.ticket_id ? '2px solid #7c3aed' : '1px solid var(--border-medium)' }}
+                  />
+                ))}
+              </div>
+            )}
           </div>
           
           <div style={{ flex: 1, minWidth: '300px' }}>
@@ -760,6 +897,50 @@ const ImageAnalysisView = () => {
   );
 };
 
+
+// --- Gemma Engine Status ---
+
+const GemmaStatusBadge = () => {
+  const [health, setHealth] = useState(null);
+
+  React.useEffect(() => {
+    let active = true;
+    const poll = async () => {
+      try {
+        const res = await fetch('http://127.0.0.1:8000/api/health');
+        const data = await res.json();
+        if (active) setHealth(data);
+      } catch {
+        if (active) setHealth({ status: 'offline' });
+      }
+    };
+    poll();
+    const timer = setInterval(poll, 5000);
+    return () => { active = false; clearInterval(timer); };
+  }, []);
+
+  const status = health?.status || 'connecting';
+  const config = {
+    ready:    { color: '#10b981', label: 'Gemma 4 E2B · Live',    detail: health?.detail },
+    loading:  { color: '#f59e0b', label: 'Gemma 4 E2B · Loading', detail: 'Warming up model weights…' },
+    failed:   { color: '#ef4444', label: 'Gemma 4 E2B · Error',   detail: 'Using fallback triage' },
+    offline:  { color: '#64748b', label: 'Backend Offline',        detail: 'Start the FastAPI server' },
+    connecting: { color: '#64748b', label: 'Connecting…',          detail: '' },
+  }[status] || { color: '#64748b', label: status, detail: '' };
+
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', padding: '0.6rem 0.75rem', backgroundColor: 'var(--glass-bg)', border: '1px solid var(--border-light)', borderRadius: '10px' }}>
+      <span style={{ position: 'relative', display: 'inline-flex', width: '9px', height: '9px' }}>
+        <span style={{ position: 'absolute', inset: 0, borderRadius: '50%', backgroundColor: config.color, opacity: 0.5, animation: status === 'loading' ? 'pulse 1.5s ease-in-out infinite' : 'none' }}></span>
+        <span style={{ position: 'relative', width: '9px', height: '9px', borderRadius: '50%', backgroundColor: config.color }}></span>
+      </span>
+      <div style={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+        <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-main)' }}>{config.label}</span>
+        {config.detail && <span style={{ fontSize: '0.65rem', color: 'var(--text-faint)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{config.detail}</span>}
+      </div>
+    </div>
+  );
+};
 
 // --- Main Layout ---
 
@@ -851,6 +1032,7 @@ const Dashboard = () => {
         )}
 
         <div className="sidebar-bottom">
+          <GemmaStatusBadge />
           {/* User Profile / Sign Out */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px solid var(--border-light)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
