@@ -93,67 +93,124 @@ const MyReportsView = () => {
     }
   };
 
-        <div style={{ backgroundColor: 'var(--glass-bg)', padding: '0.5rem 1rem', borderRadius: '8px', border: '1px solid var(--border-medium)', color: 'var(--text-main)', fontSize: '0.9rem', fontWeight: 500, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" color="var(--text-muted)"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-          {ward}, {state}
+  const myReports = pastReports.filter(r => r.ward === ward);
+  const pendingCount = myReports.filter(r => r.status?.includes('Pending')).length;
+  const routedCount = myReports.filter(r => r.status?.includes('Routed')).length;
+  const resolvedCount = myReports.filter(r => r.status?.includes('Approved') || r.status?.includes('Resolved')).length;
+  const getCategoryIcon = (cat) => { if (!cat) return '📋'; if (cat.includes('Road')) return '🛣️'; if (cat.includes('Water') || cat.includes('Sanitation')) return '💧'; if (cat.includes('Electrical') || cat.includes('Street')) return '💡'; if (cat.includes('Waste') || cat.includes('Garbage')) return '🗑️'; if (cat.includes('Safety')) return '🛡️'; if (cat.includes('Park') || cat.includes('Environ')) return '🌿'; return '📋'; };
+  const getStatusCfg = (status) => { if (!status) return { color: '#64748b', bg: '#64748b15', label: 'Unknown' }; if (status.includes('Routed')) return { color: '#3b82f6', bg: '#3b82f615', label: 'Routed' }; if (status.includes('Approved') || status.includes('Resolved')) return { color: '#10b981', bg: '#10b98115', label: status.includes('Approved') ? 'Approved' : 'Resolved' }; if (status.includes('Pending')) return { color: '#f59e0b', bg: '#f59e0b15', label: 'Pending Triage' }; return { color: '#8b5cf6', bg: '#8b5cf615', label: status }; };
+  const statCards = [
+    { label: 'Total Submitted', value: myReports.length, icon: '📨', color: '#6366f1' },
+    { label: 'Pending Triage', value: pendingCount, icon: '⏳', color: '#f59e0b' },
+    { label: 'Auto-Routed', value: routedCount, icon: '🔀', color: '#3b82f6' },
+    { label: 'Resolved', value: resolvedCount, icon: '✅', color: '#10b981' },
+  ];
+
+  return (
+    <div className="animate-fade-in" style={{ padding: '2rem 0' }}>
+      {/* Header */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '2rem' }}>
+        <div>
+          <h2 style={{ fontSize: '1.75rem', fontWeight: 700, color: 'var(--text-main)', margin: 0, fontFamily: 'var(--font-display)' }}>My Reports</h2>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '0.35rem' }}>Track and manage your civic issue submissions</p>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', backgroundColor: 'var(--glass-bg)', padding: '0.5rem 1rem', borderRadius: '10px', border: '1px solid var(--border-medium)', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            {ward}, {state}
+          </div>
+          <button onClick={fetchReports} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', backgroundColor: 'var(--glass-bg)', padding: '0.5rem 1rem', borderRadius: '10px', border: '1px solid var(--border-medium)', fontSize: '0.85rem', color: 'var(--text-muted)', cursor: 'pointer' }}>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+            Refresh
+          </button>
         </div>
       </div>
-      
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
-      {/* Report Form */}
-      <div className="dashboard-card" style={{ padding: '2rem' }}>
-        <h3 style={{ fontSize: '1.2rem', marginBottom: '1.5rem', fontWeight: 500, color: 'var(--text-main)' }}>Report a New Issue</h3>
-        <form onSubmit={handleSubmit}>
-          <div style={{ marginBottom: '1rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-muted)', fontSize: '0.9rem' }}>Issue Description (Text or Voice)</label>
-            <textarea 
-              placeholder="Describe the problem..."
-              value={reportText}
-              onChange={(e) => setReportText(e.target.value)}
-              style={{ width: '100%', height: '100px', padding: '1rem', backgroundColor: 'var(--glass-bg)', borderRadius: '8px', border: '1px solid var(--border-medium)', color: 'var(--text-main)', resize: 'none' }}
-            />
-          </div>
-          
-          <div style={{ marginBottom: '1.5rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-muted)', fontSize: '0.9rem' }}>Upload Photo Evidence</label>
-            <label style={{ border: '1px dashed var(--border-medium)', borderRadius: '8px', padding: '1.5rem', textAlign: 'center', backgroundColor: 'var(--glass-bg)', cursor: 'pointer', display: 'block' }}>
-              <input type="file" accept="image/*" style={{ display: 'none' }} onChange={handleImageUpload} />
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ color: 'var(--text-faint)', marginBottom: '0.5rem', margin: '0 auto' }}><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
-              <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{imageFile ? imageFile.name : "Click to upload an image"}</div>
-            </label>
-          </div>
-          
-          <button type="submit" disabled={isSubmitting} style={{ width: '100%', padding: '0.8rem', background: '#3a3f5c', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 600, cursor: isSubmitting ? 'not-allowed' : 'pointer', opacity: isSubmitting ? 0.7 : 1, boxShadow: '0 2px 4px rgba(58, 63, 92, 0.2)' }}>
-            {isSubmitting ? 'Gemma is analyzing...' : 'Submit Report to AI Triage'}
-          </button>
-        </form>
-      </div>
-
-      {/* Past Reports */}
-      <div className="dashboard-card" style={{ padding: '2rem' }}>
-        <h3 style={{ fontSize: '1.2rem', marginBottom: '1.5rem', fontWeight: 500, color: 'var(--text-main)' }}>My Recent Reports</h3>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', maxHeight: '350px', overflowY: 'auto', paddingRight: '0.5rem' }}>
-          {pastReports.filter(r => r.ward === ward).length === 0 && <div style={{ color: 'var(--text-faint)', fontSize: '0.9rem', textAlign: 'center', marginTop: '1rem' }}>No reports submitted in your ward yet.</div>}
-          {pastReports.filter(r => r.ward === ward).map((report, i) => (
-            <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', backgroundColor: 'var(--glass-bg)', borderRadius: '8px', border: '1px solid var(--border-light)' }}>
-              <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                {report.image_url && (
-                  <div style={{ width: '48px', height: '48px', borderRadius: '6px', backgroundImage: `url(${report.image_url})`, backgroundSize: 'cover', backgroundPosition: 'center', border: '1px solid var(--border-medium)' }} />
-                )}
-                <div>
-                  <div style={{ color: 'var(--text-main)', fontWeight: 500, fontSize: '0.9rem', textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden', maxWidth: '200px' }}>{report.text}</div>
-                  <div style={{ color: 'var(--text-faint)', fontSize: '0.8rem', marginTop: '0.25rem' }}>{report.category}</div>
-                </div>
-              </div>
-              <div style={{ color: report.color || '#3b82f6', fontSize: '0.8rem', fontWeight: 500, backgroundColor: `${report.color || '#3b82f6'}15`, padding: '0.25rem 0.75rem', borderRadius: '999px' }}>
-                {report.status}
-              </div>
+      {/* Stat Cards */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem', marginBottom: '2rem' }}>
+        {statCards.map((s, i) => (
+          <div key={i} className="dashboard-card" style={{ padding: '1.25rem 1.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <div style={{ width: '44px', height: '44px', borderRadius: '12px', backgroundColor: s.color + '18', display: 'grid', placeItems: 'center', fontSize: '1.35rem', flexShrink: 0 }}>{s.icon}</div>
+            <div>
+              <div style={{ fontSize: '1.6rem', fontWeight: 700, color: s.color, lineHeight: 1, fontFamily: 'var(--font-display)' }}>{s.value}</div>
+              <div style={{ fontSize: '0.78rem', color: 'var(--text-faint)', marginTop: '0.2rem' }}>{s.label}</div>
             </div>
-          ))}
+          </div>
+        ))}
+      </div>
+      {/* Main Grid */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr', gap: '1.5rem', alignItems: 'start' }}>
+        {/* Form */}
+        <div className="dashboard-card" style={{ padding: '1.75rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1.5rem' }}>
+            <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', display: 'grid', placeItems: 'center' }}>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </div>
+            <div>
+              <div style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--text-main)' }}>Report New Issue</div>
+              <div style={{ fontSize: '0.72rem', color: 'var(--text-faint)' }}>AI will auto-categorize & route</div>
+            </div>
+          </div>
+          <form onSubmit={handleSubmit}>
+            <div style={{ marginBottom: '1rem' }}>
+              <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.03em' }}>Issue Description</label>
+              <textarea placeholder="e.g. Large pothole on Main Street near the school..." value={reportText} onChange={(e) => setReportText(e.target.value)}
+                style={{ width: '100%', height: '110px', padding: '0.9rem 1rem', backgroundColor: 'var(--glass-bg)', borderRadius: '10px', border: '1px solid var(--border-medium)', color: 'var(--text-main)', resize: 'none', fontSize: '0.875rem', outline: 'none', boxSizing: 'border-box', fontFamily: 'inherit' }}
+                onFocus={e => e.target.style.borderColor = '#6366f1'} onBlur={e => e.target.style.borderColor = 'var(--border-medium)'} />
+            </div>
+            <div style={{ marginBottom: '1.5rem' }}>
+              <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.03em' }}>Photo Evidence (Optional)</label>
+              <label style={{ border: `2px dashed ${imageFile ? '#6366f1' : 'var(--border-medium)'}`, borderRadius: '10px', padding: '1.25rem', textAlign: 'center', backgroundColor: imageFile ? '#6366f108' : 'var(--glass-bg)', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
+                <input type="file" accept="image/*" style={{ display: 'none' }} onChange={handleImageUpload} />
+                {imageFile ? (<><div style={{ fontSize: '1.5rem' }}>📸</div><div style={{ fontSize: '0.8rem', color: '#6366f1', fontWeight: 500 }}>{imageFile.name}</div></>) : (<><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{ color: 'var(--text-faint)' }}><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 500 }}>Drop photo or click to upload</div></>)}
+              </label>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.65rem 0.9rem', backgroundColor: '#6366f110', borderRadius: '8px', marginBottom: '1.25rem', border: '1px solid #6366f125' }}>
+              <span>🧠</span><span style={{ fontSize: '0.75rem', color: '#818cf8', fontWeight: 500 }}>Gemma 4 AI will auto-classify category, severity & route to the right department</span>
+            </div>
+            <button type="submit" disabled={isSubmitting} style={{ width: '100%', padding: '0.85rem', background: isSubmitting ? 'var(--border-medium)' : 'linear-gradient(135deg, #6366f1, #8b5cf6)', color: '#fff', border: 'none', borderRadius: '10px', fontWeight: 600, fontSize: '0.9rem', cursor: isSubmitting ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', boxShadow: isSubmitting ? 'none' : '0 4px 15px #6366f140' }}>
+              {isSubmitting ? 'Gemma is analyzing…' : 'Submit to AI Triage'}
+            </button>
+          </form>
+        </div>
+        {/* Feed */}
+        <div className="dashboard-card" style={{ padding: '1.75rem' }}>
+          <div style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '1.25rem' }}>My Submissions · {myReports.length} report{myReports.length !== 1 ? 's' : ''}</div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', maxHeight: '420px', overflowY: 'auto', paddingRight: '0.25rem' }}>
+            {myReports.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '3rem 1rem' }}>
+                <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>📭</div>
+                <div style={{ color: 'var(--text-main)', fontWeight: 500 }}>No reports yet</div>
+                <div style={{ color: 'var(--text-faint)', fontSize: '0.85rem', marginTop: '0.35rem' }}>Submit your first issue using the form.</div>
+              </div>
+            ) : myReports.map((report, i) => {
+              const sc = getStatusCfg(report.status);
+              const icon = getCategoryIcon(report.category);
+              return (
+                <div key={i} style={{ display: 'flex', gap: '0.9rem', padding: '1rem 1.1rem', backgroundColor: 'var(--glass-bg)', borderRadius: '12px', border: '1px solid var(--border-light)' }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--border-medium)'; e.currentTarget.style.backgroundColor = 'var(--hover-bg)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border-light)'; e.currentTarget.style.backgroundColor = 'var(--glass-bg)'; }}>
+                  {report.image_url
+                    ? <div style={{ width: '52px', height: '52px', borderRadius: '10px', backgroundImage: `url(${report.image_url})`, backgroundSize: 'cover', backgroundPosition: 'center', border: '1px solid var(--border-medium)', flexShrink: 0 }} />
+                    : <div style={{ width: '52px', height: '52px', borderRadius: '10px', backgroundColor: 'var(--border-light)', display: 'grid', placeItems: 'center', fontSize: '1.5rem', flexShrink: 0 }}>{icon}</div>}
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '0.5rem' }}>
+                      <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-main)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1 }}>{report.text?.length > 60 ? report.text.slice(0, 60) + '…' : report.text}</div>
+                      <span style={{ fontSize: '0.7rem', fontWeight: 600, color: sc.color, backgroundColor: sc.bg, padding: '0.2rem 0.6rem', borderRadius: '999px', whiteSpace: 'nowrap', flexShrink: 0 }}>{sc.label}</span>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginTop: '0.4rem', flexWrap: 'wrap' }}>
+                      <span style={{ fontSize: '0.72rem', color: 'var(--text-faint)' }}>{icon} {report.category || 'Uncategorized'}</span>
+                      {report.priority && <span style={{ fontSize: '0.7rem', color: report.color || '#64748b', backgroundColor: (report.color || '#64748b') + '18', padding: '0.15rem 0.5rem', borderRadius: '4px', fontWeight: 500 }}>{report.priority} Priority</span>}
+                      {report.ticket_id && <span style={{ fontSize: '0.7rem', color: 'var(--text-faint)', fontFamily: 'monospace' }}>#{report.ticket_id}</span>}
+                    </div>
+                    {report.keywords && <div style={{ marginTop: '0.4rem', fontSize: '0.68rem', color: 'var(--text-faint)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>🏷️ {report.keywords}</div>}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>
-  </div>
   );
 };
 
