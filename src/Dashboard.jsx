@@ -97,13 +97,23 @@ const MyReportsView = () => {
   const pendingCount = myReports.filter(r => r.status?.includes('Pending')).length;
   const routedCount = myReports.filter(r => r.status?.includes('Routed')).length;
   const resolvedCount = myReports.filter(r => r.status?.includes('Approved') || r.status?.includes('Resolved')).length;
-  const getCategoryIcon = (cat) => { if (!cat) return '📋'; if (cat.includes('Road')) return '🛣️'; if (cat.includes('Water') || cat.includes('Sanitation')) return '💧'; if (cat.includes('Electrical') || cat.includes('Street')) return '💡'; if (cat.includes('Waste') || cat.includes('Garbage')) return '🗑️'; if (cat.includes('Safety')) return '🛡️'; if (cat.includes('Park') || cat.includes('Environ')) return '🌿'; return '📋'; };
+  const getCategoryIcon = (cat, color = 'currentColor') => {
+    const s = { width: '20', height: '20', viewBox: '0 0 24 24', fill: 'none', stroke: color, strokeWidth: '2' };
+    if (!cat) return <svg {...s}><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>;
+    if (cat.includes('Road')) return <svg {...s}><path d="M3 17l2-8h14l2 8"/><path d="M5 17h14"/><line x1="12" y1="9" x2="12" y2="17"/></svg>;
+    if (cat.includes('Water') || cat.includes('Sanitation')) return <svg {...s}><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>;
+    if (cat.includes('Electrical') || cat.includes('Street')) return <svg {...s}><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>;
+    if (cat.includes('Waste') || cat.includes('Garbage')) return <svg {...s}><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>;
+    if (cat.includes('Safety')) return <svg {...s}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>;
+    if (cat.includes('Park') || cat.includes('Environ')) return <svg {...s}><path d="M17 8C8 10 5.9 16.17 3.82 22"/><path d="M9.1 17.4C11 14 14 9.9 22 4"/></svg>;
+    return <svg {...s}><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>;
+  };
   const getStatusCfg = (status) => { if (!status) return { color: '#64748b', bg: '#64748b15', label: 'Unknown' }; if (status.includes('Routed')) return { color: '#3b82f6', bg: '#3b82f615', label: 'Routed' }; if (status.includes('Approved') || status.includes('Resolved')) return { color: '#10b981', bg: '#10b98115', label: status.includes('Approved') ? 'Approved' : 'Resolved' }; if (status.includes('Pending')) return { color: '#f59e0b', bg: '#f59e0b15', label: 'Pending Triage' }; return { color: '#8b5cf6', bg: '#8b5cf615', label: status }; };
   const statCards = [
-    { label: 'Total Submitted', value: myReports.length, icon: '📨', color: '#6366f1' },
-    { label: 'Pending Triage', value: pendingCount, icon: '⏳', color: '#f59e0b' },
-    { label: 'Auto-Routed', value: routedCount, icon: '🔀', color: '#3b82f6' },
-    { label: 'Resolved', value: resolvedCount, icon: '✅', color: '#10b981' },
+    { label: 'Total Submitted', value: myReports.length, icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>, color: '#6366f1' },
+    { label: 'Pending Triage', value: pendingCount, icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>, color: '#f59e0b' },
+    { label: 'Auto-Routed', value: routedCount, icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>, color: '#3b82f6' },
+    { label: 'Resolved', value: resolvedCount, icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>, color: '#10b981' },
   ];
 
   return (
@@ -161,11 +171,11 @@ const MyReportsView = () => {
               <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.03em' }}>Photo Evidence (Optional)</label>
               <label style={{ border: `2px dashed ${imageFile ? '#6366f1' : 'var(--border-medium)'}`, borderRadius: '10px', padding: '1.25rem', textAlign: 'center', backgroundColor: imageFile ? '#6366f108' : 'var(--glass-bg)', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
                 <input type="file" accept="image/*" style={{ display: 'none' }} onChange={handleImageUpload} />
-                {imageFile ? (<><div style={{ fontSize: '1.5rem' }}>📸</div><div style={{ fontSize: '0.8rem', color: '#6366f1', fontWeight: 500 }}>{imageFile.name}</div></>) : (<><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{ color: 'var(--text-faint)' }}><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 500 }}>Drop photo or click to upload</div></>)}
+                {imageFile ? (<><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6366f1" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><div style={{ fontSize: '0.8rem', color: '#6366f1', fontWeight: 500 }}>{imageFile.name}</div></>) : (<><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{ color: 'var(--text-faint)' }}><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 500 }}>Drop photo or click to upload</div></>)}
               </label>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.65rem 0.9rem', backgroundColor: '#6366f110', borderRadius: '8px', marginBottom: '1.25rem', border: '1px solid #6366f125' }}>
-              <span>🧠</span><span style={{ fontSize: '0.75rem', color: '#818cf8', fontWeight: 500 }}>Gemma 4 AI will auto-classify category, severity & route to the right department</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg><span style={{ fontSize: '0.75rem', color: '#818cf8', fontWeight: 500 }}>Gemma 4 AI will auto-classify category, severity & route to the right department</span>
             </div>
             <button type="submit" disabled={isSubmitting} style={{ width: '100%', padding: '0.85rem', background: isSubmitting ? 'var(--border-medium)' : 'linear-gradient(135deg, #6366f1, #8b5cf6)', color: '#fff', border: 'none', borderRadius: '10px', fontWeight: 600, fontSize: '0.9rem', cursor: isSubmitting ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', boxShadow: isSubmitting ? 'none' : '0 4px 15px #6366f140' }}>
               {isSubmitting ? 'Gemma is analyzing…' : 'Submit to AI Triage'}
@@ -178,7 +188,7 @@ const MyReportsView = () => {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', maxHeight: '420px', overflowY: 'auto', paddingRight: '0.25rem' }}>
             {myReports.length === 0 ? (
               <div style={{ textAlign: 'center', padding: '3rem 1rem' }}>
-                <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>📭</div>
+                <div style={{ marginBottom: '0.75rem', display: 'flex', justifyContent: 'center' }}><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--text-faint)" strokeWidth="1.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.64 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.55 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.54a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 16l.19.92z"/><line x1="1" y1="1" x2="23" y2="23"/></svg></div>
                 <div style={{ color: 'var(--text-main)', fontWeight: 500 }}>No reports yet</div>
                 <div style={{ color: 'var(--text-faint)', fontSize: '0.85rem', marginTop: '0.35rem' }}>Submit your first issue using the form.</div>
               </div>
@@ -191,18 +201,18 @@ const MyReportsView = () => {
                   onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border-light)'; e.currentTarget.style.backgroundColor = 'var(--glass-bg)'; }}>
                   {report.image_url
                     ? <div style={{ width: '52px', height: '52px', borderRadius: '10px', backgroundImage: `url(${report.image_url})`, backgroundSize: 'cover', backgroundPosition: 'center', border: '1px solid var(--border-medium)', flexShrink: 0 }} />
-                    : <div style={{ width: '52px', height: '52px', borderRadius: '10px', backgroundColor: 'var(--border-light)', display: 'grid', placeItems: 'center', fontSize: '1.5rem', flexShrink: 0 }}>{icon}</div>}
+                    : <div style={{ width: '52px', height: '52px', borderRadius: '10px', backgroundColor: sc.color + '15', display: 'grid', placeItems: 'center', flexShrink: 0 }}>{getCategoryIcon(report.category, sc.color)}</div>}
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '0.5rem' }}>
                       <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-main)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1 }}>{report.text?.length > 60 ? report.text.slice(0, 60) + '…' : report.text}</div>
                       <span style={{ fontSize: '0.7rem', fontWeight: 600, color: sc.color, backgroundColor: sc.bg, padding: '0.2rem 0.6rem', borderRadius: '999px', whiteSpace: 'nowrap', flexShrink: 0 }}>{sc.label}</span>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginTop: '0.4rem', flexWrap: 'wrap' }}>
-                      <span style={{ fontSize: '0.72rem', color: 'var(--text-faint)' }}>{icon} {report.category || 'Uncategorized'}</span>
+                      <span style={{ fontSize: '0.72rem', color: 'var(--text-faint)', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>{getCategoryIcon(report.category, 'var(--text-faint)')} {report.category || 'Uncategorized'}</span>
                       {report.priority && <span style={{ fontSize: '0.7rem', color: report.color || '#64748b', backgroundColor: (report.color || '#64748b') + '18', padding: '0.15rem 0.5rem', borderRadius: '4px', fontWeight: 500 }}>{report.priority} Priority</span>}
                       {report.ticket_id && <span style={{ fontSize: '0.7rem', color: 'var(--text-faint)', fontFamily: 'monospace' }}>#{report.ticket_id}</span>}
                     </div>
-                    {report.keywords && <div style={{ marginTop: '0.4rem', fontSize: '0.68rem', color: 'var(--text-faint)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>🏷️ {report.keywords}</div>}
+                    {report.keywords && <div style={{ marginTop: '0.4rem', fontSize: '0.68rem', color: 'var(--text-faint)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: '0.25rem' }}><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg> {report.keywords}</div>}
                   </div>
                 </div>
               );
@@ -292,59 +302,182 @@ const ImpactScoreView = () => {
   );
 };
 
+const MedalIcon = ({ rank }) => {
+  if (rank === 1) return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" strokeWidth="1.5">
+      <circle cx="12" cy="12" r="9" fill="#f59e0b" stroke="#d97706"/>
+      <text x="12" y="16" textAnchor="middle" fontSize="10" fontWeight="bold" fill="white">1</text>
+    </svg>
+  );
+  if (rank === 2) return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" strokeWidth="1.5">
+      <circle cx="12" cy="12" r="9" fill="#94a3b8" stroke="#64748b"/>
+      <text x="12" y="16" textAnchor="middle" fontSize="10" fontWeight="bold" fill="white">2</text>
+    </svg>
+  );
+  if (rank === 3) return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" strokeWidth="1.5">
+      <circle cx="12" cy="12" r="9" fill="#cd7c3e" stroke="#a16207"/>
+      <text x="12" y="16" textAnchor="middle" fontSize="10" fontWeight="bold" fill="white">3</text>
+    </svg>
+  );
+  return null;
+};
+
+const StarIcon = ({ size = 14, color = '#f59e0b' }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill={color} stroke={color} strokeWidth="1.5">
+    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+  </svg>
+);
+
+const TrophyIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/>
+    <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
+    <path d="M4 22h16"/>
+    <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/>
+    <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/>
+    <path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/>
+  </svg>
+);
+
 const LeaderboardView = () => {
   const state = localStorage.getItem('samadhan_state') || 'West Bengal';
-  const ward = localStorage.getItem('samadhan_ward') || 'Sector 4';
+  const ward  = localStorage.getItem('samadhan_ward')  || 'Sector 4';
+  const userName = localStorage.getItem('samadhan_name') || 'You';
+
+  const leaders = [
+    { rank: 1, name: 'Anjali Sharma',   reports: 142, score: 3250, trend: +12 },
+    { rank: 2, name: 'Rahul Desai',     reports: 128, score: 2900, trend: +8  },
+    { rank: 3, name: 'Priya Patel',     reports: 115, score: 2640, trend: +5  },
+    { rank: 4, name: 'Vikram Singh',    reports: 98,  score: 2100, trend: -2  },
+    { rank: 5, name: userName,          reports: 8,   score: 150,  trend: +3, isYou: true },
+  ];
+
+  const podiumColors = ['#f59e0b', '#94a3b8', '#cd7c3e'];
+  const avatarHues   = [200, 260, 320, 160, 230];
 
   return (
     <div className="animate-fade-in" style={{ padding: '2rem 0' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-        <h2 className="section-title" style={{ marginBottom: 0 }}>Community Leaderboard</h2>
-        <div style={{ backgroundColor: 'var(--glass-bg)', padding: '0.5rem 1rem', borderRadius: '8px', border: '1px solid var(--border-medium)', color: 'var(--text-main)', fontSize: '0.9rem', fontWeight: 500, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" color="var(--text-muted)"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-          {ward}, {state}
+
+      {/* Header */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+        <div>
+          <h2 style={{ fontSize: '1.75rem', fontWeight: 700, color: 'var(--text-main)', margin: 0, fontFamily: 'var(--font-display)', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+            <span style={{ color: '#f59e0b' }}><TrophyIcon /></span>
+            Community Leaderboard
+          </h2>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '0.35rem' }}>Top contributors in your ward this month</p>
+        </div>
+        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+          <div style={{ backgroundColor: 'var(--glass-bg)', padding: '0.5rem 1rem', borderRadius: '10px', border: '1px solid var(--border-medium)', color: 'var(--text-muted)', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            {ward}, {state}
+          </div>
         </div>
       </div>
-      <div className="dashboard-card" style={{ padding: '2rem' }}>
-      <div style={{ display: 'flex', borderBottom: '1px solid var(--border-medium)', paddingBottom: '1rem', marginBottom: '1rem', color: 'var(--text-faint)', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '1px' }}>
-        <div style={{ width: '60px', textAlign: 'center' }}>Rank</div>
-        <div style={{ flex: 1 }}>Contributor</div>
-        <div style={{ width: '150px', textAlign: 'center' }}>Verified Reports</div>
-        <div style={{ width: '100px', textAlign: 'right' }}>Score</div>
-      </div>
-      
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-        {[
-          { rank: 1, name: 'Anjali Sharma', reports: 142, score: 3250, badge: '🥇' },
-          { rank: 2, name: 'Rahul Desai', reports: 128, score: 2900, badge: '🥈' },
-          { rank: 3, name: 'Priya Patel', reports: 115, score: 2640, badge: '🥉' },
-          { rank: 4, name: 'Vikram Singh', reports: 98, score: 2100, badge: '' },
-          { rank: 5, name: 'Souradeep (You)', reports: 8, score: 150, badge: '🌟', isYou: true },
-        ].map((user, i) => (
-          <div key={i} style={{ 
-            display: 'flex', alignItems: 'center', padding: '1rem', 
-            backgroundColor: user.isYou ? 'rgba(59,130,246,0.1)' : 'var(--glass-bg)', 
-            borderRadius: '12px', border: user.isYou ? '1px solid rgba(59,130,246,0.3)' : '1px solid transparent',
-            transition: 'background-color 0.2s', cursor: 'pointer'
-          }}>
-            <div style={{ width: '60px', textAlign: 'center', fontWeight: 'bold', fontSize: '1.2rem', color: user.rank <= 3 ? 'var(--text-main)' : 'var(--text-faint)' }}>
-              {user.badge || `#${user.rank}`}
-            </div>
-            <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '1rem' }}>
-              <div style={{ width: '36px', height: '36px', borderRadius: '50%', backgroundColor: `hsl(${i * 60 + 200}, 70%, 30%)`, display: 'grid', placeItems: 'center', fontWeight: 'bold', color: '#fff' }}>
-                {user.name.charAt(0)}
+
+      {/* Podium Top-3 */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.15fr 1fr', gap: '1rem', marginBottom: '1.5rem', alignItems: 'flex-end' }}>
+        {[leaders[1], leaders[0], leaders[2]].map((user, idx) => {
+          const isCenter = idx === 1;
+          const col = podiumColors[user.rank - 1];
+          return (
+            <div key={user.rank} className="dashboard-card" style={{ padding: '1.5rem 1rem', textAlign: 'center', border: `1px solid ${col}30`, background: isCenter ? `linear-gradient(160deg, ${col}12, transparent)` : undefined, transform: isCenter ? 'scale(1.03)' : undefined }}>
+              <div style={{ marginBottom: '0.75rem', display: 'flex', justifyContent: 'center' }}>
+                <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: `linear-gradient(135deg, hsl(${avatarHues[user.rank-1]},70%,35%), hsl(${avatarHues[user.rank-1]},70%,55%))`, display: 'grid', placeItems: 'center', fontWeight: 700, fontSize: '1.2rem', color: '#fff', border: `3px solid ${col}`, boxShadow: `0 0 0 3px ${col}30` }}>
+                  {user.name.charAt(0)}
+                </div>
               </div>
-              <div style={{ fontWeight: 500, color: user.isYou ? '#60a5fa' : 'var(--text-main)' }}>{user.name}</div>
+              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '0.5rem' }}><MedalIcon rank={user.rank} /></div>
+              <div style={{ fontWeight: 700, color: 'var(--text-main)', fontSize: '0.9rem', marginBottom: '0.25rem' }}>{user.name}</div>
+              <div style={{ fontSize: '1.4rem', fontWeight: 800, color: col, fontFamily: 'var(--font-display)' }}>{user.score.toLocaleString()}</div>
+              <div style={{ fontSize: '0.72rem', color: 'var(--text-faint)', marginTop: '0.2rem' }}>{user.reports} reports</div>
             </div>
-            <div style={{ width: '150px', textAlign: 'center', color: 'var(--text-muted)' }}>{user.reports}</div>
-            <div style={{ width: '100px', textAlign: 'right', fontWeight: 'bold', color: 'var(--color-primary)' }}>{user.score}</div>
-          </div>
-        ))}
+          );
+        })}
+      </div>
+
+      {/* Full Table */}
+      <div className="dashboard-card" style={{ padding: '1.5rem' }}>
+        {/* Table header */}
+        <div style={{ display: 'flex', alignItems: 'center', paddingBottom: '0.75rem', marginBottom: '0.5rem', borderBottom: '1px solid var(--border-light)', color: 'var(--text-faint)', fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+          <div style={{ width: '56px', textAlign: 'center' }}>Rank</div>
+          <div style={{ flex: 1 }}>Contributor</div>
+          <div style={{ width: '120px', textAlign: 'center' }}>Reports</div>
+          <div style={{ width: '80px', textAlign: 'center' }}>Trend</div>
+          <div style={{ width: '90px', textAlign: 'right' }}>Score</div>
+        </div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+          {leaders.map((user, i) => (
+            <div key={i} style={{
+              display: 'flex', alignItems: 'center', padding: '0.85rem 0',
+              borderRadius: '10px',
+              backgroundColor: user.isYou ? 'rgba(59,130,246,0.08)' : 'transparent',
+              border: user.isYou ? '1px solid rgba(59,130,246,0.2)' : '1px solid transparent',
+              paddingLeft: user.isYou ? '0.75rem' : '0',
+              paddingRight: user.isYou ? '0.75rem' : '0',
+              transition: 'background-color 0.2s',
+            }}
+            onMouseEnter={e => { if (!user.isYou) e.currentTarget.style.backgroundColor = 'var(--glass-bg)'; }}
+            onMouseLeave={e => { if (!user.isYou) e.currentTarget.style.backgroundColor = 'transparent'; }}
+            >
+              {/* Rank */}
+              <div style={{ width: '56px', display: 'flex', justifyContent: 'center', flexShrink: 0 }}>
+                {user.rank <= 3
+                  ? <MedalIcon rank={user.rank} />
+                  : <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-faint)' }}>#{user.rank}</span>
+                }
+              </div>
+
+              {/* Avatar + Name */}
+              <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '0.75rem', minWidth: 0 }}>
+                <div style={{ width: '34px', height: '34px', borderRadius: '50%', background: `linear-gradient(135deg, hsl(${avatarHues[i]},65%,35%), hsl(${avatarHues[i]},65%,55%))`, display: 'grid', placeItems: 'center', fontWeight: 700, fontSize: '0.85rem', color: '#fff', flexShrink: 0 }}>
+                  {user.name.charAt(0)}
+                </div>
+                <div style={{ fontWeight: 600, color: user.isYou ? '#60a5fa' : 'var(--text-main)', fontSize: '0.9rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  {user.name}
+                  {user.isYou && (
+                    <span style={{ marginLeft: '0.4rem', display: 'inline-flex', alignItems: 'center', gap: '0.2rem', backgroundColor: '#3b82f615', border: '1px solid #3b82f630', padding: '0.1rem 0.4rem', borderRadius: '999px', fontSize: '0.65rem', color: '#60a5fa', fontWeight: 600 }}>
+                      <StarIcon size={10} color="#60a5fa" /> You
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {/* Reports */}
+              <div style={{ width: '120px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.875rem' }}>
+                {user.reports}
+              </div>
+
+              {/* Trend */}
+              <div style={{ width: '80px', textAlign: 'center', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.2rem', fontSize: '0.78rem', fontWeight: 600, color: user.trend >= 0 ? '#10b981' : '#ef4444' }}>
+                {user.trend >= 0
+                  ? <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+                  : <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                }
+                {Math.abs(user.trend)}
+              </div>
+
+              {/* Score */}
+              <div style={{ width: '90px', textAlign: 'right', fontWeight: 700, color: user.rank <= 3 ? podiumColors[user.rank - 1] : 'var(--text-main)', fontSize: '0.95rem', fontFamily: 'var(--font-display)' }}>
+                {user.score.toLocaleString()}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Footer note */}
+        <div style={{ marginTop: '1.25rem', paddingTop: '1rem', borderTop: '1px solid var(--border-light)', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.75rem', color: 'var(--text-faint)' }}>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Scores update weekly. Top 5% of contributors receive recognition badges.
+        </div>
       </div>
     </div>
-  </div>
   );
 };
+
 
 const analyticsData = [
   { name: 'Mon', roads: 40, water: 24, electrical: 24 },
@@ -972,11 +1105,11 @@ const TrackReportView = () => {
   };
 
   const timeline = report ? [
-    { label: 'Report Submitted', done: true, icon: '📨', detail: 'Received by Samadhan system' },
-    { label: 'AI Triage', done: true, icon: '🧠', detail: `Categorized as: ${report.category} · ${report.severity}` },
-    { label: 'Auto-Routed', done: report.status?.includes('Routed'), icon: '🔀', detail: report.routed_to ? `Sent to: ${report.routed_to}` : 'Pending routing' },
-    { label: 'Department Action', done: report.status?.includes('Approved') || report.status?.includes('Resolved'), icon: '🏛️', detail: 'Department reviewing issue' },
-    { label: 'Resolved', done: report.status?.includes('Resolved'), icon: '✅', detail: 'Issue closed and verified' },
+    { label: 'Report Submitted', done: true, icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>, detail: 'Received by Samadhan system' },
+    { label: 'AI Triage', done: true, icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>, detail: `Categorized as: ${report.category} · ${report.severity}` },
+    { label: 'Auto-Routed', done: report.status?.includes('Routed'), icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>, detail: report.routed_to ? `Sent to: ${report.routed_to}` : 'Pending routing' },
+    { label: 'Department Action', done: report.status?.includes('Approved') || report.status?.includes('Resolved'), icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>, detail: 'Department reviewing issue' },
+    { label: 'Resolved', done: report.status?.includes('Resolved'), icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>, detail: 'Issue closed and verified' },
   ] : [];
 
   return (
@@ -1009,7 +1142,7 @@ const TrackReportView = () => {
 
       {error && (
         <div style={{ padding: '1rem 1.25rem', backgroundColor: '#ef444415', border: '1px solid #ef444430', borderRadius: '12px', color: '#ef4444', fontSize: '0.875rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <span>⚠️</span> {error}
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> {error}
         </div>
       )}
 
@@ -1054,7 +1187,7 @@ const TrackReportView = () => {
 
             {report.keywords && (
               <div style={{ marginTop: '0.75rem', fontSize: '0.75rem', color: 'var(--text-faint)', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                <span>🏷️</span> {report.keywords}
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg> {report.keywords}
               </div>
             )}
           </div>
@@ -1066,8 +1199,10 @@ const TrackReportView = () => {
               <div style={{ position: 'absolute', left: '19px', top: '12px', bottom: '12px', width: '2px', backgroundColor: 'var(--border-medium)' }} />
               {timeline.map((step, i) => (
                 <div key={i} style={{ display: 'flex', gap: '1.25rem', marginBottom: i < timeline.length - 1 ? '1.75rem' : 0, position: 'relative', zIndex: 1 }}>
-                  <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: step.done ? '#6366f1' : 'var(--bg-card)', border: `2px solid ${step.done ? '#6366f1' : 'var(--border-medium)'}`, display: 'grid', placeItems: 'center', fontSize: '1rem', flexShrink: 0, transition: 'all 0.3s', boxShadow: step.done ? '0 0 0 4px #6366f120' : 'none' }}>
-                    {step.done ? '✓' : <span style={{ fontSize: '0.85rem' }}>{step.icon}</span>}
+                  <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: step.done ? '#6366f1' : 'var(--bg-card)', border: `2px solid ${step.done ? '#6366f1' : 'var(--border-medium)'}`, display: 'grid', placeItems: 'center', flexShrink: 0, transition: 'all 0.3s', boxShadow: step.done ? '0 0 0 4px #6366f120' : 'none' }}>
+                    {step.done
+                      ? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                      : <span style={{ display: 'flex', color: 'var(--text-faint)' }}>{step.icon}</span>}
                   </div>
                   <div style={{ paddingTop: '0.5rem' }}>
                     <div style={{ fontSize: '0.9rem', fontWeight: 600, color: step.done ? 'var(--text-main)' : 'var(--text-faint)' }}>{step.label}</div>
@@ -1080,7 +1215,7 @@ const TrackReportView = () => {
             {report.routed_to && (
               <div style={{ marginTop: '2rem', padding: '1rem', backgroundColor: '#3b82f610', borderRadius: '10px', border: '1px solid #3b82f625' }}>
                 <div style={{ fontSize: '0.7rem', color: '#60a5fa', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.25rem' }}>Assigned Department</div>
-                <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#3b82f6' }}>🏛️ {report.routed_to}</div>
+                <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#3b82f6', display: 'flex', alignItems: 'center', gap: '0.4rem' }}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg> {report.routed_to}</div>
               </div>
             )}
           </div>
@@ -1089,7 +1224,7 @@ const TrackReportView = () => {
 
       {!report && !error && !loading && (
         <div style={{ textAlign: 'center', padding: '4rem 1rem' }}>
-          <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🔍</div>
+          <div style={{ marginBottom: '1rem', display: 'flex', justifyContent: 'center' }}><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="var(--text-faint)" strokeWidth="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
           <div style={{ color: 'var(--text-main)', fontWeight: 600, fontSize: '1.1rem', marginBottom: '0.5rem' }}>Search for a ticket</div>
           <div style={{ color: 'var(--text-faint)', fontSize: '0.875rem' }}>Enter your Ticket ID (e.g. <code style={{ color: 'var(--text-muted)', backgroundColor: 'var(--glass-bg)', padding: '0.1rem 0.4rem', borderRadius: '4px' }}>TKT-A3F2</code>) above to track progress</div>
         </div>
@@ -1190,7 +1325,7 @@ const ProfileView = () => {
           <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '0.35rem' }}>Manage your account details and preferences</p>
         </div>
         <div style={{ display: 'flex', gap: '0.75rem' }}>
-          {saved && <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#10b981', fontSize: '0.85rem', fontWeight: 500 }}>✓ Saved!</div>}
+          {saved && <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#10b981', fontSize: '0.85rem', fontWeight: 500 }}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg> Saved!</div>}
           {editMode ? (
             <>
               <button onClick={() => setEditMode(false)} style={{ padding: '0.6rem 1.2rem', backgroundColor: 'var(--glass-bg)', border: '1px solid var(--border-medium)', borderRadius: '9px', color: 'var(--text-muted)', fontSize: '0.85rem', cursor: 'pointer', fontWeight: 500 }}>Cancel</button>
@@ -1229,7 +1364,9 @@ const ProfileView = () => {
           <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '0.25rem' }}>{profile.name || 'Your Name'}</div>
           <div style={{ fontSize: '0.8rem', color: 'var(--text-faint)', marginBottom: '1rem' }}>{profile.email || 'your@email.com'}</div>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', backgroundColor: '#6366f115', border: '1px solid #6366f125', padding: '0.3rem 0.9rem', borderRadius: '999px', fontSize: '0.75rem', fontWeight: 600, color: '#818cf8' }}>
-            {profile.role === 'admin' ? '🏛️ Administrator' : '🏙️ Citizen'}
+            {profile.role === 'admin'
+              ? <><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg> Administrator</>
+              : <><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Citizen</>}
           </div>
 
           {profile.ward && (
@@ -1274,7 +1411,7 @@ const ProfileView = () => {
 
           {editMode && (
             <div style={{ marginTop: '1.25rem', padding: '0.75rem 1rem', backgroundColor: '#6366f108', border: '1px solid #6366f120', borderRadius: '8px', fontSize: '0.775rem', color: '#818cf8', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <span>💾</span> Changes are saved to the database and synced to localStorage automatically.
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v13a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Changes are saved to the database and synced to localStorage automatically.
             </div>
           )}
         </div>
@@ -1335,10 +1472,46 @@ const Dashboard = () => {
   const userRole = localStorage.getItem('samadhan_role') || 'citizen';
   const [activeTab, setActiveTab] = useState(userRole === 'admin' ? 'analytics' : 'my-reports');
   const [theme, setTheme] = useState('dark');
+  const [avatarUrl, setAvatarUrl] = useState(null);
+  const [displayName, setDisplayName] = useState(
+    localStorage.getItem('samadhan_name') || (userRole === 'admin' ? 'Administrator' : 'Souradeep')
+  );
+
+  // Load profile from backend so avatar & name are always fresh
+  React.useEffect(() => {
+    const email = localStorage.getItem('samadhan_email');
+    if (!email) return;
+    fetch(`http://127.0.0.1:8000/api/profile/${encodeURIComponent(email)}`)
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        if (!data) return;
+        if (data.avatar_url) setAvatarUrl(data.avatar_url);
+        if (data.name) setDisplayName(data.name);
+      })
+      .catch(() => {});
+  }, []);
+
+  // Re-read avatar when profile tab is saved (listen for storage events)
+  React.useEffect(() => {
+    const onStorage = () => {
+      const name = localStorage.getItem('samadhan_name');
+      if (name) setDisplayName(name);
+    };
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
+  }, []);
 
   const toggleTheme = () => {
     setTheme(prev => prev === 'dark' ? 'light' : 'dark');
   };
+
+  const AvatarCircle = ({ size = 32, fontSize = '0.85rem' }) => (
+    <div style={{ width: `${size}px`, height: `${size}px`, borderRadius: '50%', overflow: 'hidden', flexShrink: 0, border: '2px solid #6366f140', display: 'grid', placeItems: 'center', background: avatarUrl ? 'transparent' : 'linear-gradient(135deg, #6366f1, #8b5cf6)' }}>
+      {avatarUrl
+        ? <img src={avatarUrl} alt="avatar" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+        : <span style={{ fontSize, fontWeight: 700, color: '#fff', lineHeight: 1 }}>{(displayName || 'U').charAt(0).toUpperCase()}</span>}
+    </div>
+  );
 
   const renderSidebarLink = (id, label, icon) => (
     <div 
@@ -1429,14 +1602,14 @@ const Dashboard = () => {
           {/* User Profile / Sign Out */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px solid var(--border-light)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-              <div style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: 'var(--color-primary)', display: 'grid', placeItems: 'center', fontWeight: 'bold', fontSize: '0.85rem', color: '#fff' }}>
-                {userRole === 'admin' ? 'A' : 'S'}
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <span style={{ fontSize: '0.85rem', fontWeight: 500, color: 'var(--text-main)' }}>{userRole === 'admin' ? 'City Dept' : 'Souradeep'}</span>
-                <span style={{ fontSize: '0.7rem', color: 'var(--text-faint)' }}>{userRole === 'admin' ? 'Administrator' : 'Citizen'}</span>
-              </div>
+            <div onClick={() => setActiveTab('profile')} style={{ cursor: 'pointer' }}>
+              <AvatarCircle size={32} fontSize="0.85rem" />
             </div>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <span style={{ fontSize: '0.85rem', fontWeight: 500, color: 'var(--text-main)' }}>{userRole === 'admin' ? 'City Dept' : displayName}</span>
+              <span style={{ fontSize: '0.7rem', color: 'var(--text-faint)' }}>{userRole === 'admin' ? 'Administrator' : 'Citizen'}</span>
+            </div>
+          </div>
             
             <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
               <button className="theme-toggle-btn" onClick={toggleTheme} title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}>
@@ -1459,7 +1632,13 @@ const Dashboard = () => {
       <main className="dashboard-main">
         {/* Header */}
         <header className="dashboard-header">
-          <div className="dashboard-welcome">Welcome back, {userRole === 'admin' ? 'Administrator' : 'Souradeep'}</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+            <AvatarCircle size={40} fontSize="1rem" />
+            <div>
+              <div className="dashboard-welcome" style={{ margin: 0 }}>Welcome back, {userRole === 'admin' ? 'Administrator' : displayName}</div>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-faint)', marginTop: '0.15rem' }}>{new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' })}</div>
+            </div>
+          </div>
           {userRole === 'citizen' && (
             <div className="credits-pill">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
