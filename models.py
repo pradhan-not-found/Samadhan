@@ -25,6 +25,7 @@ class Issue(Base):
     status = Column(String, default="Pending Triage")
     routed_to = Column(String, nullable=True)
     image_url = Column(String, nullable=True)
+    image_analysis = Column(String, nullable=True)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
 

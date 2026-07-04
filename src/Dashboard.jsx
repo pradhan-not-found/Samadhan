@@ -590,36 +590,43 @@ const IncomingIssuesView = () => {
   return (
     <div className="animate-fade-in" style={{ padding: '2rem 0' }}>
       <h2 className="section-title">Incoming Triage Queue</h2>
-      <div className="dashboard-card" style={{ padding: '2rem' }}>
-        <div style={{ display: 'flex', borderBottom: '1px solid var(--border-medium)', paddingBottom: '1rem', marginBottom: '1rem', color: 'var(--text-faint)', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '1px' }}>
-          <div style={{ width: '80px' }}>Ticket ID</div>
-          <div style={{ flex: 1 }}>Report Summary</div>
-          <div style={{ width: '150px', textAlign: 'center' }}>AI Category</div>
-          <div style={{ width: '120px', textAlign: 'center' }}>AI Priority</div>
-          <div style={{ width: '100px', textAlign: 'right' }}>Time</div>
-        </div>
-        
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', maxHeight: '400px', overflowY: 'auto' }}>
-          {reports.length === 0 && <div style={{ color: 'var(--text-faint)', fontSize: '0.9rem', textAlign: 'center', marginTop: '1rem' }}>No incoming issues right now.</div>}
-          {reports.map((ticket, i) => (
-            <div key={i} style={{ 
-              display: 'flex', alignItems: 'center', padding: '1rem', 
-              backgroundColor: 'var(--glass-bg)', 
-              borderRadius: '12px', border: '1px solid var(--border-light)',
-              transition: 'all 0.2s', cursor: 'pointer'
-            }}>
-              <div style={{ width: '80px', color: 'var(--text-muted)', fontSize: '0.85rem' }}>{ticket.ticket_id}</div>
-              <div style={{ flex: 1, fontWeight: 500, color: 'var(--text-main)', textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden', maxWidth: '300px' }}>{ticket.text}</div>
-              <div style={{ width: '150px', textAlign: 'center', color: 'var(--text-faint)', fontSize: '0.9rem' }}>{ticket.category}</div>
-              <div style={{ width: '120px', textAlign: 'center' }}>
-                <span style={{ color: ticket.color || '#3b82f6', backgroundColor: `${ticket.color || '#3b82f6'}20`, padding: '0.25rem 0.75rem', borderRadius: '999px', fontSize: '0.8rem', fontWeight: 'bold' }}>
-                  {ticket.priority || 'Medium'}
-                </span>
-              </div>
-              <div style={{ width: '100px', textAlign: 'right', color: 'var(--text-faint)', fontSize: '0.85rem' }}>{ticket.created_at ? new Date(ticket.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '—'}</div>
-            </div>
-          ))}
-        </div>
+      <div className="dashboard-card" style={{ padding: '2rem', overflowX: 'auto' }}>
+        {reports.length === 0 ? (
+          <div style={{ color: 'var(--text-faint)', fontSize: '0.9rem', textAlign: 'center', padding: '2rem 0' }}>No incoming issues right now.</div>
+        ) : (
+          <table className="admin-table">
+            <thead>
+              <tr>
+                <th>Ticket ID</th>
+                <th>Report Summary</th>
+                <th>AI Category</th>
+                <th>AI Priority</th>
+                <th style={{ textAlign: 'right' }}>Time</th>
+              </tr>
+            </thead>
+            <tbody>
+              {reports.map((ticket, i) => (
+                <tr key={i} style={{ cursor: 'pointer' }}>
+                  <td style={{ color: 'var(--text-muted)' }}>{ticket.ticket_id}</td>
+                  <td style={{ fontWeight: 500 }}>
+                    <div style={{ maxWidth: '300px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                      {ticket.text}
+                    </div>
+                  </td>
+                  <td style={{ color: 'var(--text-faint)' }}>{ticket.category}</td>
+                  <td>
+                    <span style={{ color: ticket.color || '#3b82f6', backgroundColor: `${ticket.color || '#3b82f6'}20`, padding: '0.25rem 0.75rem', borderRadius: '999px', fontSize: '0.8rem', fontWeight: 'bold' }}>
+                      {ticket.priority || 'Medium'}
+                    </span>
+                  </td>
+                  <td style={{ textAlign: 'right', color: 'var(--text-faint)', fontSize: '0.85rem' }}>
+                    {ticket.created_at ? new Date(ticket.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '—'}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   );
@@ -844,35 +851,54 @@ const AutoRoutingView = () => {
           {isProcessing ? 'Gemma Agent Executing...' : nextTicket ? `Route Ticket ${nextTicket.ticket_id}` : 'No Tickets Waiting'}
         </button>
       </div>
-      <div className="dashboard-card" style={{ padding: '2rem' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          {isProcessing && (
-            <div style={{ padding: '1rem', backgroundColor: '#f1f5f9', border: '1px dashed #cbd5e1', borderRadius: '12px', color: '#475569', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-               <svg className="animate-spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>
-               Gemma 4 calling function: <code>route_issue_to_dept(issue_id="{nextTicket?.ticket_id}", category="{nextTicket?.category}")</code>
-            </div>
-          )}
-          {!isProcessing && logs.length === 0 && (
-            <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-faint)', fontSize: '0.9rem' }}>
-              No routing history yet. Approve a triage, then trigger the Gemma agent to route it.
-            </div>
-          )}
-          {logs.map((log, i) => (
-            <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1.25rem', backgroundColor: 'var(--glass-bg)', borderRadius: '12px', border: '1px solid var(--border-light)' }}>
-              <div style={{ flex: 1 }}>
-                <div style={{ fontWeight: 500, fontSize: '1rem', color: 'var(--text-main)' }}>{log.issue}</div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" color="var(--text-muted)"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
-                  <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Assigned to: <strong style={{ color: 'var(--text-main)' }}>{log.dept}</strong></span>
-                </div>
-              </div>
-              <div style={{ textAlign: 'right' }}>
-                <div style={{ color: log.color, fontSize: '0.85rem', fontWeight: 500, backgroundColor: `${log.color}15`, padding: '0.25rem 0.75rem', borderRadius: '999px', display: 'inline-block' }}>{log.status}</div>
-                <div style={{ color: 'var(--text-faint)', fontSize: '0.75rem', marginTop: '0.5rem' }}>{log.time}</div>
-              </div>
-            </div>
-          ))}
-        </div>
+      <div className="dashboard-card" style={{ padding: '2rem', overflowX: 'auto' }}>
+        {isProcessing && (
+          <div style={{ padding: '1rem', backgroundColor: '#f1f5f9', border: '1px dashed #cbd5e1', borderRadius: '12px', color: '#475569', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
+             <svg className="animate-spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>
+             Gemma 4 calling function: <code>route_issue_to_dept(issue_id="{nextTicket?.ticket_id}", category="{nextTicket?.category}")</code>
+          </div>
+        )}
+        {!isProcessing && logs.length === 0 ? (
+          <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-faint)', fontSize: '0.9rem' }}>
+            No routing history yet. Approve a triage, then trigger the Gemma agent to route it.
+          </div>
+        ) : (
+          <table className="admin-table">
+            <thead>
+              <tr>
+                <th>Issue Summary</th>
+                <th>Assigned Department</th>
+                <th>Status</th>
+                <th style={{ textAlign: 'right' }}>Routing Time</th>
+              </tr>
+            </thead>
+            <tbody>
+              {logs.map((log, i) => (
+                <tr key={i}>
+                  <td style={{ fontWeight: 500 }}>
+                    <div style={{ maxWidth: '350px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                      {log.issue}
+                    </div>
+                  </td>
+                  <td>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" color="var(--text-muted)"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+                      <strong style={{ color: 'var(--text-main)' }}>{log.dept}</strong>
+                    </div>
+                  </td>
+                  <td>
+                    <span style={{ color: log.color, fontSize: '0.85rem', fontWeight: 500, backgroundColor: `${log.color}15`, padding: '0.25rem 0.75rem', borderRadius: '999px', display: 'inline-block' }}>
+                      {log.status}
+                    </span>
+                  </td>
+                  <td style={{ textAlign: 'right', color: 'var(--text-faint)', fontSize: '0.85rem' }}>
+                    {log.time}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   );
@@ -883,7 +909,23 @@ const ImageAnalysisView = () => {
   const [results, setResults] = useState(null);
   const [isApproved, setIsApproved] = useState(false);
   const [evidence, setEvidence] = useState([]);   // real reports that carry photos
-  const [selected, setSelected] = useState(null); // { image_url, ticket_id }
+  const [selected, setSelected] = useState(null); // full report object
+
+  const selectEvidence = (r) => {
+    setSelected(r);
+    if (r.image_analysis) {
+      try {
+        setResults(JSON.parse(r.image_analysis));
+        setIsApproved(true);
+      } catch (e) {
+        setResults(null);
+        setIsApproved(false);
+      }
+    } else {
+      setResults(null);
+      setIsApproved(false);
+    }
+  };
 
   React.useEffect(() => {
     const loadEvidence = async () => {
@@ -893,7 +935,7 @@ const ImageAnalysisView = () => {
         const withImages = reports.filter(r => r.image_url);
         setEvidence(withImages);
         if (withImages.length > 0) {
-          setSelected({ image_url: withImages[0].image_url, ticket_id: withImages[0].ticket_id });
+          selectEvidence(withImages[0]);
         }
       } catch (err) {
         console.error("Backend error:", err);
@@ -910,7 +952,7 @@ const ImageAnalysisView = () => {
       const response = await fetch("http://127.0.0.1:8000/api/analyze-report-image", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ image_url: target.image_url })
+        body: JSON.stringify({ image_url: target.image_url, ticket_id: target.ticket_id })
       });
       const data = await response.json();
       if (data.error) {
@@ -1009,10 +1051,14 @@ const ImageAnalysisView = () => {
                 {evidence.map((r) => (
                   <div
                     key={r.ticket_id}
-                    onClick={() => { setSelected({ image_url: r.image_url, ticket_id: r.ticket_id }); setResults(null); setIsApproved(false); }}
+                    onClick={() => selectEvidence(r)}
                     title={r.ticket_id}
-                    style={{ width: '64px', height: '48px', flexShrink: 0, borderRadius: '8px', backgroundImage: `url(${r.image_url})`, backgroundSize: 'cover', backgroundPosition: 'center', cursor: 'pointer', border: selected?.ticket_id === r.ticket_id ? '2px solid #7c3aed' : '1px solid var(--border-medium)' }}
-                  />
+                    style={{ width: '64px', height: '48px', flexShrink: 0, borderRadius: '8px', backgroundImage: `url(${r.image_url})`, backgroundSize: 'cover', backgroundPosition: 'center', cursor: 'pointer', border: selected?.ticket_id === r.ticket_id ? '2px solid #7c3aed' : '1px solid var(--border-medium)', position: 'relative' }}
+                  >
+                    {r.image_analysis && (
+                      <div style={{ position: 'absolute', top: '-4px', right: '-4px', width: '12px', height: '12px', borderRadius: '50%', backgroundColor: '#10b981', border: '2px solid var(--bg-body)' }} title="Analyzed" />
+                    )}
+                  </div>
                 ))}
               </div>
             )}

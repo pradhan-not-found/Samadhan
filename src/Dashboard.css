@@ -536,3 +536,11 @@
   0%, 100% { transform: scale(1); opacity: 0.5; }
   50% { transform: scale(2.2); opacity: 0; }
 }
+
+/* Admin Tables */
+.admin-table { width: 100%; border-collapse: separate; border-spacing: 0; text-align: left; }
+.admin-table th { padding: 1rem; border-bottom: 1px solid var(--border-medium); font-weight: 500; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; }
+.admin-table td { padding: 1.25rem 1rem; border-bottom: 1px solid var(--border-light); color: var(--text-main); font-size: 0.95rem; }
+.admin-table tbody tr { transition: background-color 0.2s; }
+.admin-table tbody tr:hover { background-color: var(--hover-bg); }
+.admin-table tbody tr:last-child td { border-bottom: none; }

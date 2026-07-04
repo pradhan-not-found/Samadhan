@@ -165,12 +165,15 @@ async def analyze_image(file: UploadFile = File(...)):
     return analysis
 
 
+import json
+
 class ImageUrlRequest(BaseModel):
     image_url: str
+    ticket_id: Optional[str] = None
 
 @app.post("/api/analyze-report-image")
-async def analyze_report_image(request: ImageUrlRequest):
-    """Re-analyze a photo already attached to a citizen report."""
+async def analyze_report_image(request: ImageUrlRequest, db: Session = Depends(get_db)):
+    """Re-analyze a photo already attached to a citizen report and save to DB."""
     filename = os.path.basename(request.image_url.split("?")[0])
     file_path = os.path.join(UPLOAD_DIR, filename)
     if not os.path.isfile(file_path):
@@ -187,6 +190,14 @@ async def analyze_report_image(request: ImageUrlRequest):
         }
     analysis["engine"] = engine_used
     analysis["image_url"] = request.image_url
+
+    # Save to DB if ticket_id is provided
+    if request.ticket_id:
+        issue = db.query(models.Issue).filter(models.Issue.ticket_id == request.ticket_id).first()
+        if issue:
+            issue.image_analysis = json.dumps(analysis)
+            db.commit()
+
     return analysis
 
 
