@@ -148,11 +148,12 @@ const MyReportsView = () => {
         ))}
       </div>
       {/* Main Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr', gap: '1.5rem', alignItems: 'start' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr', gap: '1.5rem', alignItems: 'stretch' }}>
         {/* Form */}
-        <div className="dashboard-card" style={{ padding: '1.75rem' }}>
+        <div className="dashboard-card" style={{ padding: '1.75rem', display: 'flex', flexDirection: 'column' }}>
 
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
+            <div style={{ flex: 1 }}>
             <div style={{ marginBottom: '1rem' }}>
               <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.03em' }}>Issue Description</label>
               <textarea placeholder="e.g. Large pothole on Main Street near the school..." value={reportText} onChange={(e) => setReportText(e.target.value)}
@@ -166,12 +167,15 @@ const MyReportsView = () => {
                 {imageFile ? (<><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6366f1" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><div style={{ fontSize: '0.8rem', color: '#6366f1', fontWeight: 500 }}>{imageFile.name}</div></>) : (<><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{ color: 'var(--text-faint)' }}><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 500 }}>Drop photo or click to upload</div></>)}
               </label>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.65rem 0.9rem', backgroundColor: '#6366f110', borderRadius: '8px', marginBottom: '1.25rem', border: '1px solid #6366f125' }}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg><span style={{ fontSize: '0.75rem', color: '#818cf8', fontWeight: 500 }}>Gemma 4 AI will auto-classify category, severity & route to the right department</span>
             </div>
-            <button type="submit" disabled={isSubmitting} style={{ width: '100%', padding: '0.85rem', background: isSubmitting ? 'var(--border-medium)' : 'linear-gradient(135deg, #6366f1, #8b5cf6)', color: '#fff', border: 'none', borderRadius: '10px', fontWeight: 600, fontSize: '0.9rem', cursor: isSubmitting ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', boxShadow: isSubmitting ? 'none' : '0 4px 15px #6366f140' }}>
-              {isSubmitting ? 'Gemma is analyzing…' : 'Submit to AI Triage'}
-            </button>
+            <div style={{ marginTop: 'auto', paddingTop: '1.5rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.65rem 0.9rem', backgroundColor: '#6366f110', borderRadius: '8px', marginBottom: '1.25rem', border: '1px solid #6366f125' }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg><span style={{ fontSize: '0.75rem', color: '#818cf8', fontWeight: 500 }}>Gemma 4 AI will auto-classify category, severity & route to the right department</span>
+              </div>
+              <button type="submit" disabled={isSubmitting} style={{ width: '100%', padding: '0.85rem', background: isSubmitting ? 'var(--border-medium)' : 'linear-gradient(135deg, #6366f1, #8b5cf6)', color: '#fff', border: 'none', borderRadius: '10px', fontWeight: 600, fontSize: '0.9rem', cursor: isSubmitting ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', boxShadow: isSubmitting ? 'none' : '0 4px 15px #6366f140' }}>
+                {isSubmitting ? 'Gemma is analyzing…' : 'Submit Report'}
+              </button>
+            </div>
           </form>
         </div>
         {/* Feed */}
