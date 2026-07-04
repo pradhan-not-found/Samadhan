@@ -190,6 +190,8 @@ async def analyze_report_image(request: ImageUrlRequest):
     return analysis
 
 
+# ── Auto-routing ─────────────────────────────────────────────────────────────
+
 class RouteRequest(BaseModel):
     issue_id: str
     text: Optional[str] = None
@@ -197,10 +199,6 @@ class RouteRequest(BaseModel):
 
 @app.post("/api/auto-route")
 async def auto_route_issue(request: RouteRequest, db: Session = Depends(get_db)):
-    """
-    Gemma agent picks the department for a real ticket and the routing
-    is persisted so the citizen sees their report progress.
-    """
     issue = db.query(models.Issue).filter(
         models.Issue.ticket_id == request.issue_id
     ).first()
@@ -215,6 +213,7 @@ async def auto_route_issue(request: RouteRequest, db: Session = Depends(get_db))
 
     if issue is not None:
         issue.status = f"Routed: {dept}"
+        issue.routed_to = dept
         db.commit()
 
     summary = (text[:60] + "…") if len(text) > 60 else text
@@ -226,3 +225,82 @@ async def auto_route_issue(request: RouteRequest, db: Session = Depends(get_db))
         "color": "#3b82f6",
         "engine": engine_used,
     }
+
+
+# ── Ticket Tracking ───────────────────────────────────────────────────────────
+
+@app.get("/api/reports/{ticket_id}")
+async def track_report(ticket_id: str, db: Session = Depends(get_db)):
+    """Fetch a single report by ticket ID for the citizen tracking view."""
+    issue = db.query(models.Issue).filter(
+        models.Issue.ticket_id == ticket_id.upper()
+    ).first()
+    if issue is None:
+        from fastapi import HTTPException
+        raise HTTPException(status_code=404, detail="Ticket not found")
+    return issue
+
+
+# ── User Profiles ─────────────────────────────────────────────────────────────
+
+class ProfileUpsert(BaseModel):
+    email: str
+    name: Optional[str] = None
+    phone: Optional[str] = None
+    role: Optional[str] = "citizen"
+    ward: Optional[str] = None
+    state_region: Optional[str] = None
+    bio: Optional[str] = None
+
+@app.get("/api/profile/{email}")
+async def get_profile(email: str, db: Session = Depends(get_db)):
+    profile = db.query(models.UserProfile).filter(
+        models.UserProfile.email == email
+    ).first()
+    if profile is None:
+        from fastapi import HTTPException
+        raise HTTPException(status_code=404, detail="Profile not found")
+    return profile
+
+@app.post("/api/profile")
+async def upsert_profile(data: ProfileUpsert, db: Session = Depends(get_db)):
+    """Create or update a user profile."""
+    profile = db.query(models.UserProfile).filter(
+        models.UserProfile.email == data.email
+    ).first()
+    if profile is None:
+        profile = models.UserProfile(email=data.email)
+        db.add(profile)
+
+    if data.name is not None:      profile.name = data.name
+    if data.phone is not None:     profile.phone = data.phone
+    if data.role is not None:      profile.role = data.role
+    if data.ward is not None:      profile.ward = data.ward
+    if data.state_region is not None: profile.state_region = data.state_region
+    if data.bio is not None:       profile.bio = data.bio
+
+    db.commit()
+    db.refresh(profile)
+    return profile
+
+@app.post("/api/profile/avatar")
+async def upload_avatar(email: str, file: UploadFile = File(...), db: Session = Depends(get_db)):
+    """Upload a profile avatar photo."""
+    contents = await file.read()
+    safe_name = f"avatar_{uuid.uuid4().hex[:8]}_{os.path.basename(file.filename)}"
+    file_path = os.path.join(UPLOAD_DIR, safe_name)
+    with open(file_path, "wb") as buf:
+        buf.write(contents)
+
+    avatar_url = f"http://127.0.0.1:8000/uploads/{safe_name}"
+
+    profile = db.query(models.UserProfile).filter(
+        models.UserProfile.email == email
+    ).first()
+    if profile is None:
+        profile = models.UserProfile(email=email, avatar_url=avatar_url)
+        db.add(profile)
+    else:
+        profile.avatar_url = avatar_url
+    db.commit()
+    return {"avatar_url": avatar_url}

@@ -93,11 +93,6 @@ const MyReportsView = () => {
     }
   };
 
-
-  return (
-    <div className="animate-fade-in" style={{ padding: '2rem 0' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-        <h2 className="section-title" style={{ marginBottom: 0 }}>Citizen Dashboard</h2>
         <div style={{ backgroundColor: 'var(--glass-bg)', padding: '0.5rem 1rem', borderRadius: '8px', border: '1px solid var(--border-medium)', color: 'var(--text-main)', fontSize: '0.9rem', fontWeight: 500, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" color="var(--text-muted)"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
           {ward}, {state}
@@ -898,6 +893,340 @@ const ImageAnalysisView = () => {
 };
 
 
+// --- Track Report View ---
+
+const TrackReportView = () => {
+  const [ticketInput, setTicketInput] = useState('');
+  const [report, setReport] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleTrack = async (e) => {
+    e.preventDefault();
+    if (!ticketInput.trim()) return;
+    setLoading(true); setError(''); setReport(null);
+    try {
+      const res = await fetch(`http://127.0.0.1:8000/api/reports/${ticketInput.trim().toUpperCase()}`);
+      if (!res.ok) { setError('Ticket not found. Check the ID and try again.'); setLoading(false); return; }
+      const data = await res.json();
+      setReport(data);
+    } catch { setError('Could not connect to the server.'); }
+    setLoading(false);
+  };
+
+  const timeline = report ? [
+    { label: 'Report Submitted', done: true, icon: '📨', detail: 'Received by Samadhan system' },
+    { label: 'AI Triage', done: true, icon: '🧠', detail: `Categorized as: ${report.category} · ${report.severity}` },
+    { label: 'Auto-Routed', done: report.status?.includes('Routed'), icon: '🔀', detail: report.routed_to ? `Sent to: ${report.routed_to}` : 'Pending routing' },
+    { label: 'Department Action', done: report.status?.includes('Approved') || report.status?.includes('Resolved'), icon: '🏛️', detail: 'Department reviewing issue' },
+    { label: 'Resolved', done: report.status?.includes('Resolved'), icon: '✅', detail: 'Issue closed and verified' },
+  ] : [];
+
+  return (
+    <div className="animate-fade-in" style={{ padding: '2rem 0' }}>
+      <div style={{ marginBottom: '2rem' }}>
+        <h2 style={{ fontSize: '1.75rem', fontWeight: 700, color: 'var(--text-main)', margin: 0, fontFamily: 'var(--font-display)' }}>Track Your Report</h2>
+        <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '0.35rem' }}>Enter your ticket ID to get real-time status updates</p>
+      </div>
+
+      {/* Search Bar */}
+      <form onSubmit={handleTrack} style={{ display: 'flex', gap: '0.75rem', marginBottom: '2rem' }}>
+        <div style={{ flex: 1, position: 'relative' }}>
+          <div style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-faint)' }}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </div>
+          <input
+            value={ticketInput}
+            onChange={e => setTicketInput(e.target.value)}
+            placeholder="Enter Ticket ID  e.g. TKT-A3F2"
+            style={{ width: '100%', padding: '0.9rem 1rem 0.9rem 2.75rem', backgroundColor: 'var(--glass-bg)', border: '1px solid var(--border-medium)', borderRadius: '12px', color: 'var(--text-main)', fontSize: '0.95rem', fontFamily: 'monospace', outline: 'none', boxSizing: 'border-box', letterSpacing: '0.05em' }}
+            onFocus={e => e.target.style.borderColor = '#6366f1'}
+            onBlur={e => e.target.style.borderColor = 'var(--border-medium)'}
+          />
+        </div>
+        <button type="submit" disabled={loading} style={{ padding: '0.9rem 2rem', background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', color: '#fff', border: 'none', borderRadius: '12px', fontWeight: 600, fontSize: '0.9rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', boxShadow: '0 4px 15px #6366f140', whiteSpace: 'nowrap' }}>
+          {loading ? <svg className="animate-spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> : <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>}
+          Track Report
+        </button>
+      </form>
+
+      {error && (
+        <div style={{ padding: '1rem 1.25rem', backgroundColor: '#ef444415', border: '1px solid #ef444430', borderRadius: '12px', color: '#ef4444', fontSize: '0.875rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <span>⚠️</span> {error}
+        </div>
+      )}
+
+      {report && (
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.2fr', gap: '1.5rem' }}>
+
+          {/* Report Card */}
+          <div className="dashboard-card" style={{ padding: '1.75rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.5rem' }}>
+              <div>
+                <div style={{ fontSize: '0.7rem', color: 'var(--text-faint)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.3rem' }}>Ticket</div>
+                <div style={{ fontSize: '1.4rem', fontWeight: 700, fontFamily: 'monospace', color: 'var(--text-main)' }}>{report.ticket_id}</div>
+              </div>
+              <div style={{ fontSize: '0.75rem', fontWeight: 600, color: report.status?.includes('Routed') ? '#3b82f6' : report.status?.includes('Resolved') ? '#10b981' : '#f59e0b', backgroundColor: (report.status?.includes('Routed') ? '#3b82f6' : report.status?.includes('Resolved') ? '#10b981' : '#f59e0b') + '15', padding: '0.4rem 0.9rem', borderRadius: '999px', border: `1px solid ${(report.status?.includes('Routed') ? '#3b82f6' : report.status?.includes('Resolved') ? '#10b981' : '#f59e0b')}30` }}>
+                {report.status}
+              </div>
+            </div>
+
+            {report.image_url && (
+              <div style={{ marginBottom: '1.25rem', borderRadius: '10px', overflow: 'hidden', border: '1px solid var(--border-light)' }}>
+                <img src={report.image_url} alt="Report" style={{ width: '100%', height: '140px', objectFit: 'cover', display: 'block' }} />
+              </div>
+            )}
+
+            <div style={{ fontSize: '0.9rem', color: 'var(--text-main)', lineHeight: 1.6, marginBottom: '1.25rem', padding: '0.9rem', backgroundColor: 'var(--glass-bg)', borderRadius: '8px', border: '1px solid var(--border-light)' }}>
+              {report.text}
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+              {[
+                { label: 'Category', value: report.category },
+                { label: 'Severity', value: report.severity },
+                { label: 'Priority', value: report.priority, color: report.color },
+                { label: 'Ward', value: `${report.ward}, ${report.state_region}` },
+              ].map((item, i) => (
+                <div key={i} style={{ padding: '0.75rem', backgroundColor: 'var(--glass-bg)', borderRadius: '8px', border: '1px solid var(--border-light)' }}>
+                  <div style={{ fontSize: '0.65rem', color: 'var(--text-faint)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.25rem' }}>{item.label}</div>
+                  <div style={{ fontSize: '0.82rem', fontWeight: 600, color: item.color || 'var(--text-main)' }}>{item.value}</div>
+                </div>
+              ))}
+            </div>
+
+            {report.keywords && (
+              <div style={{ marginTop: '0.75rem', fontSize: '0.75rem', color: 'var(--text-faint)', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                <span>🏷️</span> {report.keywords}
+              </div>
+            )}
+          </div>
+
+          {/* Timeline */}
+          <div className="dashboard-card" style={{ padding: '1.75rem' }}>
+            <div style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '1.75rem' }}>Resolution Timeline</div>
+            <div style={{ position: 'relative' }}>
+              <div style={{ position: 'absolute', left: '19px', top: '12px', bottom: '12px', width: '2px', backgroundColor: 'var(--border-medium)' }} />
+              {timeline.map((step, i) => (
+                <div key={i} style={{ display: 'flex', gap: '1.25rem', marginBottom: i < timeline.length - 1 ? '1.75rem' : 0, position: 'relative', zIndex: 1 }}>
+                  <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: step.done ? '#6366f1' : 'var(--bg-card)', border: `2px solid ${step.done ? '#6366f1' : 'var(--border-medium)'}`, display: 'grid', placeItems: 'center', fontSize: '1rem', flexShrink: 0, transition: 'all 0.3s', boxShadow: step.done ? '0 0 0 4px #6366f120' : 'none' }}>
+                    {step.done ? '✓' : <span style={{ fontSize: '0.85rem' }}>{step.icon}</span>}
+                  </div>
+                  <div style={{ paddingTop: '0.5rem' }}>
+                    <div style={{ fontSize: '0.9rem', fontWeight: 600, color: step.done ? 'var(--text-main)' : 'var(--text-faint)' }}>{step.label}</div>
+                    <div style={{ fontSize: '0.78rem', color: 'var(--text-faint)', marginTop: '0.2rem' }}>{step.detail}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {report.routed_to && (
+              <div style={{ marginTop: '2rem', padding: '1rem', backgroundColor: '#3b82f610', borderRadius: '10px', border: '1px solid #3b82f625' }}>
+                <div style={{ fontSize: '0.7rem', color: '#60a5fa', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.25rem' }}>Assigned Department</div>
+                <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#3b82f6' }}>🏛️ {report.routed_to}</div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {!report && !error && !loading && (
+        <div style={{ textAlign: 'center', padding: '4rem 1rem' }}>
+          <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🔍</div>
+          <div style={{ color: 'var(--text-main)', fontWeight: 600, fontSize: '1.1rem', marginBottom: '0.5rem' }}>Search for a ticket</div>
+          <div style={{ color: 'var(--text-faint)', fontSize: '0.875rem' }}>Enter your Ticket ID (e.g. <code style={{ color: 'var(--text-muted)', backgroundColor: 'var(--glass-bg)', padding: '0.1rem 0.4rem', borderRadius: '4px' }}>TKT-A3F2</code>) above to track progress</div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+
+// --- Profile View ---
+
+const ProfileView = () => {
+  const [profile, setProfile] = useState({
+    email: localStorage.getItem('samadhan_email') || '',
+    name: localStorage.getItem('samadhan_name') || '',
+    phone: '',
+    role: localStorage.getItem('samadhan_role') || 'citizen',
+    ward: localStorage.getItem('samadhan_ward') || '',
+    state_region: localStorage.getItem('samadhan_state') || '',
+    bio: '',
+    avatar_url: null,
+  });
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [avatarLoading, setAvatarLoading] = useState(false);
+  const [editMode, setEditMode] = useState(false);
+
+  React.useEffect(() => {
+    const email = localStorage.getItem('samadhan_email');
+    if (!email) return;
+    fetch(`http://127.0.0.1:8000/api/profile/${encodeURIComponent(email)}`)
+      .then(r => r.ok ? r.json() : null)
+      .then(data => { if (data) setProfile(p => ({ ...p, ...data })); })
+      .catch(() => {});
+  }, []);
+
+  const handleAvatarUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file || !profile.email) return;
+    setAvatarLoading(true);
+    const formData = new FormData();
+    formData.append('file', file);
+    try {
+      const res = await fetch(`http://127.0.0.1:8000/api/profile/avatar?email=${encodeURIComponent(profile.email)}`, { method: 'POST', body: formData });
+      const data = await res.json();
+      if (data.avatar_url) setProfile(p => ({ ...p, avatar_url: data.avatar_url }));
+    } catch (err) { console.error(err); }
+    setAvatarLoading(false);
+  };
+
+  const handleSave = async () => {
+    if (!profile.email) return alert('Email is required to save profile.');
+    setSaving(true);
+    try {
+      await fetch('http://127.0.0.1:8000/api/profile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(profile),
+      });
+      localStorage.setItem('samadhan_email', profile.email);
+      localStorage.setItem('samadhan_name', profile.name || '');
+      localStorage.setItem('samadhan_ward', profile.ward || '');
+      localStorage.setItem('samadhan_state', profile.state_region || '');
+      setSaved(true); setEditMode(false);
+      setTimeout(() => setSaved(false), 3000);
+    } catch { alert('Failed to save. Is the backend running?'); }
+    setSaving(false);
+  };
+
+  const Field = ({ label, field, type = 'text', placeholder, half }) => (
+    <div style={{ gridColumn: half ? 'span 1' : 'span 2' }}>
+      <label style={{ display: 'block', marginBottom: '0.4rem', fontSize: '0.75rem', fontWeight: 500, color: 'var(--text-faint)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{label}</label>
+      {editMode ? (
+        <input
+          type={type}
+          value={profile[field] || ''}
+          placeholder={placeholder}
+          onChange={e => setProfile(p => ({ ...p, [field]: e.target.value }))}
+          style={{ width: '100%', padding: '0.75rem 0.9rem', backgroundColor: 'var(--glass-bg)', border: '1px solid var(--border-medium)', borderRadius: '9px', color: 'var(--text-main)', fontSize: '0.875rem', outline: 'none', boxSizing: 'border-box', fontFamily: 'inherit', transition: 'border-color 0.2s' }}
+          onFocus={e => e.target.style.borderColor = '#6366f1'}
+          onBlur={e => e.target.style.borderColor = 'var(--border-medium)'}
+        />
+      ) : (
+        <div style={{ padding: '0.75rem 0.9rem', backgroundColor: 'var(--glass-bg)', borderRadius: '9px', border: '1px solid var(--border-light)', fontSize: '0.875rem', color: profile[field] ? 'var(--text-main)' : 'var(--text-faint)', minHeight: '42px' }}>
+          {profile[field] || <span style={{ opacity: 0.5 }}>Not set</span>}
+        </div>
+      )}
+    </div>
+  );
+
+  const initials = (profile.name || profile.email || '?').slice(0, 2).toUpperCase();
+
+  return (
+    <div className="animate-fade-in" style={{ padding: '2rem 0' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '2rem' }}>
+        <div>
+          <h2 style={{ fontSize: '1.75rem', fontWeight: 700, color: 'var(--text-main)', margin: 0, fontFamily: 'var(--font-display)' }}>My Profile</h2>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '0.35rem' }}>Manage your account details and preferences</p>
+        </div>
+        <div style={{ display: 'flex', gap: '0.75rem' }}>
+          {saved && <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#10b981', fontSize: '0.85rem', fontWeight: 500 }}>✓ Saved!</div>}
+          {editMode ? (
+            <>
+              <button onClick={() => setEditMode(false)} style={{ padding: '0.6rem 1.2rem', backgroundColor: 'var(--glass-bg)', border: '1px solid var(--border-medium)', borderRadius: '9px', color: 'var(--text-muted)', fontSize: '0.85rem', cursor: 'pointer', fontWeight: 500 }}>Cancel</button>
+              <button onClick={handleSave} disabled={saving} style={{ padding: '0.6rem 1.5rem', background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', border: 'none', borderRadius: '9px', color: '#fff', fontSize: '0.85rem', cursor: 'pointer', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.4rem', boxShadow: '0 4px 12px #6366f140' }}>
+                {saving ? <svg className="animate-spin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> : null}
+                Save Changes
+              </button>
+            </>
+          ) : (
+            <button onClick={() => setEditMode(true)} style={{ padding: '0.6rem 1.5rem', backgroundColor: 'var(--glass-bg)', border: '1px solid var(--border-medium)', borderRadius: '9px', color: 'var(--text-main)', fontSize: '0.85rem', cursor: 'pointer', fontWeight: 500, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              Edit Profile
+            </button>
+          )}
+        </div>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: '280px 1fr', gap: '1.5rem', alignItems: 'start' }}>
+
+        {/* Avatar Card */}
+        <div className="dashboard-card" style={{ padding: '2rem', textAlign: 'center' }}>
+          <div style={{ position: 'relative', display: 'inline-block', marginBottom: '1.25rem' }}>
+            <div style={{ width: '100px', height: '100px', borderRadius: '50%', border: '3px solid #6366f1', overflow: 'hidden', display: 'grid', placeItems: 'center', margin: '0 auto', background: profile.avatar_url ? 'transparent' : 'linear-gradient(135deg, #6366f1, #8b5cf6)' }}>
+              {profile.avatar_url ? (
+                <img src={profile.avatar_url} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              ) : (
+                <span style={{ fontSize: '2rem', fontWeight: 700, color: '#fff' }}>{initials}</span>
+              )}
+            </div>
+            <label style={{ position: 'absolute', bottom: 0, right: 0, width: '28px', height: '28px', backgroundColor: '#6366f1', borderRadius: '50%', display: 'grid', placeItems: 'center', cursor: 'pointer', border: '2px solid var(--bg-card)', boxShadow: '0 2px 8px #6366f140' }}>
+              <input type="file" accept="image/*" style={{ display: 'none' }} onChange={handleAvatarUpload} />
+              {avatarLoading ? <svg className="animate-spin" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+                : <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>}
+            </label>
+          </div>
+          <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '0.25rem' }}>{profile.name || 'Your Name'}</div>
+          <div style={{ fontSize: '0.8rem', color: 'var(--text-faint)', marginBottom: '1rem' }}>{profile.email || 'your@email.com'}</div>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', backgroundColor: '#6366f115', border: '1px solid #6366f125', padding: '0.3rem 0.9rem', borderRadius: '999px', fontSize: '0.75rem', fontWeight: 600, color: '#818cf8' }}>
+            {profile.role === 'admin' ? '🏛️ Administrator' : '🏙️ Citizen'}
+          </div>
+
+          {profile.ward && (
+            <div style={{ marginTop: '1.25rem', padding: '0.75rem', backgroundColor: 'var(--glass-bg)', borderRadius: '8px', border: '1px solid var(--border-light)', fontSize: '0.8rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem' }}>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              {profile.ward}, {profile.state_region}
+            </div>
+          )}
+        </div>
+
+        {/* Details Form */}
+        <div className="dashboard-card" style={{ padding: '1.75rem' }}>
+          <div style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            Personal Information
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+            <Field label="Full Name" field="name" placeholder="Your full name" half />
+            <Field label="Email Address" field="email" type="email" placeholder="you@example.com" half />
+            <Field label="Phone Number" field="phone" type="tel" placeholder="+91 98765 43210" half />
+            <Field label="Role" field="role" placeholder="citizen" half />
+            <Field label="Ward / Sector" field="ward" placeholder="e.g. Sector 4" half />
+            <Field label="State" field="state_region" placeholder="e.g. West Bengal" half />
+            <div style={{ gridColumn: 'span 2' }}>
+              <label style={{ display: 'block', marginBottom: '0.4rem', fontSize: '0.75rem', fontWeight: 500, color: 'var(--text-faint)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Bio</label>
+              {editMode ? (
+                <textarea
+                  value={profile.bio || ''}
+                  placeholder="Tell us a bit about yourself..."
+                  onChange={e => setProfile(p => ({ ...p, bio: e.target.value }))}
+                  style={{ width: '100%', height: '80px', padding: '0.75rem 0.9rem', backgroundColor: 'var(--glass-bg)', border: '1px solid var(--border-medium)', borderRadius: '9px', color: 'var(--text-main)', fontSize: '0.875rem', outline: 'none', resize: 'none', boxSizing: 'border-box', fontFamily: 'inherit' }}
+                  onFocus={e => e.target.style.borderColor = '#6366f1'}
+                  onBlur={e => e.target.style.borderColor = 'var(--border-medium)'}
+                />
+              ) : (
+                <div style={{ padding: '0.75rem 0.9rem', backgroundColor: 'var(--glass-bg)', borderRadius: '9px', border: '1px solid var(--border-light)', fontSize: '0.875rem', color: profile.bio ? 'var(--text-main)' : 'var(--text-faint)', minHeight: '80px', lineHeight: 1.5 }}>
+                  {profile.bio || <span style={{ opacity: 0.5 }}>No bio added yet</span>}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {editMode && (
+            <div style={{ marginTop: '1.25rem', padding: '0.75rem 1rem', backgroundColor: '#6366f108', border: '1px solid #6366f120', borderRadius: '8px', fontSize: '0.775rem', color: '#818cf8', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <span>💾</span> Changes are saved to the database and synced to localStorage automatically.
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+
 // --- Gemma Engine Status ---
 
 const GemmaStatusBadge = () => {
@@ -990,11 +1319,17 @@ const Dashboard = () => {
             {renderSidebarLink('my-reports', 'My Reports',
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
             )}
+            {renderSidebarLink('track-report', 'Track Report',
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            )}
             {renderSidebarLink('impact-score', 'Impact Score',
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
             )}
             {renderSidebarLink('leaderboard', 'Leaderboard',
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+            )}
+            {renderSidebarLink('profile', 'My Profile',
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
             )}
           </div>
         )}
@@ -1084,8 +1419,10 @@ const Dashboard = () => {
           </div>
         )}
         {activeTab === 'my-reports' && <MyReportsView />}
+        {activeTab === 'track-report' && <TrackReportView />}
         {activeTab === 'impact-score' && <ImpactScoreView />}
         {activeTab === 'leaderboard' && <LeaderboardView />}
+        {activeTab === 'profile' && <ProfileView />}
         {activeTab === 'analytics' && <AnalyticsView />}
         {activeTab === 'incoming-issues' && <IncomingIssuesView />}
         
