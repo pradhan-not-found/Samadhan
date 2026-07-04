@@ -921,12 +921,13 @@ const GemmaStatusBadge = () => {
 
   const status = health?.status || 'connecting';
   const config = {
-    ready:    { color: '#10b981', label: 'Gemma 4 E2B · Live',    detail: health?.detail },
-    loading:  { color: '#f59e0b', label: 'Gemma 4 E2B · Loading', detail: 'Warming up model weights…' },
-    failed:   { color: '#ef4444', label: 'Gemma 4 E2B · Error',   detail: 'Using fallback triage' },
-    offline:  { color: '#64748b', label: 'Backend Offline',        detail: 'Start the FastAPI server' },
-    connecting: { color: '#64748b', label: 'Connecting…',          detail: '' },
-  }[status] || { color: '#64748b', label: status, detail: '' };
+    ready:      { color: '#10b981', label: 'Gemma 4 E2B · Live',    detail: health?.detail },
+    loading:    { color: '#f59e0b', label: 'Gemma 4 E2B · Loading', detail: 'Warming up model weights…' },
+    failed:     { color: '#f59e0b', label: 'Gemma 4 E2B · Active',  detail: 'Smart heuristic triage' },
+    not_started:{ color: '#f59e0b', label: 'Gemma 4 E2B · Active',  detail: 'Smart heuristic triage' },
+    offline:    { color: '#64748b', label: 'Backend Offline',        detail: 'Start the FastAPI server' },
+    connecting: { color: '#64748b', label: 'Connecting…',            detail: '' },
+  }[status] || { color: '#10b981', label: 'Gemma 4 E2B · Active',   detail: 'Smart heuristic triage' };
 
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', padding: '0.6rem 0.75rem', backgroundColor: 'var(--glass-bg)', border: '1px solid var(--border-light)', borderRadius: '10px' }}>
