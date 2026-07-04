@@ -492,29 +492,53 @@ const categoryData = [
   { name: 'Garbage', count: 200 },
 ];
 
-const AnalyticsView = () => (
+const AnalyticsView = () => {
+  const [stats, setStats] = useState({
+    total_issues: 0,
+    avg_resolution_days: 0,
+    accuracy_pct: 98.4,
+    category_data: [],
+    analytics_data: []
+  });
+
+  React.useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const res = await fetch("http://127.0.0.1:8000/api/stats");
+        if (res.ok) {
+          const data = await res.json();
+          setStats(data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch stats:", err);
+      }
+    };
+    fetchStats();
+  }, []);
+
+  return (
   <div className="animate-fade-in" style={{ padding: '2rem 0' }}>
     <h2 className="section-title">Platform Analytics</h2>
     <div className="analytics-grid">
       <div className="dashboard-card" style={{ padding: '1.5rem' }}>
         <div style={{ color: 'var(--text-faint)', fontSize: '0.85rem', marginBottom: '0.5rem' }}>Total Issues Reported</div>
-        <div style={{ fontSize: '2rem', fontFamily: 'var(--font-display)', color: 'var(--text-main)' }}>14,239</div>
+        <div style={{ fontSize: '2rem', fontFamily: 'var(--font-display)', color: 'var(--text-main)' }}>{stats.total_issues.toLocaleString()}</div>
         <div style={{ color: '#10b981', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.25rem', marginTop: '0.5rem' }}>
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
-          +12% this week
+          Live from Database
         </div>
       </div>
       <div className="dashboard-card" style={{ padding: '1.5rem' }}>
         <div style={{ color: 'var(--text-faint)', fontSize: '0.85rem', marginBottom: '0.5rem' }}>Average Resolution Time</div>
-        <div style={{ fontSize: '2rem', fontFamily: 'var(--font-display)', color: 'var(--text-main)' }}>4.2 Days</div>
+        <div style={{ fontSize: '2rem', fontFamily: 'var(--font-display)', color: 'var(--text-main)' }}>{stats.avg_resolution_days === 0 ? 'N/A' : `${stats.avg_resolution_days} Days`}</div>
         <div style={{ color: '#10b981', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.25rem', marginTop: '0.5rem' }}>
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
-          -1.5 days improved
+          Based on resolved tickets
         </div>
       </div>
       <div className="dashboard-card" style={{ padding: '1.5rem' }}>
         <div style={{ color: 'var(--text-faint)', fontSize: '0.85rem', marginBottom: '0.5rem' }}>AI Auto-Routing Accuracy</div>
-        <div style={{ fontSize: '2rem', fontFamily: 'var(--font-display)', color: 'var(--text-main)' }}>98.4%</div>
+        <div style={{ fontSize: '2rem', fontFamily: 'var(--font-display)', color: 'var(--text-main)' }}>{stats.accuracy_pct}%</div>
         <div style={{ color: '#60a5fa', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.25rem', marginTop: '0.5rem' }}>
           Consistently high
         </div>
@@ -526,7 +550,7 @@ const AnalyticsView = () => (
         <div style={{ color: 'var(--text-main)', fontWeight: 500, marginBottom: '1rem' }}>Issues Reported (Past Week)</div>
         <div style={{ flex: 1 }}>
           <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={analyticsData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+            <AreaChart data={stats.analytics_data} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
               <defs>
                 <linearGradient id="colorRoads" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor="#f97316" stopOpacity={0.3}/>
@@ -558,7 +582,7 @@ const AnalyticsView = () => (
         <div style={{ color: 'var(--text-main)', fontWeight: 500, marginBottom: '1rem' }}>Top Categories</div>
         <div style={{ flex: 1 }}>
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={categoryData} layout="vertical" margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+            <BarChart data={stats.category_data} layout="vertical" margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
               <XAxis type="number" hide />
               <YAxis dataKey="name" type="category" stroke="var(--text-faint)" fontSize={12} tickLine={false} axisLine={false} />
               <Tooltip cursor={{ fill: 'var(--glass-bg)' }} contentStyle={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-medium)', borderRadius: '8px' }} />
@@ -569,7 +593,8 @@ const AnalyticsView = () => (
       </div>
     </div>
   </div>
-);
+  );
+};
 
 const IncomingIssuesView = () => {
   const [reports, setReports] = useState([]);
