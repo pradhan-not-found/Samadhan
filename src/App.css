@@ -25,7 +25,7 @@
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  color: #fff;
+  color: #111;
   font-weight: bold;
   font-size: 1.6rem;
   text-decoration: none;
@@ -36,7 +36,7 @@
   height: 34px;
   width: auto;
   object-fit: contain;
-  filter: brightness(0) invert(1);
+  filter: brightness(0);
   transition: filter 0.3s ease;
 }
 
@@ -67,13 +67,13 @@
   font-family: var(--font-sans);
   font-weight: 500;
   font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--color-text-muted);
   transition: color 0.2s ease;
   text-decoration: none;
 }
 
 .navbar-inner .nav-links-center a:hover {
-  color: #fff;
+  color: #111;
 }
 
 .navbar-flat.scrolled .nav-links-center a {
@@ -1408,7 +1408,7 @@
     justify-content: center;
     background: transparent;
     border: none;
-    color: #fff;
+    color: #111;
     cursor: pointer;
     margin-left: 0.5rem;
     transition: color 0.3s ease;
