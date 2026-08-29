@@ -24,7 +24,9 @@ export default function DashboardUI() {
       category: "Electrical",
       status: "resolved",
       date: "2 days ago",
-      image: "https://images.unsplash.com/photo-1542289650-62294154117b?w=200&h=200&fit=crop"
+      color: "#f59e0b",
+      bg: "#fef3c715",
+      icon: <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
     },
     {
       id: "REP-9088",
@@ -32,7 +34,9 @@ export default function DashboardUI() {
       category: "Infrastructure",
       status: "in_progress",
       date: "5 hours ago",
-      image: "https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?w=200&h=200&fit=crop"
+      color: "#6366f1",
+      bg: "#6366f115",
+      icon: <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#6366f1" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3 21h18"/><path d="M6 21V7a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v14"/><path d="M10 10h4"/><path d="M10 14h4"/></svg>
     },
     {
       id: "REP-9102",
@@ -40,7 +44,9 @@ export default function DashboardUI() {
       category: "Sanitation",
       status: "pending",
       date: "Just now",
-      image: null
+      color: "#10b981",
+      bg: "#10b98115",
+      icon: <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
     }
   ];
 
@@ -150,13 +156,19 @@ export default function DashboardUI() {
         <div>
           {mockReports.slice(0,2).map(report => (
             <div key={report.id} style={{ display: 'flex', gap: '1rem', padding: '1.25rem 1.5rem', borderBottom: '1px solid var(--border-light)' }}>
-              {report.image ? (
-                <img src={report.image} alt="Report" style={{ width: '60px', height: '60px', borderRadius: '8px', objectFit: 'cover' }} />
-              ) : (
-                <div style={{ width: '60px', height: '60px', borderRadius: '8px', backgroundColor: 'var(--border-light)', display: 'grid', placeItems: 'center', fontSize: '1.5rem' }}>
-                  {getCategoryIcon(report.category, 'var(--text-faint)')}
-                </div>
-              )}
+              <div style={{
+                width: '60px',
+                height: '60px',
+                borderRadius: '12px',
+                background: `linear-gradient(135deg, ${report.bg}, ${report.color}10)`,
+                border: `1.5px solid ${report.color}30`,
+                display: 'grid',
+                placeItems: 'center',
+                flexShrink: 0,
+                boxShadow: `0 4px 12px ${report.color}20`
+              }}>
+                {report.icon}
+              </div>
               <div style={{ flex: 1 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.25rem' }}>
                   <h4 style={{ margin: 0, fontSize: '1rem', color: '#111' }}>{report.title}</h4>
@@ -192,13 +204,19 @@ export default function DashboardUI() {
       <div style={{ display: 'grid', gap: '1rem' }}>
         {mockReports.map(report => (
           <div key={report.id} style={{ backgroundColor: 'var(--glass-bg)', border: '1px solid var(--border-medium)', borderRadius: '16px', padding: '1.25rem', display: 'flex', gap: '1rem', alignItems: 'center' }}>
-            {report.image ? (
-              <img src={report.image} alt="Report" style={{ width: '80px', height: '80px', borderRadius: '10px', objectFit: 'cover' }} />
-            ) : (
-              <div style={{ width: '80px', height: '80px', borderRadius: '10px', backgroundColor: 'var(--border-light)', display: 'grid', placeItems: 'center', fontSize: '2rem' }}>
-                {getCategoryIcon(report.category, 'var(--text-faint)')}
-              </div>
-            )}
+            <div style={{
+              width: '72px',
+              height: '72px',
+              borderRadius: '14px',
+              background: `linear-gradient(135deg, ${report.bg}, ${report.color}15)`,
+              border: `1.5px solid ${report.color}30`,
+              display: 'grid',
+              placeItems: 'center',
+              flexShrink: 0,
+              boxShadow: `0 4px 16px ${report.color}25`
+            }}>
+              {report.icon}
+            </div>
             <div style={{ flex: 1 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                 <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 500 }}>{report.id} • {report.date}</span>
