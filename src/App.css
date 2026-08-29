@@ -712,45 +712,40 @@
   width: 100%;
   display: flex;
   justify-content: center;
+  align-items: flex-end;
   margin: 4rem 0 0 0;
-  min-height: clamp(5rem, 18vw, 340px);
   overflow: hidden;
+  padding: 0 1rem;
 }
 
 .footer-massive-logo {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
   font-family: var(--font-sans);
   font-weight: 900;
-  font-size: clamp(5rem, 24vw, 440px);
-  line-height: 0.75;
+  font-size: clamp(3.5rem, 13.5vw, 240px);
+  line-height: 0.85;
   text-align: center;
   text-transform: lowercase;
+  white-space: nowrap;
   background: linear-gradient(
     180deg,
     #FF6B00 0%,
-    #FF9933 20%,
-    #FFB347 33%,
-    #e0e0e0 44%,
+    #FF9933 22%,
+    #FFB347 34%,
+    #e8e8e8 46%,
     #f5f5f5 50%,
-    #d0e8cc 56%,
-    #4CAF50 67%,
+    #d0e8cc 54%,
+    #4CAF50 66%,
     #138808 80%,
     #0d6b05 100%
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  opacity: 0.85;
-  letter-spacing: -0.05em;
+  opacity: 0.9;
+  letter-spacing: -0.03em;
   pointer-events: none;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  filter: saturate(1.3) contrast(1.1);
+  filter: saturate(1.4) contrast(1.15);
+  user-select: none;
 }
 
 @keyframes logoFade3 {
