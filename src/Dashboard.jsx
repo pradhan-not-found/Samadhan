@@ -1473,15 +1473,26 @@ const ProfileView = () => {
         {/* Avatar Card */}
         <div className="dashboard-card" style={{ padding: '2rem', textAlign: 'center' }}>
           <div style={{ position: 'relative', display: 'inline-block', marginBottom: '1.25rem' }}>
-            <div style={{ width: '110px', height: '110px', borderRadius: '50%', border: '3px solid transparent', backgroundImage: 'linear-gradient(white, white), linear-gradient(135deg, #6366f1, #8b5cf6)', backgroundOrigin: 'border-box', backgroundClip: 'padding-box, border-box', overflow: 'hidden', display: 'grid', placeItems: 'center', margin: '0 auto', boxShadow: '0 8px 24px rgba(99,102,241,0.25)' }}>
+            <div style={{
+              width: '110px',
+              height: '110px',
+              borderRadius: '50%',
+              overflow: 'hidden',
+              display: 'grid',
+              placeItems: 'center',
+              margin: '0 auto',
+              background: profile.avatar_url
+                ? 'transparent'
+                : 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #06b6d4 100%)',
+              boxShadow: profile.avatar_url
+                ? '0 8px 24px rgba(0,0,0,0.12)'
+                : '0 0 0 6px rgba(99,102,241,0.12), 0 8px 28px rgba(99,102,241,0.35)',
+              border: '3px solid rgba(255,255,255,0.5)',
+            }}>
               {profile.avatar_url ? (
                 <img src={profile.avatar_url} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               ) : (
-                <img
-                  src={`https://api.dicebear.com/9.x/notionists-neutral/svg?seed=${encodeURIComponent(profile.name || profile.email || 'user')}&backgroundColor=b6e3f4,c0aede,d1d4f9`}
-                  alt="Avatar"
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                />
+                <span style={{ fontSize: '2.2rem', fontWeight: 800, color: '#fff', letterSpacing: '-0.02em', textShadow: '0 2px 8px rgba(0,0,0,0.2)' }}>{initials}</span>
               )}
             </div>
             <label style={{ position: 'absolute', bottom: 2, right: 2, width: '30px', height: '30px', background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', borderRadius: '50%', display: 'grid', placeItems: 'center', cursor: 'pointer', border: '2.5px solid var(--bg-card)', boxShadow: '0 4px 12px #6366f150' }}>
@@ -1641,13 +1652,29 @@ const Dashboard = () => {
   const getAvatarUrl = (seed) =>
     `https://api.dicebear.com/9.x/notionists-neutral/svg?seed=${encodeURIComponent(seed || 'default')}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`;
 
-  const AvatarCircle = ({ size = 32, fontSize = '0.85rem' }) => (
-    <div style={{ width: `${size}px`, height: `${size}px`, borderRadius: '50%', overflow: 'hidden', flexShrink: 0, border: '2px solid #6366f140', display: 'grid', placeItems: 'center', background: 'var(--glass-bg)' }}>
-      {avatarUrl
-        ? <img src={avatarUrl} alt="avatar" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-        : <img src={getAvatarUrl(displayName || 'user')} alt="avatar" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />}
-    </div>
-  );
+  const AvatarCircle = ({ size = 32, fontSize = '0.85rem' }) => {
+    const initial = (displayName || 'U').charAt(0).toUpperCase();
+    return (
+      <div style={{
+        width: `${size}px`,
+        height: `${size}px`,
+        borderRadius: '50%',
+        overflow: 'hidden',
+        flexShrink: 0,
+        border: '2px solid rgba(99,102,241,0.3)',
+        display: 'grid',
+        placeItems: 'center',
+        background: avatarUrl ? 'transparent' : 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #06b6d4 100%)',
+        boxShadow: avatarUrl ? 'none' : `0 0 0 ${size/16}px rgba(99,102,241,0.15), 0 4px ${size/2}px rgba(99,102,241,0.25)`,
+        backdropFilter: 'blur(8px)',
+        position: 'relative',
+      }}>
+        {avatarUrl
+          ? <img src={avatarUrl} alt="avatar" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+          : <span style={{ fontSize, fontWeight: 800, color: '#fff', lineHeight: 1, letterSpacing: '-0.02em', textShadow: '0 1px 4px rgba(0,0,0,0.2)' }}>{initial}</span>}
+      </div>
+    );
+  };
 
   const renderSidebarLink = (id, label, icon) => (
     <div 
