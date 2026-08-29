@@ -1473,17 +1473,21 @@ const ProfileView = () => {
         {/* Avatar Card */}
         <div className="dashboard-card" style={{ padding: '2rem', textAlign: 'center' }}>
           <div style={{ position: 'relative', display: 'inline-block', marginBottom: '1.25rem' }}>
-            <div style={{ width: '100px', height: '100px', borderRadius: '50%', border: '3px solid #6366f1', overflow: 'hidden', display: 'grid', placeItems: 'center', margin: '0 auto', background: profile.avatar_url ? 'transparent' : 'linear-gradient(135deg, #6366f1, #8b5cf6)' }}>
+            <div style={{ width: '110px', height: '110px', borderRadius: '50%', border: '3px solid transparent', backgroundImage: 'linear-gradient(white, white), linear-gradient(135deg, #6366f1, #8b5cf6)', backgroundOrigin: 'border-box', backgroundClip: 'padding-box, border-box', overflow: 'hidden', display: 'grid', placeItems: 'center', margin: '0 auto', boxShadow: '0 8px 24px rgba(99,102,241,0.25)' }}>
               {profile.avatar_url ? (
                 <img src={profile.avatar_url} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               ) : (
-                <span style={{ fontSize: '2rem', fontWeight: 700, color: '#fff' }}>{initials}</span>
+                <img
+                  src={`https://api.dicebear.com/9.x/notionists-neutral/svg?seed=${encodeURIComponent(profile.name || profile.email || 'user')}&backgroundColor=b6e3f4,c0aede,d1d4f9`}
+                  alt="Avatar"
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                />
               )}
             </div>
-            <label style={{ position: 'absolute', bottom: 0, right: 0, width: '28px', height: '28px', backgroundColor: '#6366f1', borderRadius: '50%', display: 'grid', placeItems: 'center', cursor: 'pointer', border: '2px solid var(--bg-card)', boxShadow: '0 2px 8px #6366f140' }}>
+            <label style={{ position: 'absolute', bottom: 2, right: 2, width: '30px', height: '30px', background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', borderRadius: '50%', display: 'grid', placeItems: 'center', cursor: 'pointer', border: '2.5px solid var(--bg-card)', boxShadow: '0 4px 12px #6366f150' }}>
               <input type="file" accept="image/*" style={{ display: 'none' }} onChange={handleAvatarUpload} />
-              {avatarLoading ? <svg className="animate-spin" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
-                : <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>}
+              {avatarLoading ? <svg className="animate-spin" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+                : <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>}
             </label>
           </div>
           <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '0.25rem' }}>{profile.name || 'Your Name'}</div>
@@ -1634,11 +1638,14 @@ const Dashboard = () => {
     setTheme(prev => prev === 'dark' ? 'light' : 'dark');
   };
 
+  const getAvatarUrl = (seed) =>
+    `https://api.dicebear.com/9.x/notionists-neutral/svg?seed=${encodeURIComponent(seed || 'default')}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`;
+
   const AvatarCircle = ({ size = 32, fontSize = '0.85rem' }) => (
-    <div style={{ width: `${size}px`, height: `${size}px`, borderRadius: '50%', overflow: 'hidden', flexShrink: 0, border: '2px solid #6366f140', display: 'grid', placeItems: 'center', background: avatarUrl ? 'transparent' : 'linear-gradient(135deg, #6366f1, #8b5cf6)' }}>
+    <div style={{ width: `${size}px`, height: `${size}px`, borderRadius: '50%', overflow: 'hidden', flexShrink: 0, border: '2px solid #6366f140', display: 'grid', placeItems: 'center', background: 'var(--glass-bg)' }}>
       {avatarUrl
         ? <img src={avatarUrl} alt="avatar" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-        : <span style={{ fontSize, fontWeight: 700, color: '#fff', lineHeight: 1 }}>{(displayName || 'U').charAt(0).toUpperCase()}</span>}
+        : <img src={getAvatarUrl(displayName || 'user')} alt="avatar" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />}
     </div>
   );
 
