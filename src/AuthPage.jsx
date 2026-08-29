@@ -25,7 +25,6 @@ const AuthPage = () => {
       if (signInError) throw signInError;
       
       const userRole = data.user.user_metadata?.role || 'citizen';
-      localStorage.setItem('samadhan_role', userRole);
       window.location.href = '/dashboard';
     } catch (err) {
       setError(err.message);

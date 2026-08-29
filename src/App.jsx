@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import './App.css';
+import { supabase } from './supabaseClient';
 import FeatureCard from './FeatureCard';
 import logoImg from './assets/logo.png';
 import { featuresData } from './featuresData';
@@ -12,6 +13,30 @@ import JoinNow from './JoinNow';
 function App() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [userProfile, setUserProfile] = useState(null);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [showCookies, setShowCookies] = useState(false);
+
+  useEffect(() => {
+    if (!localStorage.getItem('cookie_consent')) {
+      setShowCookies(true);
+    }
+    const fetchSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        const { data: profile } = await supabase.from('profiles').select('avatar_url, full_name, role').eq('email', session.user.email).single();
+        if (profile) setUserProfile({ ...profile, email: session.user.email });
+        else setUserProfile({ email: session.user.email, role: 'citizen', full_name: 'User' });
+      }
+    };
+    fetchSession();
+  }, []);
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    window.location.reload();
+  };
+
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -495,7 +520,21 @@ function App() {
           </div>
         </div>
       </footer>
+      
+        {showCookies && (
+          <div className="cookie-banner animate-fade-in-up">
+            <div className="cookie-content">
+              <span className="cookie-title">?? Cookie Preferences</span>
+              <p>We use cookies to ensure you get the best experience on our civic platform. By continuing to use Samadhan, you agree to our policies.</p>
+            </div>
+            <div className="cookie-actions">
+              <button className="cookie-btn-outline" onClick={() => { localStorage.setItem('cookie_consent', 'true'); setShowCookies(false); }}>Manage</button>
+              <button className="cookie-btn-primary" onClick={() => { localStorage.setItem('cookie_consent', 'true'); setShowCookies(false); }}>Accept All</button>
+            </div>
+          </div>
+        )}
       </main>
+
     </>
   );
 }

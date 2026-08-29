@@ -4,11 +4,14 @@ import logoImg from './assets/logo.png';
 import DashboardUI from './DashboardUI';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Legend } from 'recharts';
 
+export const UserContext = React.createContext(null);
+
 // --- Page Components ---
 
 const MyReportsView = () => {
-  const state = localStorage.getItem('samadhan_state') || 'West Bengal';
-  const ward = localStorage.getItem('samadhan_ward') || 'Sector 4';
+  const { userProfile } = React.useContext(UserContext) || { userProfile: {} };
+  const state = userProfile?.state_region || 'West Bengal';
+  const ward = userProfile?.ward || 'Sector 4';
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [reportText, setReportText] = useState('');
   const [imageFile, setImageFile] = useState(null);
@@ -222,7 +225,8 @@ const MyReportsView = () => {
 
 const ImpactScoreView = () => {
   const [reports, setReports] = useState([]);
-  const ward = localStorage.getItem('samadhan_ward') || 'Sector 4';
+  const { userProfile } = React.useContext(UserContext) || { userProfile: {} };
+  const ward = userProfile?.ward || 'Sector 4';
 
   React.useEffect(() => {
     const fetchReports = async () => {
@@ -237,9 +241,7 @@ const ImpactScoreView = () => {
     fetchReports();
   }, [ward]);
 
-  const basePoints = 150;
-  const earnedPoints = reports.length * 15;
-  const totalPoints = basePoints + earnedPoints;
+  const totalPoints = userProfile?.impact_score || 0;
   const percentage = Math.min(Math.round((totalPoints / 500) * 100), 100);
 
   return (
@@ -1330,33 +1332,22 @@ const TrackReportView = () => {
 // --- Profile View ---
 
 const ProfileView = () => {
+  const { userProfile, setUserProfile } = React.useContext(UserContext) || { userProfile: {} };
   const [profile, setProfile] = useState({
-    email: localStorage.getItem('samadhan_email') || '',
-    name: localStorage.getItem('samadhan_name') || '',
-    phone: '',
-    role: localStorage.getItem('samadhan_role') || 'citizen',
-    ward: localStorage.getItem('samadhan_ward') || '',
-    state_region: localStorage.getItem('samadhan_state') || '',
-    bio: '',
-    avatar_url: null,
+    email: userProfile.email || '',
+    name: userProfile.name || '',
+    role: userProfile.role || 'citizen',
+    ward: userProfile.ward || '',
+    state_region: userProfile.state_region || '',
+    bio: userProfile.bio || '',
+    avatar_url: userProfile.avatar_url || null,
   });
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [avatarLoading, setAvatarLoading] = useState(false);
   const [editMode, setEditMode] = useState(false);
 
-  React.useEffect(() => {
-    const email = localStorage.getItem('samadhan_email');
-    if (!email || email === 'demo@samadhan.gov.in') return;
-    const fetchProfile = async () => {
-      const { data, error } = await supabase.from('profiles').select('*').eq('email', email).single();
-      if (data && !error) {
-        setProfile(p => ({ ...p, ...data, name: data.full_name || data.name }));
-      }
-    };
-    fetchProfile();
-  }, []);
-
+  
   const handleAvatarUpload = async (e) => {
     const file = e.target.files[0];
     if (!file || !profile.email) return;
@@ -1385,10 +1376,7 @@ const ProfileView = () => {
     if (!profile.email) return alert('Email is required to save profile.');
     
     if (profile.email === 'demo@samadhan.gov.in') {
-      localStorage.setItem('samadhan_name', profile.name || '');
-      localStorage.setItem('samadhan_ward', profile.ward || '');
-      localStorage.setItem('samadhan_state', profile.state_region || '');
-      setSaved(true); setEditMode(false);
+                        setSaved(true); setEditMode(false);
       setTimeout(() => setSaved(false), 3000);
       return;
     }
@@ -1406,11 +1394,8 @@ const ProfileView = () => {
       
       if (error) throw error;
 
-      localStorage.setItem('samadhan_email', profile.email);
-      localStorage.setItem('samadhan_name', profile.name || '');
-      localStorage.setItem('samadhan_ward', profile.ward || '');
-      localStorage.setItem('samadhan_state', profile.state_region || '');
-      setSaved(true); setEditMode(false);
+      setUserProfile(p => ({ ...p, ...profile }));
+                        setSaved(true); setEditMode(false);
       setTimeout(() => setSaved(false), 3000);
     } catch (err) { 
       console.error(err);
@@ -1528,7 +1513,6 @@ const ProfileView = () => {
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
             <Field label="Full Name" field="name" placeholder="Your full name" half />
             <Field label="Email Address" field="email" type="email" placeholder="you@example.com" half />
-            <Field label="Phone Number" field="phone" type="tel" placeholder="+91 98765 43210" half />
             <Field label="Role" field="role" placeholder="citizen" half />
             <Field label="Ward / Sector" field="ward" placeholder="e.g. Sector 4" half />
             <Field label="State" field="state_region" placeholder="e.g. West Bengal" half />
@@ -1563,51 +1547,6 @@ const ProfileView = () => {
 };
 
 
-// --- Gemma Engine Status ---
-
-const GemmaStatusBadge = () => {
-  const [health, setHealth] = useState(null);
-
-  React.useEffect(() => {
-    let active = true;
-    const poll = async () => {
-      try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/api/health`);
-        const data = await res.json();
-        if (active) setHealth(data);
-      } catch {
-        if (active) setHealth({ status: 'offline' });
-      }
-    };
-    poll();
-    const timer = setInterval(poll, 5000);
-    return () => { active = false; clearInterval(timer); };
-  }, []);
-
-  const status = health?.status || 'connecting';
-  const config = {
-    ready:      { color: '#10b981', label: 'Gemma 4 E2B · Live',    detail: health?.detail },
-    loading:    { color: '#f59e0b', label: 'Gemma 4 E2B · Loading', detail: 'Warming up model weights…' },
-    failed:     { color: '#f59e0b', label: 'Gemma 4 E2B · Active',  detail: 'Smart heuristic triage' },
-    not_started:{ color: '#f59e0b', label: 'Gemma 4 E2B · Active',  detail: 'Smart heuristic triage' },
-    offline:    { color: '#64748b', label: 'Backend Offline',        detail: 'Start the FastAPI server' },
-    connecting: { color: '#64748b', label: 'Connecting…',            detail: '' },
-  }[status] || { color: '#10b981', label: 'Gemma 4 E2B · Active',   detail: 'Smart heuristic triage' };
-
-  return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', padding: '0.6rem 0.75rem', backgroundColor: 'var(--glass-bg)', border: '1px solid var(--border-light)', borderRadius: '10px' }}>
-      <span style={{ position: 'relative', display: 'inline-flex', width: '9px', height: '9px' }}>
-        <span style={{ position: 'absolute', inset: 0, borderRadius: '50%', backgroundColor: config.color, opacity: 0.5, animation: status === 'loading' ? 'pulse 1.5s ease-in-out infinite' : 'none' }}></span>
-        <span style={{ position: 'relative', width: '9px', height: '9px', borderRadius: '50%', backgroundColor: config.color }}></span>
-      </span>
-      <div style={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
-        <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-main)' }}>{config.label}</span>
-        {config.detail && <span style={{ fontSize: '0.65rem', color: 'var(--text-faint)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{config.detail}</span>}
-      </div>
-    </div>
-  );
-};
-
 // --- Main Layout ---
 
 const Dashboard = () => {
@@ -1622,19 +1561,7 @@ const Dashboard = () => {
   );
 
   // Load profile from Supabase so avatar & name are always fresh
-  React.useEffect(() => {
-    const email = localStorage.getItem('samadhan_email');
-    if (!email || email === 'demo@samadhan.gov.in') return;
-    
-    supabase.from('profiles').select('avatar_url, full_name, impact_score').eq('email', email).single()
-      .then(({ data, error }) => {
-        if (!data || error) return;
-        if (data.avatar_url) setAvatarUrl(data.avatar_url);
-        if (data.full_name) setDisplayName(data.full_name);
-        if (data.impact_score !== undefined) setImpactScore(data.impact_score);
-      });
-  }, []);
-
+  
   // Re-read avatar when profile tab is saved (listen for storage events)
   React.useEffect(() => {
     const onStorage = () => {
@@ -1689,7 +1616,10 @@ const Dashboard = () => {
     </div>
   );
 
+  if (loadingSession) return <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'var(--bg-main)', color: 'var(--text-main)' }}>Loading Dashboard...</div>;
+
   return (
+    <UserContext.Provider value={{ userProfile, setUserProfile }}>
     <div className={`dashboard-layout ${theme === 'light' ? 'theme-light' : ''}`}>
       
       {/* Mobile Header */}
@@ -1779,7 +1709,7 @@ const Dashboard = () => {
         )}
 
         <div className="sidebar-bottom">
-          <GemmaStatusBadge />
+          
           {/* User Profile / Sign Out */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px solid var(--border-light)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
@@ -1843,6 +1773,7 @@ const Dashboard = () => {
 
       </main>
     </div>
+    </UserContext.Provider>
   );
 }
 

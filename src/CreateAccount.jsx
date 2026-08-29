@@ -39,22 +39,17 @@ const CreateAccount = () => {
       
       if (data.user) {
         // Attempt to upsert profile for public leaderboard/display (fails silently if table doesn't exist yet)
-        await supabase.from('user_profiles').upsert({
+        await supabase.from('profiles').upsert({
           id: data.user.id,
           email: email,
-          name: fullName,
+          full_name: fullName,
           role: role,
           state_region: stateRegion || 'West Bengal',
           ward: ward || 'Sector 4',
-          impact_points: 0
+          impact_score: 0
         }).select();
       }
 
-      localStorage.setItem('samadhan_role', role);
-      if (role === 'citizen') {
-        localStorage.setItem('samadhan_state', stateRegion || 'West Bengal');
-        localStorage.setItem('samadhan_ward', ward || 'Sector 4');
-      }
       window.location.href = '/dashboard';
     } catch (err) {
       if (err.message?.toLowerCase().includes('already registered') || err.message?.toLowerCase().includes('already exists')) {
