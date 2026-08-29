@@ -349,17 +349,8 @@ function App() {
             </div>
           </div>
           
-          <div className="footer-massive-logo-wrapper" style={{ position: 'relative' }}>
+          <div className="footer-massive-logo-wrapper">
             <div className="footer-massive-logo">samadhan</div>
-            <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', opacity: 0.8, pointerEvents: 'none' }}>
-              <svg width="clamp(80px, 12vw, 180px)" height="clamp(80px, 12vw, 180px)" viewBox="0 0 200 200" fill="none">
-                <circle cx="100" cy="100" r="90" stroke="#000080" strokeWidth="8"/>
-                <circle cx="100" cy="100" r="16" fill="#000080"/>
-                {Array.from({ length: 24 }).map((_, i) => (
-                  <path key={i} d="M100 100 L100 10" stroke="#000080" strokeWidth="4" transform={`rotate(${i * 15} 100 100)`}/>
-                ))}
-              </svg>
-            </div>
           </div>
         </div>
       </footer>
