@@ -481,12 +481,52 @@
 @media (max-width: 768px) {
   .dashboard-layout {
     flex-direction: column;
-    overflow-y: auto;
   }
-  .dashboard-sidebar {
-    width: 100%;
-    border-right: none;
+  
+  /* Mobile Header */
+  .mobile-header {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    background-color: var(--bg-sidebar);
     border-bottom: 1px solid var(--border-light);
+    z-index: 50;
+  }
+  
+  /* Sliding Sidebar */
+  .dashboard-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 280px;
+    z-index: 100;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+    box-shadow: 4px 0 20px rgba(0,0,0,0.1);
+  }
+  .dashboard-sidebar.mobile-open {
+    transform: translateX(0);
+  }
+  
+  /* Overlay */
+  .sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 90;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  .sidebar-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
   }
   .dashboard-main {
     padding: 1.5rem;

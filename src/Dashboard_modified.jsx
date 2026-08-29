@@ -17,7 +17,7 @@ const MyReportsView = () => {
 
   const fetchReports = async () => {
     try {
-      const res = await fetch("http://127.0.0.1:8000/api/reports");
+      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'}/api/reports`);
       const data = await res.json();
       setPastReports(data);
     } catch (err) {
@@ -38,7 +38,7 @@ const MyReportsView = () => {
       const formData = new FormData();
       formData.append("file", file);
       
-      const imgRes = await fetch("http://127.0.0.1:8000/api/analyze-image", {
+      const imgRes = await fetch(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'}/api/analyze-image`, {
         method: "POST",
         body: formData
       });
@@ -69,7 +69,7 @@ const MyReportsView = () => {
     if (!reportText && !imageFile) return alert("Please enter a description or upload a photo");
     setIsSubmitting(true);
     try {
-      const res = await fetch("http://127.0.0.1:8000/api/reports", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'}/api/reports`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
@@ -136,7 +136,7 @@ const MyReportsView = () => {
         </div>
       </div>
       {/* Stat Cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem', marginBottom: '2rem' }}>
+      <div className="stat-cards-grid">
         {statCards.map((s, i) => (
           <div key={i} className="dashboard-card" style={{ padding: '1.25rem 1.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
             <div style={{ width: '44px', height: '44px', borderRadius: '12px', backgroundColor: s.color + '18', display: 'grid', placeItems: 'center', fontSize: '1.35rem', flexShrink: 0 }}>{s.icon}</div>
@@ -148,7 +148,7 @@ const MyReportsView = () => {
         ))}
       </div>
       {/* Main Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr', gap: '1.5rem', alignItems: 'stretch' }}>
+      <div className="main-grid">
         {/* Form */}
         <div className="dashboard-card" style={{ padding: '1.75rem', display: 'flex', flexDirection: 'column' }}>
 
@@ -184,7 +184,7 @@ const MyReportsView = () => {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', maxHeight: '420px', overflowY: 'auto', paddingRight: '0.25rem' }}>
             {myReports.length === 0 ? (
               <div style={{ textAlign: 'center', padding: '3rem 1rem' }}>
-                <div style={{ marginBottom: '0.75rem', display: 'flex', justifyContent: 'center' }}><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--text-faint)" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg></div>
+                <div style={{ marginBottom: '0.75rem', display: 'flex', justifyContent: 'center' }}><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--text-faint)" strokeWidth="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg></div>
                 <div style={{ color: 'var(--text-main)', fontWeight: 500 }}>No reports yet</div>
                 <div style={{ color: 'var(--text-faint)', fontSize: '0.85rem', marginTop: '0.35rem' }}>Submit your first issue using the form.</div>
               </div>
@@ -227,7 +227,7 @@ const ImpactScoreView = () => {
   React.useEffect(() => {
     const fetchReports = async () => {
       try {
-        const res = await fetch("http://127.0.0.1:8000/api/reports");
+        const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'}/api/reports`);
         const data = await res.json();
         setReports(data.filter(r => r.ward === ward));
       } catch (err) {
@@ -342,39 +342,13 @@ const LeaderboardView = () => {
   const ward  = localStorage.getItem('samadhan_ward')  || 'Sector 4';
   const userName = localStorage.getItem('samadhan_name') || 'You';
 
-  const defaultLeaders = [
+  const leaders = [
     { rank: 1, name: 'Anjali Sharma',   reports: 142, score: 3250, trend: +12 },
     { rank: 2, name: 'Rahul Desai',     reports: 128, score: 2900, trend: +8  },
     { rank: 3, name: 'Priya Patel',     reports: 115, score: 2640, trend: +5  },
     { rank: 4, name: 'Vikram Singh',    reports: 98,  score: 2100, trend: -2  },
     { rank: 5, name: userName,          reports: 8,   score: 150,  trend: +3, isYou: true },
   ];
-
-  const [leaders, setLeaders] = useState(defaultLeaders);
-  const [liveMode, setLiveMode] = useState(false);
-
-  React.useEffect(() => {
-    supabase.from('profiles').select('full_name, impact_score, email, avatar_url').order('impact_score', { ascending: false }).limit(10)
-      .then(({ data, error }) => {
-        if (data && data.length > 0 && !error) {
-          const myEmail = localStorage.getItem('samadhan_email');
-          const mapped = data.map((d, i) => ({
-            rank: i + 1,
-            name: d.full_name || d.email.split('@')[0],
-            reports: Math.floor((d.impact_score || 0) / 10),
-            score: d.impact_score || 0,
-            trend: 0,
-            isYou: d.email === myEmail,
-            avatar: d.avatar_url
-          }));
-          while (mapped.length < 3) {
-            mapped.push({ rank: mapped.length + 1, name: 'No user yet', score: 0, reports: 0, trend: 0, isYou: false });
-          }
-          setLeaders(mapped);
-          setLiveMode(true);
-        }
-      });
-  }, []);
 
   const podiumColors = ['#f59e0b', '#94a3b8', '#cd7c3e'];
   const avatarHues   = [200, 260, 320, 160, 230];
@@ -400,15 +374,15 @@ const LeaderboardView = () => {
       </div>
 
       {/* Podium Top-3 */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.15fr 1fr', gap: '1rem', marginBottom: '1.5rem', alignItems: 'flex-end' }}>
+      <div className="podium-grid">
         {[leaders[1], leaders[0], leaders[2]].map((user, idx) => {
           const isCenter = idx === 1;
           const col = podiumColors[user.rank - 1];
           return (
             <div key={user.rank} className="dashboard-card" style={{ padding: '1.5rem 1rem', textAlign: 'center', border: `1px solid ${col}30`, background: isCenter ? `linear-gradient(160deg, ${col}12, transparent)` : undefined, transform: isCenter ? 'scale(1.03)' : undefined }}>
               <div style={{ marginBottom: '0.75rem', display: 'flex', justifyContent: 'center' }}>
-                <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: user.avatar ? 'transparent' : `linear-gradient(135deg, hsl(${avatarHues[user.rank-1] || 200},70%,35%), hsl(${avatarHues[user.rank-1] || 200},70%,55%))`, display: 'grid', placeItems: 'center', fontWeight: 700, fontSize: '1.2rem', color: '#fff', border: `3px solid ${col}`, boxShadow: `0 0 0 3px ${col}30`, overflow: 'hidden' }}>
-                  {user.avatar ? <img src={user.avatar} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : (user.name ? user.name.charAt(0) : '?')}
+                <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: `linear-gradient(135deg, hsl(${avatarHues[user.rank-1]},70%,35%), hsl(${avatarHues[user.rank-1]},70%,55%))`, display: 'grid', placeItems: 'center', fontWeight: 700, fontSize: '1.2rem', color: '#fff', border: `3px solid ${col}`, boxShadow: `0 0 0 3px ${col}30` }}>
+                  {user.name.charAt(0)}
                 </div>
               </div>
               <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '0.5rem' }}><MedalIcon rank={user.rank} /></div>
@@ -455,8 +429,8 @@ const LeaderboardView = () => {
 
               {/* Avatar + Name */}
               <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '0.75rem', minWidth: 0 }}>
-                <div style={{ width: '34px', height: '34px', borderRadius: '50%', background: `linear-gradient(135deg, hsl(${avatarHues[i % 5]},65%,35%), hsl(${avatarHues[i % 5]},65%,55%))`, display: 'grid', placeItems: 'center', fontWeight: 700, fontSize: '0.85rem', color: '#fff', flexShrink: 0, overflow: 'hidden' }}>
-                  {user.avatar ? <img src={user.avatar} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : user.name.charAt(0)}
+                <div style={{ width: '34px', height: '34px', borderRadius: '50%', background: `linear-gradient(135deg, hsl(${avatarHues[i]},65%,35%), hsl(${avatarHues[i]},65%,55%))`, display: 'grid', placeItems: 'center', fontWeight: 700, fontSize: '0.85rem', color: '#fff', flexShrink: 0 }}>
+                  {user.name.charAt(0)}
                 </div>
                 <div style={{ fontWeight: 600, color: user.isYou ? '#60a5fa' : 'var(--text-main)', fontSize: '0.9rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {user.name}
@@ -530,7 +504,7 @@ const AnalyticsView = () => {
   React.useEffect(() => {
     const fetchStats = async () => {
       try {
-        const res = await fetch("http://127.0.0.1:8000/api/stats");
+        const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'}/api/stats`);
         if (res.ok) {
           const data = await res.json();
           setStats(data);
@@ -571,7 +545,7 @@ const AnalyticsView = () => {
       </div>
     </div>
     
-    <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '1.5rem', marginTop: '1.5rem' }}>
+    <div className="analytics-charts-grid">
       <div className="dashboard-card" style={{ padding: '2rem', height: '350px', display: 'flex', flexDirection: 'column' }}>
         <div style={{ color: 'var(--text-main)', fontWeight: 500, marginBottom: '1rem' }}>Issues Reported (Past Week)</div>
         <div style={{ flex: 1 }}>
@@ -628,7 +602,7 @@ const IncomingIssuesView = () => {
   React.useEffect(() => {
     const fetchReports = async () => {
       try {
-        const res = await fetch("http://127.0.0.1:8000/api/reports");
+        const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'}/api/reports`);
         const data = await res.json();
         setReports(data);
       } catch (err) {
@@ -696,7 +670,7 @@ const IssueCategorizationView = () => {
     const fetchTicketAndCategorize = async () => {
       setIsThinking(true);
       try {
-        const res = await fetch("http://127.0.0.1:8000/api/reports");
+        const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'}/api/reports`);
         const reports = await res.json();
         const pending = reports.find(r => r.status === 'Pending Triage') || reports[0];
         if (!pending) {
@@ -706,7 +680,7 @@ const IssueCategorizationView = () => {
         setTicket(pending);
         setIsApproved(pending.status !== 'Pending Triage');
 
-        const response = await fetch("http://127.0.0.1:8000/api/categorize", {
+        const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'}/api/categorize`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ text: pending.text })
@@ -730,7 +704,7 @@ const IssueCategorizationView = () => {
   const handleApprove = async () => {
     if (!ticket) return;
     try {
-      await fetch(`http://127.0.0.1:8000/api/reports/${ticket.ticket_id}/approve`, { method: "POST" });
+      await fetch(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'}/api/reports/${ticket.ticket_id}/approve`, { method: "POST" });
       setIsApproved(true);
       alert(`Triage approved. ${ticket.ticket_id} is ready for department routing.`);
     } catch (err) {
@@ -844,7 +818,7 @@ const AutoRoutingView = () => {
 
   const refresh = async () => {
     try {
-      const res = await fetch("http://127.0.0.1:8000/api/reports");
+      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'}/api/reports`);
       const reports = await res.json();
 
       // Tickets already routed by the agent form the historical log
@@ -875,7 +849,7 @@ const AutoRoutingView = () => {
     setIsProcessing(true);
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/auto-route", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'}/api/auto-route`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ issue_id: nextTicket.ticket_id })
@@ -981,7 +955,7 @@ const ImageAnalysisView = () => {
   React.useEffect(() => {
     const loadEvidence = async () => {
       try {
-        const res = await fetch("http://127.0.0.1:8000/api/reports");
+        const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'}/api/reports`);
         const reports = await res.json();
         const withImages = reports.filter(r => r.image_url);
         setEvidence(withImages);
@@ -1000,7 +974,7 @@ const ImageAnalysisView = () => {
     setResults(null);
     setIsApproved(false);
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/analyze-report-image", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'}/api/analyze-report-image`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ image_url: target.image_url, ticket_id: target.ticket_id })
@@ -1028,7 +1002,7 @@ const ImageAnalysisView = () => {
     try {
       const formData = new FormData();
       formData.append("file", file);
-      const response = await fetch("http://127.0.0.1:8000/api/analyze-image", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'}/api/analyze-image`, {
         method: "POST",
         body: formData
       });
@@ -1189,7 +1163,7 @@ const TrackReportView = () => {
     if (!ticketInput.trim()) return;
     setLoading(true); setError(''); setReport(null);
     try {
-      const res = await fetch(`http://127.0.0.1:8000/api/reports/${ticketInput.trim().toUpperCase()}`);
+      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'}/api/reports/${ticketInput.trim().toUpperCase()}`);
       if (!res.ok) { setError('Ticket not found. Check the ID and try again.'); setLoading(false); return; }
       const data = await res.json();
       setReport(data);
@@ -1221,13 +1195,13 @@ const TrackReportView = () => {
           <input
             value={ticketInput}
             onChange={e => setTicketInput(e.target.value)}
-            placeholder="e.g. TICK-10294"
-            style={{ width: '100%', padding: '1rem 1rem 1rem 3rem', backgroundColor: '#fdfdfd', border: '1.5px solid var(--border-medium)', borderRadius: '12px', color: 'var(--text-main)', fontSize: '0.95rem', fontFamily: 'monospace', outline: 'none', boxSizing: 'border-box', letterSpacing: '0.05em', transition: 'border-color 0.2s, box-shadow 0.2s' }}
-            onFocus={e => e.target.style.borderColor = '#6366f1'}
+            placeholder="Enter Ticket ID  e.g. TKT-A3F2"
+            style={{ width: '100%', padding: '0.9rem 1rem 0.9rem 2.75rem', backgroundColor: 'var(--glass-bg)', border: '1px solid var(--border-medium)', borderRadius: '12px', color: 'var(--text-main)', fontSize: '0.95rem', fontFamily: 'monospace', outline: 'none', boxSizing: 'border-box', letterSpacing: '0.05em' }}
+            onFocus={e => e.target.style.borderColor = '#111'}
             onBlur={e => e.target.style.borderColor = 'var(--border-medium)'}
           />
         </div>
-        <button type="submit" disabled={loading} style={{ padding: '0.9rem 2rem', background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', color: '#fff', border: 'none', borderRadius: '12px', fontWeight: 600, fontSize: '0.9rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', boxShadow: '0 4px 15px #6366f140', whiteSpace: 'nowrap' }}>
+        <button type="submit" disabled={loading} style={{ padding: '0.9rem 2rem', background: '#111', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 600, fontSize: '0.9rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', whiteSpace: 'nowrap', transition: 'background 0.2s' }}>
           {loading ? <svg className="animate-spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> : <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>}
           Track Report
         </button>
@@ -1240,7 +1214,7 @@ const TrackReportView = () => {
       )}
 
       {report && (
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.2fr', gap: '1.5rem' }}>
+        <div className="main-grid">
 
           {/* Report Card */}
           <div className="dashboard-card" style={{ padding: '1.75rem' }}>
@@ -1292,7 +1266,7 @@ const TrackReportView = () => {
               <div style={{ position: 'absolute', left: '19px', top: '12px', bottom: '12px', width: '2px', backgroundColor: 'var(--border-medium)' }} />
               {timeline.map((step, i) => (
                 <div key={i} style={{ display: 'flex', gap: '1.25rem', marginBottom: i < timeline.length - 1 ? '1.75rem' : 0, position: 'relative', zIndex: 1 }}>
-                  <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: step.done ? '#6366f1' : 'var(--bg-card)', border: `2px solid ${step.done ? '#6366f1' : 'var(--border-medium)'}`, display: 'grid', placeItems: 'center', flexShrink: 0, transition: 'all 0.3s', boxShadow: step.done ? '0 0 0 4px #6366f120' : 'none' }}>
+                  <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: step.done ? '#111' : 'var(--bg-card)', border: `2px solid ${step.done ? '#111' : 'var(--border-medium)'}`, display: 'grid', placeItems: 'center', flexShrink: 0, transition: 'all 0.3s', boxShadow: step.done ? '0 0 0 4px rgba(0,0,0,0.04)' : 'none' }}>
                     {step.done
                       ? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
                       : <span style={{ display: 'flex', color: 'var(--text-faint)' }}>{step.icon}</span>}
@@ -1306,9 +1280,9 @@ const TrackReportView = () => {
             </div>
 
             {report.routed_to && (
-              <div style={{ marginTop: '2rem', padding: '1rem', backgroundColor: '#3b82f610', borderRadius: '10px', border: '1px solid #3b82f625' }}>
-                <div style={{ fontSize: '0.7rem', color: '#60a5fa', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.25rem' }}>Assigned Department</div>
-                <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#3b82f6', display: 'flex', alignItems: 'center', gap: '0.4rem' }}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg> {report.routed_to}</div>
+              <div style={{ marginTop: '2rem', padding: '1.25rem', backgroundColor: '#f9f9f9', borderRadius: '8px', border: '1px solid var(--border-medium)' }}>
+                <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.35rem' }}>Assigned Department</div>
+                <div style={{ fontSize: '1rem', fontWeight: 700, color: '#111', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg> {report.routed_to}</div>
               </div>
             )}
           </div>
@@ -1347,75 +1321,43 @@ const ProfileView = () => {
 
   React.useEffect(() => {
     const email = localStorage.getItem('samadhan_email');
-    if (!email || email === 'demo@samadhan.gov.in') return;
-    const fetchProfile = async () => {
-      const { data, error } = await supabase.from('profiles').select('*').eq('email', email).single();
-      if (data && !error) {
-        setProfile(p => ({ ...p, ...data, name: data.full_name || data.name }));
-      }
-    };
-    fetchProfile();
+    if (!email) return;
+    fetch(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'}/api/profile/${encodeURIComponent(email)}`)
+      .then(r => r.ok ? r.json() : null)
+      .then(data => { if (data) setProfile(p => ({ ...p, ...data })); })
+      .catch(() => {});
   }, []);
 
   const handleAvatarUpload = async (e) => {
     const file = e.target.files[0];
     if (!file || !profile.email) return;
-    if (profile.email === 'demo@samadhan.gov.in') return alert("Avatar upload disabled for demo.");
-
     setAvatarLoading(true);
+    const formData = new FormData();
+    formData.append('file', file);
     try {
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${profile.email.replace(/[^a-zA-Z0-9]/g, '_')}-${Math.random()}.${fileExt}`;
-      const { error: uploadError } = await supabase.storage.from('avatars').upload(fileName, file, { upsert: true });
-      if (uploadError) throw uploadError;
-      
-      const { data: publicUrlData } = supabase.storage.from('avatars').getPublicUrl(fileName);
-      const avatar_url = publicUrlData.publicUrl;
-      
-      await supabase.from('profiles').update({ avatar_url }).eq('email', profile.email);
-      setProfile(p => ({ ...p, avatar_url }));
-    } catch (err) { 
-      console.error(err);
-      alert('Failed to upload avatar.');
-    }
+      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'}/api/profile/avatar?email=${encodeURIComponent(profile.email)}`, { method: 'POST', body: formData });
+      const data = await res.json();
+      if (data.avatar_url) setProfile(p => ({ ...p, avatar_url: data.avatar_url }));
+    } catch (err) { console.error(err); }
     setAvatarLoading(false);
   };
 
   const handleSave = async () => {
     if (!profile.email) return alert('Email is required to save profile.');
-    
-    if (profile.email === 'demo@samadhan.gov.in') {
-      localStorage.setItem('samadhan_name', profile.name || '');
-      localStorage.setItem('samadhan_ward', profile.ward || '');
-      localStorage.setItem('samadhan_state', profile.state_region || '');
-      setSaved(true); setEditMode(false);
-      setTimeout(() => setSaved(false), 3000);
-      return;
-    }
-
     setSaving(true);
     try {
-      const { error } = await supabase.from('profiles').upsert({
-        email: profile.email,
-        full_name: profile.name,
-        role: profile.role,
-        ward: profile.ward,
-        state_region: profile.state_region,
-        impact_score: profile.impact_score || 0
-      }, { onConflict: 'email' });
-      
-      if (error) throw error;
-
+      await fetch(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'}/api/profile`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(profile),
+      });
       localStorage.setItem('samadhan_email', profile.email);
       localStorage.setItem('samadhan_name', profile.name || '');
       localStorage.setItem('samadhan_ward', profile.ward || '');
       localStorage.setItem('samadhan_state', profile.state_region || '');
       setSaved(true); setEditMode(false);
       setTimeout(() => setSaved(false), 3000);
-    } catch (err) { 
-      console.error(err);
-      alert('Failed to save profile via Supabase.');
-    }
+    } catch { alert('Failed to save. Is the backend running?'); }
     setSaving(false);
   };
 
@@ -1555,7 +1497,7 @@ const GemmaStatusBadge = () => {
     let active = true;
     const poll = async () => {
       try {
-        const res = await fetch('http://127.0.0.1:8000/api/health');
+        const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'}/api/health`);
         const data = await res.json();
         if (active) setHealth(data);
       } catch {
@@ -1598,24 +1540,22 @@ const Dashboard = () => {
   const [activeTab, setActiveTab] = useState(userRole === 'admin' ? 'analytics' : 'my-reports');
   const [theme, setTheme] = useState('dark');
   const [avatarUrl, setAvatarUrl] = useState(null);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [impactScore, setImpactScore] = useState(150);
   const [displayName, setDisplayName] = useState(
     localStorage.getItem('samadhan_name') || (userRole === 'admin' ? 'Administrator' : 'Souradeep')
   );
 
-  // Load profile from Supabase so avatar & name are always fresh
+  // Load profile from backend so avatar & name are always fresh
   React.useEffect(() => {
     const email = localStorage.getItem('samadhan_email');
-    if (!email || email === 'demo@samadhan.gov.in') return;
-    
-    supabase.from('profiles').select('avatar_url, full_name, impact_score').eq('email', email).single()
-      .then(({ data, error }) => {
-        if (!data || error) return;
+    if (!email) return;
+    fetch(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'}/api/profile/${encodeURIComponent(email)}`)
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        if (!data) return;
         if (data.avatar_url) setAvatarUrl(data.avatar_url);
-        if (data.full_name) setDisplayName(data.full_name);
-        if (data.impact_score !== undefined) setImpactScore(data.impact_score);
-      });
+        if (data.name) setDisplayName(data.name);
+      })
+      .catch(() => {});
   }, []);
 
   // Re-read avatar when profile tab is saved (listen for storage events)
@@ -1643,10 +1583,7 @@ const Dashboard = () => {
   const renderSidebarLink = (id, label, icon) => (
     <div 
       className={`sidebar-link ${activeTab === id ? 'active' : ''}`}
-      onClick={() => {
-        setActiveTab(id);
-        setMobileMenuOpen(false);
-      }}
+      onClick={() => setActiveTab(id)}
     >
       {icon}
       {label}
@@ -1655,23 +1592,8 @@ const Dashboard = () => {
 
   return (
     <div className={`dashboard-layout ${theme === 'light' ? 'theme-light' : ''}`}>
-      
-      {/* Mobile Header */}
-      <div className="mobile-header" style={{ display: 'none' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontWeight: 700, fontSize: '1.25rem', color: 'var(--text-main)' }}>
-          <img src={logoImg} alt="Samadhan" style={{ height: '28px', filter: 'brightness(0)' }} />
-          Samadhan
-        </div>
-        <button onClick={() => setMobileMenuOpen(true)} style={{ background: 'transparent', border: 'none', color: 'var(--text-main)', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-        </button>
-      </div>
-
-      {/* Mobile Overlay */}
-      <div className={`sidebar-overlay ${mobileMenuOpen ? 'active' : ''}`} onClick={() => setMobileMenuOpen(false)}></div>
-
       {/* Sidebar */}
-      <aside className={`dashboard-sidebar ${mobileMenuOpen ? 'mobile-open' : ''}`}>
+      <aside className="dashboard-sidebar">
         <div className="sidebar-header">
           <a href="/" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none', color: 'var(--text-main)' }}>
             <img src={logoImg} alt="Samadhan Logo" style={{ height: '32px', filter: 'brightness(0)' }} />
@@ -1692,13 +1614,13 @@ const Dashboard = () => {
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="18 15 12 9 6 15"></polyline></svg>
             </div>
             {renderSidebarLink('my-reports', 'My Reports',
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
             )}
             {renderSidebarLink('track-report', 'Track Report',
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="2"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="2" y1="12" x2="4" y2="12"></line></svg>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             )}
             {renderSidebarLink('impact-score', 'Impact Score',
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
             )}
             {renderSidebarLink('leaderboard', 'Leaderboard',
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
@@ -1781,7 +1703,7 @@ const Dashboard = () => {
           {userRole === 'citizen' && (
             <div className="credits-pill">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
-              {impactScore} Impact Points
+              150 Impact Points
             </div>
           )}
         </header>

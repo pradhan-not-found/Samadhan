@@ -17,9 +17,9 @@ export default function VisionDashboardUI() {
   const [activeTab, setActiveTab] = useState('public-reports');
 
   return (
-    <div className="dashboard-container">
+    <div className="dashboard-container dark-dashboard">
       {/* Top Header / Logo */}
-      <div style={{ display: 'flex', alignItems: 'center', padding: '1rem', borderBottom: '1px solid var(--color-border-light)' }}>
+      <div className="dash-main-header" style={{ display: 'flex', alignItems: 'center', padding: '1rem' }}>
         <img src={logoImg} alt="Samadhan" className="nav-logo themed-logo" style={{ marginRight: '10px' }} />
         <span style={{ fontFamily: 'var(--font-display)', fontWeight: 'bold', fontSize: '1.25rem', color: 'var(--color-text)', letterSpacing: '-0.02em' }}>Samadhan Vision</span>
       </div>
