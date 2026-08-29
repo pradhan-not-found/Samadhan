@@ -1,4 +1,4 @@
-.auth-split-layout {
+.ca-split-layout {
   display: flex;
   height: 100vh;
   width: 100vw;
@@ -9,8 +9,8 @@
 }
 
 /* --- LEFT VISUAL PANE --- */
-.auth-split-visual {
-  flex: 1;
+.ca-split-visual {
+  flex: 0 0 35%;
   position: relative;
   display: none; /* hidden on mobile */
   flex-direction: column;
@@ -22,7 +22,7 @@
   background-position: center;
 }
 
-.auth-split-visual::before {
+.ca-split-visual::before {
   content: '';
   position: absolute;
   inset: 0;
@@ -30,7 +30,7 @@
   z-index: 1;
 }
 
-.auth-split-visual::after {
+.ca-split-visual::after {
   content: '';
   position: absolute;
   inset: 0;
@@ -43,19 +43,19 @@
 }
 
 @media (min-width: 1024px) {
-  .auth-split-visual {
+  .ca-split-visual {
     display: flex;
   }
 }
 
-.auth-visual-content {
+.ca-visual-content {
   position: relative;
   z-index: 2;
   margin-top: auto;
   max-width: 480px;
 }
 
-.auth-visual-logo {
+.ca-visual-logo {
   position: relative;
   z-index: 2;
   display: flex;
@@ -67,7 +67,7 @@
   color: #ffffff;
 }
 
-.auth-visual-content h2 {
+.ca-visual-content h2 {
   font-family: var(--font-display);
   font-size: 3rem;
   font-weight: 400;
@@ -76,14 +76,14 @@
   color: #ffffff;
 }
 
-.auth-visual-content p {
+.ca-visual-content p {
   font-size: 1.1rem;
   line-height: 1.6;
   color: rgba(255, 255, 255, 0.8);
 }
 
 /* --- RIGHT FORM PANE --- */
-.auth-split-form-container {
+.ca-split-form-container {
   flex: 1;
   display: flex;
   align-items: center;
@@ -95,15 +95,15 @@
   overflow: hidden;
 }
 
-.auth-card {
+.ca-card {
   width: 100%;
-  max-width: 420px;
+  max-width: 660px;
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-.auth-back-btn {
+.ca-back-btn {
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -114,11 +114,11 @@
   align-self: flex-start;
 }
 
-.auth-back-btn:hover {
+.ca-back-btn:hover {
   color: #111827;
 }
 
-.auth-title {
+.ca-title {
   font-family: var(--font-display);
   font-size: 2.2rem;
   font-weight: 500;
@@ -127,7 +127,7 @@
   text-align: left;
 }
 
-.auth-subtitle {
+.ca-subtitle {
   color: #555;
   font-size: 0.95rem;
   font-weight: 300;
@@ -135,13 +135,13 @@
   text-align: left;
 }
 
-.auth-social-group {
+.ca-social-group {
   display: flex;
   gap: 1rem;
   width: 100%;
 }
 
-.auth-social-btn {
+.ca-social-btn {
   flex: 1;
   display: flex;
   align-items: center;
@@ -159,17 +159,17 @@
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
-.auth-social-btn:hover {
+.ca-social-btn:hover {
   background: #f9fafb;
   border-color: #d1d5db;
 }
 
-.auth-social-icon {
+.ca-social-icon {
   width: 18px;
   height: 18px;
 }
 
-.auth-divider {
+.ca-divider {
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -177,90 +177,98 @@
   font-size: 0.8rem;
 }
 
-.auth-divider-line {
+.ca-divider-line {
   flex: 1;
   height: 1px;
   background-color: #e5e7eb;
 }
 
-.auth-form {
+.ca-form {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
 }
 
-.auth-form-grid {
+.ca-form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  column-gap: 1.5rem;
-  row-gap: 1.25rem;
+  column-gap: 1rem;
+  row-gap: 1rem;
 }
 
-.auth-form-grid .full-width {
+.ca-form-grid .ca-full-width {
   grid-column: 1 / -1;
 }
 
-.auth-field {
+.ca-field {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
-.auth-field label {
+.ca-field label {
   font-size: 0.8rem;
   color: #374151;
   font-family: var(--font-sans);
   font-weight: 500;
 }
 
-.auth-input-group {
+.ca-input-group {
   display: flex;
   align-items: center;
   border: 1px solid #e5e7eb;
   border-radius: 12px;
-  padding: 0 1rem;
   background: #ffffff;
   transition: all 0.2s;
   box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+  overflow: hidden;
 }
 
-.auth-input-group:focus-within {
+.ca-input-group:focus-within {
   border-color: #9ca3af;
   background: #ffffff;
   box-shadow: 0 0 0 4px rgba(243, 244, 246, 0.8);
 }
 
-.auth-input {
+.ca-input {
   width: 100%;
   background: transparent;
   border: none;
   outline: none;
   color: #111;
-  padding: 1rem 0;
+  padding: 1rem;
   font-size: 0.95rem;
 }
 
-.auth-input::placeholder {
+.ca-input::placeholder {
   color: #999;
 }
 
-.auth-forgot-wrapper {
+.ca-input:-webkit-autofill,
+.ca-input:-webkit-autofill:hover, 
+.ca-input:-webkit-autofill:focus, 
+.ca-input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px white inset !important;
+  border-radius: 12px;
+}
+
+.ca-forgot-wrapper {
   display: flex;
   justify-content: flex-end;
 }
 
-.auth-forgot {
+.ca-forgot {
   color: var(--color-primary, #F9730C);
   font-size: 0.85rem;
   text-decoration: none;
   transition: opacity 0.2s;
 }
 
-.auth-forgot:hover {
+.ca-forgot:hover {
   opacity: 0.8;
 }
 
-.auth-submit-btn {
+.ca-submit-btn {
   width: 100%;
   padding: 1rem;
   background: linear-gradient(to bottom, #3a3f5c 0%, #1e2033 100%);
@@ -273,24 +281,25 @@
   cursor: pointer;
   transition: opacity 0.2s, transform 0.1s;
   margin-top: 0.5rem;
+  white-space: nowrap;
 }
 
-.auth-submit-btn:hover {
+.ca-submit-btn:hover {
   opacity: 0.9;
 }
 
-.auth-submit-btn:active {
-  transform: scale(0.98);
+.ca-submit-btn:active:not(:disabled) {
+  transform: translateY(0);
 }
 
-.auth-footer-link {
+.ca-footer-link {
   text-align: center;
   font-size: 0.9rem;
   color: #6b7280;
   margin-top: 1rem;
 }
 
-.auth-toggle-link {
+.ca-toggle-link {
   color: #111827;
   font-weight: 600;
   cursor: pointer;
@@ -301,18 +310,18 @@
   transition: text-decoration-color 0.2s;
 }
 
-.auth-toggle-link:hover {
+.ca-toggle-link:hover {
   text-decoration-color: #111827;
 }
 
-.auth-password-rules {
+.ca-password-rules {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   margin-bottom: 0.5rem;
 }
 
-.auth-rule-item {
+.ca-rule-item {
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -320,18 +329,18 @@
   color: rgba(255, 255, 255, 0.4);
 }
 
-.auth-rule-item.valid {
+.ca-rule-item.valid {
   color: rgba(255, 255, 255, 0.8);
 }
 
-.auth-rule-dot {
+.ca-rule-dot {
   width: 4px;
   height: 4px;
   border-radius: 50%;
   background-color: currentColor;
 }
 
-.auth-branding {
+.ca-branding {
   position: absolute;
   bottom: 2rem;
   left: 50%;
@@ -341,4 +350,22 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+/* --- PROGRESS RING --- */
+.ca-progress-container {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ca-progress-ring-circle {
+  transition: stroke-dashoffset 0.35s;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
 }

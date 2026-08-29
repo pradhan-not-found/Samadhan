@@ -681,23 +681,30 @@
 }
 
 .footer {
-  padding: 4rem 0;
-  background-color: var(--color-bg);
-  color: var(--color-text);
+  padding: 4rem 0 0;
+  background-color: #ffffff;
+  color: #111;
+  border-top: 1px solid rgba(0,0,0,0.07);
 }
 
 .footer .text-muted {
-  color: var(--color-text-muted) !important;
+  color: #6b7280 !important;
+  transition: color 0.15s ease;
+}
+.footer .text-muted:hover {
+  color: #111 !important;
 }
 .footer .logo {
-  color: var(--color-text) !important;
+  color: #111 !important;
 }
 
 .footer-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 3rem;
-  padding-top: 3rem;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 2.5rem;
+  padding-top: 2.5rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid rgba(0,0,0,0.07);
 }
 
 @media (min-width: 1024px) {
@@ -707,45 +714,66 @@
   }
 }
 
+.footer-col h4 {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 1.25rem;
+  color: #9ca3af;
+  font-weight: 600;
+}
+
+.footer-col ul {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  font-size: 0.875rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-col ul li a {
+  color: #374151;
+  text-decoration: none;
+  transition: color 0.15s ease;
+  line-height: 1.4;
+}
+.footer-col ul li a:hover {
+  color: #111;
+}
+
 .footer-massive-logo-wrapper {
-  position: relative;
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  margin: 4rem 0 0 0;
+  margin: 3rem 0 0 0;
   overflow: hidden;
   padding: 0 1rem;
+  user-select: none;
 }
 
 .footer-massive-logo {
   font-family: var(--font-sans);
   font-weight: 900;
   font-size: clamp(3.5rem, 13.5vw, 240px);
-  line-height: 0.85;
+  line-height: 0.88;
   text-align: center;
   text-transform: lowercase;
   white-space: nowrap;
   background: linear-gradient(
-    180deg,
-    #FF6B00 0%,
-    #FF9933 22%,
-    #FFB347 34%,
-    #e8e8e8 46%,
-    #f5f5f5 50%,
-    #d0e8cc 54%,
-    #4CAF50 66%,
-    #138808 80%,
-    #0d6b05 100%
+    to bottom, 
+    #13121e 0%, 
+    #a5bbfc 116.55%
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  opacity: 0.9;
+  opacity: 0.82;
   letter-spacing: -0.03em;
   pointer-events: none;
-  filter: saturate(1.4) contrast(1.15);
-  user-select: none;
+  filter: saturate(1.2) contrast(1.05);
 }
 
 @keyframes logoFade3 {
@@ -797,8 +825,80 @@
 /* --- FEATURES GRID --- */
 .features-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.testimonials-section {
+  color: #111;
+  padding: 6rem 2rem 4rem 2rem;
+}
+
+.testimonials-title {
+  font-size: clamp(2rem, 3vw, 2.5rem);
+  font-weight: 600;
+  margin-bottom: 3.5rem;
+  text-align: center;
+  letter-spacing: -0.02em;
+  color: #111;
+}
+
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .testimonials-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .testimonials-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.testimonial-card {
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.testimonial-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+}
+
+.testimonial-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background-size: cover;
+  background-position: center;
+  background-color: #e2e8f0;
+}
+
+.testimonial-text {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #334155;
+  flex: 1;
+}
+
+.testimonial-author {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #64748b;
 }
 
 /* --- TRUSTED LOGOS GRAYSCALE --- */
@@ -1363,7 +1463,8 @@
 }
 @media (max-width: 768px) {
   .features-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
   }
   .hero-actions-wrapper {
     flex-direction: row;
@@ -1428,6 +1529,8 @@
   /* Show mobile actions container in the header row */
   .mobile-actions {
     display: flex;
+    align-items: center;
+    gap: 0.5rem;
   }
 
   /* Handle links center */

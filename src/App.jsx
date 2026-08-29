@@ -4,10 +4,10 @@ import './App.css';
 import FeatureCard from './FeatureCard';
 import logoImg from './assets/logo.png';
 import { featuresData } from './featuresData';
-import JoinNow from './JoinNow';
 import DashboardUI from './DashboardUI';
 import VisionDashboardUI from './VisionDashboardUI';
 import GamificationDashboardUI from './GamificationDashboardUI';
+import JoinNow from './JoinNow';
 
 function App() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -46,13 +46,13 @@ function App() {
           </div>
 
           <div className={`nav-actions desktop-only`}>
-            <a href="/login" className="btn-hero-dark" style={{ padding: '0.5rem 1.3rem', fontSize: '0.85rem', borderRadius: '999px' }}>Sign In</a>
-            <a href="/dashboard" className="btn-hero-light" style={{ padding: '0.5rem 1.3rem', fontSize: '0.85rem', borderRadius: '999px' }}>View Dashboard</a>
+            <a href="/login" className="btn-hero-dark" style={{ padding: '0.5rem 1.3rem', fontSize: '0.85rem', borderRadius: '999px', backgroundColor: '#23273b' }}>Sign In</a>
+            <a href="/contact" className="btn-hero-light" style={{ padding: '0.5rem 1.3rem', fontSize: '0.85rem', borderRadius: '999px' }}>Contact Us</a>
           </div>
 
           <div className="mobile-actions">
             <a href="/login" className="btn-hero-dark" style={{ padding: '0.4rem 1rem', fontSize: '0.8rem', borderRadius: '999px' }}>Sign In</a>
-            <a href="/dashboard" className="btn-hero-light" style={{ padding: '0.4rem 1rem', fontSize: '0.8rem', borderRadius: '999px' }}>Dashboard</a>
+            <a href="/contact" className="btn-hero-light" style={{ padding: '0.4rem 1rem', fontSize: '0.8rem', borderRadius: '999px' }}>Contact Us</a>
             <button className="mobile-menu-btn" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 {isMobileMenuOpen ? (
@@ -185,83 +185,226 @@ function App() {
       
         <section className="section card-page" style={{ '--stack-index': 4, overflow: 'hidden', position: 'relative' }}>
           <div className="container">
-            <div className="grid-section" style={{ alignItems: 'center', gap: '4rem' }}>
+            <div className="grid-section" style={{ gridTemplateColumns: '1fr 1fr', alignItems: 'stretch', gap: '4rem' }}>
+              
+              {/* Dashboard Wrapper with exact classes provided by user, converted to inline styles */}
+              <div style={{ 
+                position: 'relative',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'flex-end',
+                alignItems: 'center',
+                borderRadius: '24px',
+                minHeight: '580px',
+                overflow: 'hidden',
+                background: 'linear-gradient(to bottom, #13121e 0%, #a5bbfc 116.55%)' 
+              }}>
+                <div style={{
+                  width: '85%',
+                  height: '550px',
+                  background: 'white',
+                  borderRadius: '16px 16px 0 0',
+                  overflow: 'hidden',
+                  boxShadow: '0 -10px 30px rgba(0,0,0,0.2)',
+                  display: 'flex',
+                  flexDirection: 'column'
+                }}>
+                  <VisionDashboardUI />
+                </div>
+              </div>
+
               <div className="grid-content">
                 <span className="section-number">01</span>
-                <h2 style={{ fontSize: 'clamp(2.5rem, 4vw, 3.5rem)', lineHeight: '1.1', marginBottom: '1.5rem', fontWeight: '600' }}>The vision: <br/>Transparency & Action</h2>
-                <p style={{ fontSize: '1.1rem', color: 'var(--color-text-muted)', marginBottom: '1.5rem', lineHeight: '1.6' }}>
-                  Samadhan translates to resolution. Our platform brings citizens and authorities closer to resolve hyperlocal problems efficiently.
-                </p>
-                <p style={{ fontSize: '1.1rem', color: 'var(--color-text-muted)', lineHeight: '1.6' }}>
-                  Fragmented reporting and untracked issues lead to public distrust. By combining gamification, predictive insights, and AI categorization, Samadhan transforms complaints into accountable community action.
-                </p>
-              </div>
-              <div className="visual-box" style={{ 
-                display: 'flex', 
-                alignItems: 'center', 
-                justifyContent: 'center',
-                position: 'relative',
-                width: '100%',
-                aspectRatio: '1', /* Keep it a square box for the glow */
-              }}>
-                {/* Purple glowing background exactly like the GIF */}
-                <div style={{
-                  position: 'absolute',
-                  width: '120%',
-                  height: '120%',
-                  background: 'radial-gradient(circle at center, rgba(124, 136, 255, 0.4) 0%, rgba(181, 175, 255, 0.15) 40%, transparent 70%)',
-                  filter: 'blur(40px)',
-                  zIndex: 0
-                }}></div>
+                <h2 style={{ fontSize: 'clamp(2.5rem, 3.5vw, 3rem)', lineHeight: '1.1', marginBottom: '2.5rem', fontWeight: '600' }}>The vision: Transparency & Action</h2>
                 
-                {/* Scaled container to prevent text squishing */}
-                <div style={{ 
-                  position: 'relative', 
-                  zIndex: 1, 
-                  width: '100%', 
-                  display: 'flex', 
-                  justifyContent: 'center' 
-                }}>
-                  <div style={{ 
-                    width: '150%', /* Render at 150% width (e.g. 750px instead of 500px) */
-                    transform: 'scale(0.666)', /* Scale it back down visually to fit 100% */
-                    transformOrigin: 'center center'
-                  }}>
-                    <VisionDashboardUI />
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', marginBottom: '3rem' }}>
+                  <div style={{ display: 'flex', gap: '1rem' }}>
+                    <div style={{ flexShrink: 0, marginTop: '0.25rem' }}>
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                          <linearGradient id="sparkleGrad1" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse"><stop offset="0%" stopColor="#a3e635"/><stop offset="100%" stopColor="#3b82f6"/></linearGradient>
+                        </defs>
+                        <path d="M12 2C12 7.52 16.48 12 22 12C16.48 12 12 16.48 12 22C12 16.48 7.52 12 2 12C7.52 12 12 7.52 12 2Z" fill="url(#sparkleGrad1)"/>
+                      </svg>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                      <h4 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '0.5rem', color: 'var(--text-main)' }}>Hyperlocal Resolution</h4>
+                      <p style={{ fontSize: '1rem', color: 'var(--text-muted)', margin: 0, lineHeight: 1.6 }}>Our platform brings citizens and authorities closer to resolve problems efficiently.</p>
+                    </div>
                   </div>
+                  
+                  <div style={{ display: 'flex', gap: '1rem' }}>
+                    <div style={{ flexShrink: 0, marginTop: '0.25rem' }}>
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2C12 7.52 16.48 12 22 12C16.48 12 12 16.48 12 22C12 16.48 7.52 12 2 12C7.52 12 12 7.52 12 2Z" fill="url(#sparkleGrad1)"/>
+                      </svg>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                      <h4 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '0.5rem', color: 'var(--text-main)' }}>Rebuilding Trust</h4>
+                      <p style={{ fontSize: '1rem', color: 'var(--text-muted)', margin: 0, lineHeight: 1.6 }}>Fragmented reporting and untracked issues lead to public distrust. We fix that.</p>
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', gap: '1rem' }}>
+                    <div style={{ flexShrink: 0, marginTop: '0.25rem' }}>
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2C12 7.52 16.48 12 22 12C16.48 12 12 16.48 12 22C12 16.48 7.52 12 2 12C7.52 12 12 7.52 12 2Z" fill="url(#sparkleGrad1)"/>
+                      </svg>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                      <h4 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '0.5rem', color: 'var(--text-main)' }}>Accountable Action</h4>
+                      <p style={{ fontSize: '1rem', color: 'var(--text-muted)', margin: 0, lineHeight: 1.6 }}>By combining gamification and AI categorization, Samadhan transforms complaints into community action.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <a href="/login" className="btn-hero-dark" style={{ 
+                  display: 'inline-flex', 
+                  width: '100%',
+                  justifyContent: 'center', 
+                  padding: '1rem 3rem', 
+                  fontSize: '1rem', 
+                  borderRadius: '12px',
+                  backgroundColor: '#1e293b',
+                  color: 'white',
+                  textDecoration: 'none',
+                  fontWeight: '500'
+                }}>
+                  Explore Vision
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="section card-page" style={{ '--stack-index': 5, overflow: 'hidden', position: 'relative' }}>
+          <div className="container">
+            <div className="grid-section" style={{ gridTemplateColumns: '1fr 1fr', alignItems: 'stretch', gap: '4rem' }}>
+              <div className="grid-content">
+                <span className="section-number">02</span>
+                <h2 style={{ fontSize: 'clamp(2.5rem, 3.5vw, 3rem)', lineHeight: '1.1', marginBottom: '2.5rem', fontWeight: '600' }}>Gamification & Tracking</h2>
+                
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', marginBottom: '3rem' }}>
+                  <div style={{ display: 'flex', gap: '1rem' }}>
+                    <div style={{ flexShrink: 0, marginTop: '0.25rem' }}>
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2C12 7.52 16.48 12 22 12C16.48 12 12 16.48 12 22C12 16.48 7.52 12 2 12C7.52 12 12 7.52 12 2Z" fill="url(#sparkleGrad1)"/>
+                      </svg>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                      <h4 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '0.5rem', color: 'var(--text-main)' }}>Rewarding Participation</h4>
+                      <p style={{ fontSize: '1rem', color: 'var(--text-muted)', margin: 0, lineHeight: 1.6 }}>Earn reputation points, badges, and recognition for valid reports and successful verifications.</p>
+                    </div>
+                  </div>
+                  
+                  <div style={{ display: 'flex', gap: '1rem' }}>
+                    <div style={{ flexShrink: 0, marginTop: '0.25rem' }}>
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2C12 7.52 16.48 12 22 12C16.48 12 12 16.48 12 22C12 16.48 7.52 12 2 12C7.52 12 12 7.52 12 2Z" fill="url(#sparkleGrad1)"/>
+                      </svg>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                      <h4 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '0.5rem', color: 'var(--text-main)' }}>Transparent Tracking</h4>
+                      <p style={{ fontSize: '1rem', color: 'var(--text-muted)', margin: 0, lineHeight: 1.6 }}>A real-time transparent window into issue resolution progress from reporting to fixing.</p>
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', gap: '1rem' }}>
+                    <div style={{ flexShrink: 0, marginTop: '0.25rem' }}>
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2C12 7.52 16.48 12 22 12C16.48 12 12 16.48 12 22C12 16.48 7.52 12 2 12C7.52 12 12 7.52 12 2Z" fill="url(#sparkleGrad1)"/>
+                      </svg>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                      <h4 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '0.5rem', color: 'var(--text-main)' }}>Community Leaderboards</h4>
+                      <p style={{ fontSize: '1rem', color: 'var(--text-muted)', margin: 0, lineHeight: 1.6 }}>Compete alongside neighbors to become a top civic guardian and track your community's overall impact.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <a href="/login" className="btn-hero-dark" style={{ 
+                  display: 'inline-flex', 
+                  width: '100%',
+                  justifyContent: 'center', 
+                  padding: '1rem 3rem', 
+                  fontSize: '1rem', 
+                  borderRadius: '12px',
+                  backgroundColor: '#1e293b',
+                  color: 'white',
+                  textDecoration: 'none',
+                  fontWeight: '500'
+                }}>
+                  Join the Movement
+                </a>
+              </div>
+
+              {/* Dashboard Wrapper with exact classes provided by user, converted to inline styles */}
+              <div style={{ 
+                position: 'relative',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'flex-end',
+                alignItems: 'center',
+                borderRadius: '24px',
+                minHeight: '580px',
+                overflow: 'hidden',
+                background: 'linear-gradient(to bottom, #13121e 0%, #a5bbfc 116.55%)' 
+              }}>
+                <div style={{
+                  width: '85%',
+                  height: '550px',
+                  background: 'white',
+                  borderRadius: '16px 16px 0 0',
+                  overflow: 'hidden',
+                  boxShadow: '0 -10px 30px rgba(0,0,0,0.2)',
+                  display: 'flex',
+                  flexDirection: 'column'
+                }}>
+                  <GamificationDashboardUI />
                 </div>
               </div>
             </div>
           </div>
         </section>
-
-        
-        <section className="section card-page" style={{ '--stack-index': 5, overflow: 'hidden', position: 'relative' }}>
-          <div className="dash-insert-left">
-            <GamificationDashboardUI />
-          </div>
-          <div className="container">
-            <div className="grid-section">
-              <div className="visual-box">
-                {/* Empty visual box */}
+        <section className="section card-page" style={{ '--stack-index': 6, background: 'var(--color-bg)', padding: 0 }}>
+          <div className="testimonials-section">
+            <h2 className="testimonials-title">What citizens are saying</h2>
+            <div className="testimonials-grid">
+              <div className="testimonial-card">
+                <div className="testimonial-avatar" style={{ backgroundImage: 'url(https://ui-avatars.com/api/?name=Rahul+S&background=e2e8f0&color=334155&bold=true)' }}></div>
+                <div className="testimonial-text">"I've been complaining about the massive pothole on EM Bypass for three months. It’s a severe safety hazard, but no one from the municipality has even acknowledged the issue."</div>
+                <div className="testimonial-author">Rahul S., Kolkata</div>
               </div>
-              <div className="grid-content">
-                <span className="section-number">02</span>
-                <h2>Gamification & Tracking</h2>
-                <p>
-                  Community participation shouldn't be a chore. Through an integrated impact dashboard, users earn reputation points for valid reports and successful verifications.
-                </p>
-                <p>
-                  Real-time tracking provides a transparent window into issue resolution, connecting the digital report with real-world public infrastructure repair.
-                </p>
+              <div className="testimonial-card">
+                <div className="testimonial-avatar" style={{ backgroundImage: 'url(https://ui-avatars.com/api/?name=Priya+M&background=e2e8f0&color=334155&bold=true)' }}></div>
+                <div className="testimonial-text">"The streetlights in Sector 4 have been out for weeks. I filed a report on the official portal, but it just says 'Pending' with no timeline or updates on resolution."</div>
+                <div className="testimonial-author">Priya M., Delhi</div>
+              </div>
+              <div className="testimonial-card">
+                <div className="testimonial-avatar" style={{ backgroundImage: 'url(https://ui-avatars.com/api/?name=Anil+K&background=e2e8f0&color=334155&bold=true)' }}></div>
+                <div className="testimonial-text">"We have a huge garbage dump accumulating near the local school. I've tweeted, emailed, and called the authorities, but the issue hasn't been resolved yet."</div>
+                <div className="testimonial-author">Anil K., Mumbai</div>
+              </div>
+              <div className="testimonial-card">
+                <div className="testimonial-avatar" style={{ backgroundImage: 'url(https://ui-avatars.com/api/?name=Sneha+R&background=e2e8f0&color=334155&bold=true)' }}></div>
+                <div className="testimonial-text">"Waterlogging during the monsoon is getting worse every year. We submit complaints, but there's absolutely no transparency on whether any action is actually being taken."</div>
+                <div className="testimonial-author">Sneha R., Chennai</div>
+              </div>
+              <div className="testimonial-card">
+                <div className="testimonial-avatar" style={{ backgroundImage: 'url(https://ui-avatars.com/api/?name=Vikram+T&background=e2e8f0&color=334155&bold=true)' }}></div>
+                <div className="testimonial-text">"There's a broken water pipe wasting hundreds of liters of water in our neighborhood. I complained weeks ago, but the authorities still haven't sent anyone."</div>
+                <div className="testimonial-author">Vikram T., Bangalore</div>
+              </div>
+              <div className="testimonial-card">
+                <div className="testimonial-avatar" style={{ backgroundImage: 'url(https://ui-avatars.com/api/?name=Meera+D&background=e2e8f0&color=334155&bold=true)' }}></div>
+                <div className="testimonial-text">"I feel completely unheard. I filed a grievance about illegal encroachment on the footpath, but my complaint was closed without any actual resolution on the ground."</div>
+                <div className="testimonial-author">Meera D., Pune</div>
               </div>
             </div>
           </div>
         </section>
-
         
-        
-        <section className="section card-page join-now-page" style={{ '--stack-index': 6 }}>
+        <section className="section card-page join-now-page" style={{ '--stack-index': 7 }}>
           <div className="container" style={{ height: "100%" }}>
             <JoinNow />
           </div>
@@ -271,80 +414,78 @@ function App() {
         <div className="container" style={{ position: 'relative', zIndex: 10, flex: 1, display: 'flex', flexDirection: 'column', paddingBottom: '2rem' }}>
           <div className="footer-grid">
             <div className="footer-col" style={{ display: 'flex', flexDirection: 'column' }}>
-              <div className="logo" style={{ marginBottom: '0.5rem', fontSize: '1.5rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <img src={logoImg} alt="" className="nav-logo" style={{ filter: 'brightness(0)' }} />
+              <div className="logo" style={{ marginBottom: '0.5rem', fontSize: '1.4rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#111' }}>
+                <img src={logoImg} alt="" className="nav-logo" style={{ filter: 'brightness(0)', height: '28px' }} />
                 Samadhan
               </div>
-              <p className="text-muted" style={{ fontSize: '0.8rem', marginBottom: '2rem' }}>Resolution for India starts here</p>
+              <p style={{ fontSize: '0.8rem', color: '#9ca3af', marginBottom: '2rem', lineHeight: 1.5 }}>Resolution for India starts here</p>
 
-              <div style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)', marginBottom: '1rem' }}>Find us at</div>
-              <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem' }}>
-                <a href="#" className="text-muted"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg></a>
-                <a href="#" className="text-muted"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 4l11.733 16h4.267l-11.733 -16z"></path><path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"></path></svg></a>
-                <a href="#" className="text-muted"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33 2.78 2.78 0 0 0 1.94 2c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg></a>
-                <a href="#" className="text-muted"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg></a>
+              <div style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: '#9ca3af', marginBottom: '0.75rem', fontWeight: 600 }}>Find us at</div>
+              <div style={{ display: 'flex', gap: '0.9rem', marginBottom: '2.5rem', color: '#6b7280' }}>
+                <a href="#" style={{ color: '#6b7280', transition: 'color 0.15s' }} onMouseEnter={e=>e.target.style.color='#111'} onMouseLeave={e=>e.target.style.color='#6b7280'}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg></a>
+                <a href="#" style={{ color: '#6b7280', transition: 'color 0.15s' }} onMouseEnter={e=>e.target.style.color='#111'} onMouseLeave={e=>e.target.style.color='#6b7280'}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 4l11.733 16h4.267l-11.733-16z"></path><path d="M4 20l6.768-6.768m2.46-2.46l6.772-6.772"></path></svg></a>
+                <a href="#" style={{ color: '#6b7280', transition: 'color 0.15s' }} onMouseEnter={e=>e.target.style.color='#111'} onMouseLeave={e=>e.target.style.color='#6b7280'}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33 2.78 2.78 0 0 0 1.94 2c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg></a>
+                <a href="#" style={{ color: '#6b7280', transition: 'color 0.15s' }} onMouseEnter={e=>e.target.style.color='#111'} onMouseLeave={e=>e.target.style.color='#6b7280'}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg></a>
               </div>
 
-              <div style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>
-                <div style={{ marginBottom: '0.5rem' }}>© 2026 Samadhan.</div>
-                <div style={{ marginBottom: '0.5rem' }}>
-                  Built by <a href="https://github.com/pradhan-not-found/Samadhan" target="_blank" rel="noopener noreferrer" style={{color: 'var(--color-text)', fontWeight: 'bold', textDecoration: 'none'}}>@pradhan-not-found</a>
+              <div style={{ fontSize: '0.78rem', color: '#9ca3af', lineHeight: 1.7 }}>
+                <div style={{ marginBottom: '0.3rem' }}>© 2026 Samadhan. All rights reserved.</div>
+                <div style={{ marginBottom: '0.3rem' }}>
+                  Built by <a href="https://github.com/pradhan-not-found/Samadhan" target="_blank" rel="noopener noreferrer" style={{ color: '#6366f1', fontWeight: 600, textDecoration: 'none' }}>@pradhan-not-found</a>
                 </div>
-                <div style={{ lineHeight: 1.6, opacity: 0.8 }}>
-                  Civic Innovation Hub<br/>Kolkata, India
-                </div>
+                <div>Civic Innovation Hub, Kolkata, India</div>
               </div>
             </div>
             
             <div className="footer-col">
-              <h4 style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '1.5rem', color: 'var(--color-text)', fontWeight: 600 }}>Products</h4>
-              <ul style={{ display: 'flex', flexDirection: 'column', gap: '1rem', fontSize: '0.9rem', listStyle: 'none' }}>
-                <li><a href="#" className="text-muted">Citizen App</a></li>
-                <li><a href="#" className="text-muted">AI Dashboard</a></li>
-                <li><a href="#" className="text-muted">Impact Tracker</a></li>
-                <li><a href="#" className="text-muted">Gov Portal</a></li>
-                <li><a href="#" className="text-muted">Data Insights</a></li>
+              <h4>Products</h4>
+              <ul>
+                <li><a href="#">Citizen App</a></li>
+                <li><a href="#">AI Dashboard</a></li>
+                <li><a href="#">Impact Tracker</a></li>
+                <li><a href="#">Gov Portal</a></li>
+                <li><a href="#">Data Insights</a></li>
               </ul>
             </div>
             
             <div className="footer-col">
-              <h4 style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '1.5rem', color: 'var(--color-text)', fontWeight: 600 }}>APIs</h4>
-              <ul style={{ display: 'flex', flexDirection: 'column', gap: '1rem', fontSize: '0.9rem', listStyle: 'none' }}>
-                <li><a href="#" className="text-muted">Issue Detection</a></li>
-                <li><a href="#" className="text-muted">Auto-Routing</a></li>
-                <li><a href="#" className="text-muted">Image Analysis</a></li>
-                <li><a href="#" className="text-muted">Predictive Model</a></li>
+              <h4>APIs</h4>
+              <ul>
+                <li><a href="#">Issue Detection</a></li>
+                <li><a href="#">Auto-Routing</a></li>
+                <li><a href="#">Image Analysis</a></li>
+                <li><a href="#">Predictive Model</a></li>
               </ul>
             </div>
             
             <div className="footer-col">
-              <h4 style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '1.5rem', color: 'var(--color-text)', fontWeight: 600 }}>Resources</h4>
-              <ul style={{ display: 'flex', flexDirection: 'column', gap: '1rem', fontSize: '0.9rem', listStyle: 'none' }}>
-                <li><a href="#" className="text-muted">Documentation</a></li>
-                <li><a href="#" className="text-muted">API Pricing</a></li>
-                <li><a href="#" className="text-muted">Integrations</a></li>
-                <li><a href="#" className="text-muted">Customer Stories</a></li>
+              <h4>Resources</h4>
+              <ul>
+                <li><a href="#">Documentation</a></li>
+                <li><a href="#">API Pricing</a></li>
+                <li><a href="#">Integrations</a></li>
+                <li><a href="#">Customer Stories</a></li>
               </ul>
             </div>
             
             <div className="footer-col">
-              <h4 style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '1.5rem', color: 'var(--color-text)', fontWeight: 600 }}>Company</h4>
-              <ul style={{ display: 'flex', flexDirection: 'column', gap: '1rem', fontSize: '0.9rem', listStyle: 'none' }}>
-                <li><a href="/about" className="text-muted">About Us</a></li>
-                <li><a href="/careers" className="text-muted">Careers</a></li>
-                <li><a href="/contact" className="text-muted">Contact Us</a></li>
-                <li><a href="/blogs" className="text-muted">Blogs</a></li>
-                <li><a href="#" className="text-muted">Brand Guidelines</a></li>
+              <h4>Company</h4>
+              <ul>
+                <li><a href="/about">About Us</a></li>
+                <li><a href="/careers">Careers</a></li>
+                <li><a href="/contact">Contact Us</a></li>
+                <li><a href="/blogs">Blogs</a></li>
+                <li><a href="#">Brand Guidelines</a></li>
               </ul>
             </div>
             
-            <div className="footer-col">
-              <h4 style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '1.5rem', color: 'var(--color-text)', fontWeight: 600 }}>Legal</h4>
-              <ul style={{ display: 'flex', flexDirection: 'column', gap: '1rem', fontSize: '0.9rem', listStyle: 'none' }}>
-                <li><a href="/trust" className="text-muted">Trust Center</a></li>
-                <li><a href="/terms" className="text-muted">Terms of Service</a></li>
-                <li><a href="/privacy" className="text-muted">Privacy Policy</a></li>
-                <li><a href="#" className="text-muted">EULA</a></li>
+            <div className="footer-col legal-col">
+              <h4>Legal</h4>
+              <ul>
+                <li><a href="/trust">Trust Center</a></li>
+                <li><a href="/terms">Terms of Service</a></li>
+                <li><a href="/privacy">Privacy Policy</a></li>
+                <li><a href="#">EULA</a></li>
               </ul>
             </div>
           </div>

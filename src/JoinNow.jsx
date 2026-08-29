@@ -6,7 +6,7 @@ export default function JoinNow() {
     <div className="join-now-container">
       <div className="join-now-card">
         <h2 className="join-now-title">
-          Build the Future of India's AI<br />with Samadhan
+          Build the Future of India<br />with Samadhan
         </h2>
         
         <div className="join-now-center">

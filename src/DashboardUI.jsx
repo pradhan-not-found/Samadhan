@@ -13,8 +13,7 @@ export default function DashboardUI() {
     color: "linear-gradient(135deg, #6366f1, #8b5cf6)",
     impactScore: 1250,
     rank: 42,
-    email: "venkatesh.d@example.com",
-    phone: "+91 98765 43210"
+    email: "venkatesh.d@samadhan.com"
   };
 
   const mockReports = [
@@ -26,7 +25,8 @@ export default function DashboardUI() {
       date: "2 days ago",
       color: "#f59e0b",
       bg: "#fef3c715",
-      icon: <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      icon: <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.9 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>,
+      image: "/report/brokenlamp.png"
     },
     {
       id: "REP-9088",
@@ -36,7 +36,8 @@ export default function DashboardUI() {
       date: "5 hours ago",
       color: "#6366f1",
       bg: "#6366f115",
-      icon: <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#6366f1" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3 21h18"/><path d="M6 21V7a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v14"/><path d="M10 10h4"/><path d="M10 14h4"/></svg>
+      icon: <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#6366f1" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="m10.82 2.89 8.65 15.11a2 2 0 0 1-1.74 3H6.27a2 2 0 0 1-1.74-3l8.65-15.11a1.95 1.95 0 0 1 3.44 0Z"/><path d="M9 10h6"/><path d="M7 14h10"/></svg>,
+      image: "/report/pothhole.png"
     },
     {
       id: "REP-9102",
@@ -46,7 +47,8 @@ export default function DashboardUI() {
       date: "Just now",
       color: "#10b981",
       bg: "#10b98115",
-      icon: <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+      icon: <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>,
+      image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Garbage_dumping_near_a_street.jpg/640px-Garbage_dumping_near_a_street.jpg"
     }
   ];
 
@@ -68,16 +70,13 @@ export default function DashboardUI() {
     }
   };
 
-  const getCategoryIcon = (category, color = 'currentColor') => {
-    if (!category) return <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>;
-    const s = { width: 16, height: 16, stroke: color, strokeWidth: 2, fill: 'none' };
-    if (category.includes('Road') || category.includes('Infra')) return <svg {...s}><path d="M3 21h18"/><path d="M19 21v-4"/><path d="M19 17a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v4"/><path d="M7 15v-6a5 5 0 0 1 10 0v6"/><path d="M12 9v6"/></svg>;
-    if (category.includes('Water') || category.includes('Sanitation')) return <svg {...s}><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>;
-    if (category.includes('Electrical') || category.includes('Street')) return <svg {...s}><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>;
-    if (category.includes('Waste') || category.includes('Garbage')) return <svg {...s}><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>;
-    if (category.includes('Safety')) return <svg {...s}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>;
-    if (category.includes('Park') || category.includes('Environ')) return <svg {...s}><path d="M17 8C8 10 5.9 16.17 3.82 22"/><path d="M9.1 17.4C11 14 14 9.9 22 4"/></svg>;
-    return <svg {...s}><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>;
+  const getCategoryIcon = (cat, color) => {
+    switch (cat) {
+      case 'Electrical': return <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.9 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>;
+      case 'Infrastructure': return <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m10.82 2.89 8.65 15.11a2 2 0 0 1-1.74 3H6.27a2 2 0 0 1-1.74-3l8.65-15.11a1.95 1.95 0 0 1 3.44 0Z"/><path d="M9 10h6"/><path d="M7 14h10"/></svg>;
+      case 'Sanitation': return <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>;
+      default: return null;
+    }
   };
 
   const renderSidebarLink = (id, label, icon) => (
@@ -94,28 +93,29 @@ export default function DashboardUI() {
   );
 
   const renderHomeContent = () => (
-    <div className="dashboard-content-scroll" style={{ padding: "2rem", overflowY: "auto", height: "100%" }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', flexWrap: 'wrap', gap: '1rem' }}>
-        <div>
-          <h1 style={{ fontSize: '1.8rem', color: '#111', fontWeight: 600, margin: 0 }}>Welcome back, {mockUser.name.split(' ')[0]}!</h1>
-          <p style={{ color: 'var(--text-muted)', margin: '0.25rem 0 0 0' }}>Here's the impact you're making in your community.</p>
+    <div className="dashboard-content-scroll" style={{ padding: "2rem", overflowY: "auto", flex: 1 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', flexWrap: 'nowrap', gap: '1rem' }}>
+        <div style={{ minWidth: 0, flex: 1 }}>
+          <h1 style={{ fontSize: 'clamp(1.2rem, 3vw, 1.8rem)', color: '#111', fontWeight: 600, margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Welcome back, {mockUser.name.split(' ')[0]}!</h1>
+          <p style={{ color: 'var(--text-muted)', margin: '0.25rem 0 0 0', fontSize: 'clamp(0.85rem, 2vw, 1rem)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Here's the impact you're making in your community.</p>
         </div>
-        <button style={{ 
-          background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', 
-          color: 'white', 
-          border: 'none', 
-          padding: '0.75rem 1.25rem', 
-          borderRadius: '10px', 
-          fontWeight: 600, 
-          cursor: 'pointer',
-          boxShadow: '0 4px 15px rgba(99, 102, 241, 0.3)',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '0.5rem'
-        }}>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-          New Report
-        </button>
+        <div style={{ display: "flex", gap: "1rem", alignItems: "center", flexShrink: 0 }}>
+            <button className="btn-hero-dark" style={{
+              backgroundColor: '#1e293b',
+              color: 'white',
+              padding: '0.8rem 1.8rem',
+              borderRadius: '12px',
+              fontSize: '1rem',
+              border: 'none',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem'
+            }}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+              New Report
+            </button>
+        </div>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
@@ -157,18 +157,38 @@ export default function DashboardUI() {
           {mockReports.slice(0,2).map(report => (
             <div key={report.id} style={{ display: 'flex', gap: '1rem', padding: '1.25rem 1.5rem', borderBottom: '1px solid var(--border-light)' }}>
               <div style={{
-                width: '60px',
-                height: '60px',
+                width: '64px',
+                height: '64px',
                 borderRadius: '12px',
-                background: `linear-gradient(135deg, ${report.bg}, ${report.color}10)`,
+                backgroundImage: report.image ? `url(${report.image})` : 'none',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundColor: report.image ? 'transparent' : report.bg,
                 border: `1.5px solid ${report.color}30`,
-                display: 'grid',
-                placeItems: 'center',
+                position: 'relative',
                 flexShrink: 0,
-                boxShadow: `0 4px 12px ${report.color}20`
+                display: report.image ? 'block' : 'grid',
+                placeItems: report.image ? 'unset' : 'center'
               }}>
-                {report.icon}
+                {report.image ? (
+                  <div style={{
+                    position: 'absolute',
+                    bottom: '-6px',
+                    right: '-6px',
+                    backgroundColor: 'white',
+                    borderRadius: '50%',
+                    padding: '4px',
+                    display: 'grid',
+                    placeItems: 'center',
+                    boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                  }}>
+                     {React.cloneElement(report.icon, { width: 14, height: 14 })}
+                  </div>
+                ) : (
+                  report.icon
+                )}
               </div>
+
               <div style={{ flex: 1 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.25rem' }}>
                   <h4 style={{ margin: 0, fontSize: '1rem', color: '#111' }}>{report.title}</h4>
@@ -199,7 +219,7 @@ export default function DashboardUI() {
   );
 
   const renderMyReports = () => (
-    <div className="dashboard-content-scroll" style={{ padding: "2rem", overflowY: "auto", height: "100%" }}>
+    <div className="dashboard-content-scroll" style={{ padding: "2rem", overflowY: "auto", flex: 1 }}>
       <h1 style={{ fontSize: '1.8rem', color: '#111', fontWeight: 600, margin: '0 0 1.5rem 0' }}>My Reports</h1>
       <div style={{ display: 'grid', gap: '1rem' }}>
         {mockReports.map(report => (
@@ -248,7 +268,7 @@ export default function DashboardUI() {
   );
 
   const renderTrackReport = () => (
-    <div className="dashboard-content-scroll" style={{ padding: "2rem", overflowY: "auto", height: "100%" }}>
+    <div className="dashboard-content-scroll" style={{ padding: "2rem", overflowY: "auto", flex: 1 }}>
       <h1 style={{ fontSize: '1.8rem', color: '#111', fontWeight: 600, margin: '0 0 1.5rem 0' }}>Track Report</h1>
       <div style={{ backgroundColor: 'var(--glass-bg)', padding: '2rem', borderRadius: '16px', border: '1px solid var(--border-medium)', textAlign: 'center' }}>
         <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#6366f1" strokeWidth="1.5" style={{ marginBottom: '1rem' }}><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
@@ -263,7 +283,7 @@ export default function DashboardUI() {
   );
 
   const renderLeaderboard = () => (
-    <div className="dashboard-content-scroll" style={{ padding: "2rem", overflowY: "auto", height: "100%" }}>
+    <div className="dashboard-content-scroll" style={{ padding: "2rem", overflowY: "auto", flex: 1 }}>
       <h1 style={{ fontSize: '1.8rem', color: '#111', fontWeight: 600, margin: '0 0 1.5rem 0' }}>City Leaderboard</h1>
       <div style={{ backgroundColor: 'var(--glass-bg)', borderRadius: '16px', border: '1px solid var(--border-medium)', overflow: 'hidden' }}>
         <div style={{ padding: '1rem 1.5rem', borderBottom: '1px solid var(--border-light)', display: 'grid', gridTemplateColumns: '60px 1fr 100px', fontWeight: 600, color: 'var(--text-muted)', fontSize: '0.85rem' }}>
@@ -295,7 +315,7 @@ export default function DashboardUI() {
   );
 
   const renderMyProfile = () => (
-    <div className="dashboard-content-scroll" style={{ padding: "2rem", overflowY: "auto", height: "100%" }}>
+    <div className="dashboard-content-scroll" style={{ padding: "2rem", overflowY: "auto", flex: 1 }}>
       <h1 style={{ fontSize: '1.8rem', color: '#111', fontWeight: 600, margin: '0 0 1.5rem 0' }}>My Profile</h1>
       <div style={{ backgroundColor: 'var(--glass-bg)', padding: '2rem', borderRadius: '16px', border: '1px solid var(--border-medium)', display: 'flex', gap: '2rem', alignItems: 'center' }}>
         <div style={{ width: '120px', height: '120px', borderRadius: '50%', background: mockUser.color, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 8px 24px rgba(99,102,241,0.35)', border: '4px solid white' }}>
@@ -349,105 +369,67 @@ export default function DashboardUI() {
           position: "absolute",
           height: "100%",
           zIndex: 50,
-          width: "260px",
           transition: "transform 0.3s ease",
           transform: mobileMenuOpen ? "translateX(0)" : "translateX(-100%)",
-          display: 'flex',
-          flexDirection: 'column'
         }}
       >
-        <div className="sidebar-header" style={{ padding: "1.25rem 1.5rem", display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", fontWeight: 700, fontSize: "1.25rem", color: "var(--text-main)" }}>
-            <img src={logoImg} alt="Samadhan" style={{ height: "28px", filter: "brightness(0)" }} />
+        <div className="sidebar-header">
+          <a href="#" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none', color: 'var(--text-main)' }}>
+            <img src={logoImg} alt="Samadhan Logo" style={{ height: '32px', filter: 'brightness(0)' }} />
             Samadhan
-          </div>
+          </a>
           <button 
             className="mobile-header" 
-            style={{ background: 'none', border: 'none', fontSize: '1.5rem', cursor: 'pointer', color: 'var(--text-main)' }}
+            style={{ background: 'none', border: 'none', fontSize: '1.5rem', cursor: 'pointer', color: 'var(--text-main)', marginLeft: 'auto' }}
             onClick={() => setMobileMenuOpen(false)}
           >
             ×
           </button>
         </div>
 
-        <div style={{ flex: 1, overflowY: 'auto', padding: '0.75rem 0' }}>
-          {/* Home link */}
-          <button
-            onClick={() => { setActiveTab('home'); setMobileMenuOpen(false); }}
-            style={{
-              display: 'flex', alignItems: 'center', gap: '0.6rem',
-              width: '100%', padding: '0.6rem 1.25rem',
-              background: activeTab === 'home' ? 'rgba(99,102,241,0.08)' : 'transparent',
-              border: 'none', color: activeTab === 'home' ? '#6366f1' : 'var(--text-muted)',
-              fontWeight: activeTab === 'home' ? 600 : 500, fontSize: '0.88rem',
-              cursor: 'pointer', textAlign: 'left', marginBottom: '0.5rem',
-            }}
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-            Home
-          </button>
-
-          {/* Glassy Tab Bar */}
-          <div style={{
-            margin: '0 0.75rem 0.5rem',
-            borderRadius: '14px',
-            border: '1px solid rgba(255,255,255,0.2)',
-            outline: '1px solid rgba(255,255,255,0.08)',
-            background: 'linear-gradient(to bottom, rgba(0,0,0,0.06), rgba(0,0,0,0.02))',
-            backdropFilter: 'blur(16px)',
-            padding: '4px',
-            overflow: 'hidden',
-          }}>
-            {[
-              { id: 'my-reports', label: 'My Reports', icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> },
-              { id: 'track-report', label: 'Track', icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg> },
-              { id: 'impact-score', label: 'Impact', icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg> },
-              { id: 'leaderboard', label: 'Leaders', icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="6"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg> },
-              { id: 'my-profile', label: 'Profile', icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> },
-            ].map(tab => {
-              const isActive = activeTab === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => { setActiveTab(tab.id); setMobileMenuOpen(false); }}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.4rem',
-                    width: '100%',
-                    padding: '0.55rem 0.75rem',
-                    borderRadius: '10px',
-                    border: isActive ? '1px solid rgba(99,102,241,0.2)' : '1px solid transparent',
-                    background: isActive
-                      ? 'white'
-                      : 'transparent',
-                    boxShadow: isActive
-                      ? 'inset 0 0 6px rgba(0,0,0,0.06), 0 1px 4px rgba(99,102,241,0.12)'
-                      : 'none',
-                    color: isActive ? '#6366f1' : 'var(--text-muted)',
-                    fontWeight: isActive ? 600 : 500,
-                    fontSize: '0.8rem',
-                    cursor: 'pointer',
-                    transition: 'all 0.15s ease',
-                    textAlign: 'left',
-                    marginBottom: '2px',
-                  }}
-                >
-                  <span style={{ opacity: isActive ? 1 : 0.6 }}>{tab.icon}</span>
-                  {tab.label}
-                </button>
-              );
-            })}
-          </div>
+        <div className="sidebar-nav-group">
+          {renderSidebarLink('home', 'Home', 
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+          )}
         </div>
 
-        <div style={{ padding: '1.25rem 1.5rem', borderTop: '1px solid var(--border-light)', display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer' }} onClick={() => setActiveTab("my-profile")}>
-          <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: mockUser.color, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 2px 8px rgba(99,102,241,0.3)', border: '2px solid rgba(255,255,255,0.5)' }}>
-              <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#fff', lineHeight: 1 }}>{mockUser.initials}</span>
+        <div className="sidebar-nav-group">
+          <div className="sidebar-nav-title">
+            Citizen Tools
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="18 15 12 9 6 15"></polyline></svg>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-main)', lineHeight: 1.2 }}>{mockUser.name}</span>
-            <span style={{ fontSize: '0.75rem', color: 'var(--text-faint)' }}>Citizen Account</span>
+          {renderSidebarLink('my-reports', 'My Reports',
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+          )}
+          {renderSidebarLink('track-report', 'Track Report',
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="2"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="2" y1="12" x2="4" y2="12"></line></svg>
+          )}
+          {renderSidebarLink('impact-score', 'Impact Score',
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+          )}
+          {renderSidebarLink('leaderboard', 'Leaderboard',
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+          )}
+          {renderSidebarLink('my-profile', 'My Profile',
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          )}
+        </div>
+        
+        <div className="sidebar-bottom">
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '1rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+              <div onClick={() => setActiveTab('my-profile')} style={{ cursor: 'pointer' }}>
+                <div style={{
+                  width: '32px', height: '32px', borderRadius: '50%', border: '2px solid rgba(99,102,241,0.3)', display: 'grid', placeItems: 'center', background: mockUser.color
+                }}>
+                  <span style={{ fontSize: '0.85rem', fontWeight: 800, color: '#fff' }}>{mockUser.initials}</span>
+                </div>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <span style={{ fontSize: '0.85rem', fontWeight: 500, color: 'var(--text-main)' }}>{mockUser.name}</span>
+                <span style={{ fontSize: '0.7rem', color: 'var(--text-faint)' }}>Citizen Account</span>
+              </div>
+            </div>
           </div>
         </div>
       </aside>
@@ -463,6 +445,7 @@ export default function DashboardUI() {
           marginLeft: window.innerWidth > 768 ? "260px" : "0",
           height: "100%",
           width: window.innerWidth > 768 ? "calc(100% - 260px)" : "100%",
+          overflow: "hidden"
         }}
       >
         {/* Header */}
@@ -482,17 +465,23 @@ export default function DashboardUI() {
             >
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
             </button>
-            <div style={{ position: 'relative', width: '300px' }} className="desktop-only">
-              <svg style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-faint)' }} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-              <input type="text" placeholder="Search reports..." style={{ width: '100%', padding: '0.6rem 1rem 0.6rem 2.5rem', borderRadius: '20px', border: '1px solid var(--border-medium)', backgroundColor: 'var(--glass-bg)', fontSize: '0.9rem', outline: 'none' }} />
-            </div>
+            <h2 className="desktop-only" style={{ fontSize: '1.25rem', fontWeight: 600, color: '#111', margin: 0, textTransform: 'capitalize' }}>
+              {activeTab.replace('-', ' ')}
+            </h2>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+            <div style={{ position: 'relative', width: '280px' }} className="desktop-only">
+              <svg style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-faint)' }} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+              <input type="text" placeholder="Search reports..." style={{ width: '100%', padding: '0.65rem 1rem 0.65rem 2.8rem', borderRadius: '100px', border: '1px solid var(--border-medium)', backgroundColor: 'var(--bg-main)', fontSize: '0.9rem', outline: 'none' }} />
+            </div>
+            
+            <div style={{ height: '28px', width: '1px', backgroundColor: 'var(--border-light)', margin: '0 0.25rem' }} className="desktop-only"></div>
+
             <button style={{ background: 'none', border: 'none', position: 'relative', cursor: 'pointer', color: 'var(--text-muted)' }}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
               <span style={{ position: 'absolute', top: '-2px', right: '-2px', width: '8px', height: '8px', backgroundColor: '#ef4444', borderRadius: '50%' }}></span>
             </button>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', paddingLeft: '1rem', borderLeft: '1px solid var(--border-light)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', paddingLeft: '0.5rem' }}>
               <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: mockUser.color, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 2px 8px rgba(99,102,241,0.3)', border: '2px solid rgba(255,255,255,0.5)' }}>
                 <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#fff', lineHeight: 1 }}>{mockUser.initials}</span>
               </div>
@@ -513,6 +502,7 @@ export default function DashboardUI() {
       </main>
       
       <style dangerouslySetInnerHTML={{__html: `
+        .mobile-only { display: none; }
         @media (min-width: 769px) {
           .dashboard-sidebar {
             transform: translateX(0) !important;
@@ -525,10 +515,20 @@ export default function DashboardUI() {
           .desktop-only {
             display: none !important;
           }
+          .mobile-only {
+            display: block !important;
+          }
           .dashboard-main {
             width: 100% !important;
             margin-left: 0 !important;
           }
+        }
+        .dashboard-content-scroll::-webkit-scrollbar {
+          display: none;
+        }
+        .dashboard-content-scroll {
+          -ms-overflow-style: none;  /* IE and Edge */
+          scrollbar-width: none;  /* Firefox */
         }
       `}} />
     </div>
