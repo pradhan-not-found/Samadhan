@@ -17,7 +17,7 @@ const MyReportsView = () => {
 
   const fetchReports = async () => {
     try {
-      const res = await fetch("http://127.0.0.1:8000/api/reports");
+      const res = await fetch(`${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/api/reports`);
       const data = await res.json();
       setPastReports(data);
     } catch (err) {
@@ -38,7 +38,7 @@ const MyReportsView = () => {
       const formData = new FormData();
       formData.append("file", file);
       
-      const imgRes = await fetch("http://127.0.0.1:8000/api/analyze-image", {
+      const imgRes = await fetch(`${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/api/analyze-image`, {
         method: "POST",
         body: formData
       });
@@ -69,7 +69,7 @@ const MyReportsView = () => {
     if (!reportText && !imageFile) return alert("Please enter a description or upload a photo");
     setIsSubmitting(true);
     try {
-      const res = await fetch("http://127.0.0.1:8000/api/reports", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/api/reports`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
@@ -227,7 +227,7 @@ const ImpactScoreView = () => {
   React.useEffect(() => {
     const fetchReports = async () => {
       try {
-        const res = await fetch("http://127.0.0.1:8000/api/reports");
+        const res = await fetch(`${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/api/reports`);
         const data = await res.json();
         setReports(data.filter(r => r.ward === ward));
       } catch (err) {
@@ -530,7 +530,7 @@ const AnalyticsView = () => {
   React.useEffect(() => {
     const fetchStats = async () => {
       try {
-        const res = await fetch("http://127.0.0.1:8000/api/stats");
+        const res = await fetch(`${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/api/stats`);
         if (res.ok) {
           const data = await res.json();
           setStats(data);
@@ -628,7 +628,7 @@ const IncomingIssuesView = () => {
   React.useEffect(() => {
     const fetchReports = async () => {
       try {
-        const res = await fetch("http://127.0.0.1:8000/api/reports");
+        const res = await fetch(`${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/api/reports`);
         const data = await res.json();
         setReports(data);
       } catch (err) {
@@ -696,7 +696,7 @@ const IssueCategorizationView = () => {
     const fetchTicketAndCategorize = async () => {
       setIsThinking(true);
       try {
-        const res = await fetch("http://127.0.0.1:8000/api/reports");
+        const res = await fetch(`${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/api/reports`);
         const reports = await res.json();
         const pending = reports.find(r => r.status === 'Pending Triage') || reports[0];
         if (!pending) {
@@ -706,7 +706,7 @@ const IssueCategorizationView = () => {
         setTicket(pending);
         setIsApproved(pending.status !== 'Pending Triage');
 
-        const response = await fetch("http://127.0.0.1:8000/api/categorize", {
+        const response = await fetch(`${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/api/categorize`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ text: pending.text })
@@ -730,7 +730,7 @@ const IssueCategorizationView = () => {
   const handleApprove = async () => {
     if (!ticket) return;
     try {
-      await fetch(`http://127.0.0.1:8000/api/reports/${ticket.ticket_id}/approve`, { method: "POST" });
+      await fetch(`${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/api/reports/${ticket.ticket_id}/approve`, { method: "POST" });
       setIsApproved(true);
       alert(`Triage approved. ${ticket.ticket_id} is ready for department routing.`);
     } catch (err) {
@@ -844,7 +844,7 @@ const AutoRoutingView = () => {
 
   const refresh = async () => {
     try {
-      const res = await fetch("http://127.0.0.1:8000/api/reports");
+      const res = await fetch(`${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/api/reports`);
       const reports = await res.json();
 
       // Tickets already routed by the agent form the historical log
@@ -875,7 +875,7 @@ const AutoRoutingView = () => {
     setIsProcessing(true);
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/auto-route", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/api/auto-route`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ issue_id: nextTicket.ticket_id })
@@ -981,7 +981,7 @@ const ImageAnalysisView = () => {
   React.useEffect(() => {
     const loadEvidence = async () => {
       try {
-        const res = await fetch("http://127.0.0.1:8000/api/reports");
+        const res = await fetch(`${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/api/reports`);
         const reports = await res.json();
         const withImages = reports.filter(r => r.image_url);
         setEvidence(withImages);
@@ -1000,7 +1000,7 @@ const ImageAnalysisView = () => {
     setResults(null);
     setIsApproved(false);
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/analyze-report-image", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/api/analyze-report-image`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ image_url: target.image_url, ticket_id: target.ticket_id })
@@ -1028,7 +1028,7 @@ const ImageAnalysisView = () => {
     try {
       const formData = new FormData();
       formData.append("file", file);
-      const response = await fetch("http://127.0.0.1:8000/api/analyze-image", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/api/analyze-image`, {
         method: "POST",
         body: formData
       });
@@ -1189,7 +1189,7 @@ const TrackReportView = () => {
     if (!ticketInput.trim()) return;
     setLoading(true); setError(''); setReport(null);
     try {
-      const res = await fetch(`http://127.0.0.1:8000/api/reports/${ticketInput.trim().toUpperCase()}`);
+      const res = await fetch(`${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/api/reports/${ticketInput.trim().toUpperCase()}`);
       if (!res.ok) { setError('Ticket not found. Check the ID and try again.'); setLoading(false); return; }
       const data = await res.json();
       setReport(data);
@@ -1572,7 +1572,7 @@ const GemmaStatusBadge = () => {
     let active = true;
     const poll = async () => {
       try {
-        const res = await fetch('http://127.0.0.1:8000/api/health');
+        const res = await fetch(`${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/api/health`);
         const data = await res.json();
         if (active) setHealth(data);
       } catch {
