@@ -68,21 +68,21 @@
   font-family: var(--font-sans);
   font-weight: 500;
   font-size: 0.85rem;
-  color: var(--color-text-muted);
+  color: #111;
   transition: color 0.2s ease;
   text-decoration: none;
 }
 
 .navbar-inner .nav-links-center a:hover {
-  color: #111;
+  color: #4f46e5;
 }
 
 .navbar-flat.scrolled .nav-links-center a {
-  color: var(--color-text-muted);
+  color: #111;
 }
 
 .navbar-flat.scrolled .nav-links-center a:hover {
-  color: #111;
+  color: #4f46e5;
 }
 
 /* Nav Buttons */
