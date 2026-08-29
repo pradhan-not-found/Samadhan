@@ -122,9 +122,10 @@ function App() {
         
         <section className="section card-page" style={{ '--stack-index': 2 }}>
           <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-            <div style={{ marginBottom: '3rem' }}>
-              <h2>AI Platform Dashboard</h2>
-              <p className="text-muted">Explore how intelligent automation aids problem solving.</p>
+            <div style={{ marginBottom: '3rem', textAlign: 'center' }}>
+              <h2 style={{ fontSize: 'clamp(2.5rem, 5vw, 4rem)', lineHeight: '1.05', fontWeight: '700', fontFamily: 'var(--font-display, sans-serif)', letterSpacing: '-0.03em', marginBottom: '0.5rem', color: '#111' }}>
+                The AI Platform<br/>India Builds On
+              </h2>
             </div>
             
             {/* Dashboard Container with Edge Glows */}
@@ -348,8 +349,17 @@ function App() {
             </div>
           </div>
           
-          <div className="footer-massive-logo-wrapper">
+          <div className="footer-massive-logo-wrapper" style={{ position: 'relative' }}>
             <div className="footer-massive-logo">samadhan</div>
+            <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', opacity: 0.8, pointerEvents: 'none' }}>
+              <svg width="clamp(80px, 12vw, 180px)" height="clamp(80px, 12vw, 180px)" viewBox="0 0 200 200" fill="none">
+                <circle cx="100" cy="100" r="90" stroke="#000080" strokeWidth="8"/>
+                <circle cx="100" cy="100" r="16" fill="#000080"/>
+                {Array.from({ length: 24 }).map((_, i) => (
+                  <path key={i} d="M100 100 L100 10" stroke="#000080" strokeWidth="4" transform={`rotate(${i * 15} 100 100)`}/>
+                ))}
+              </svg>
+            </div>
           </div>
         </div>
       </footer>
