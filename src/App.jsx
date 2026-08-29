@@ -33,8 +33,8 @@ function App() {
       <nav className={`navbar-flat ${scrolled ? 'scrolled' : ''}`}>
         <div className={`navbar-inner ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
           <div className="nav-logo-container">
-            <a href="#" className="logo" style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#111', fontWeight: 'bold', fontSize: '1.6rem', textDecoration: 'none' }}>
-              <img src={logoImg} alt="" className="nav-logo" style={{ height: '34px', width: 'auto', objectFit: 'contain', filter: 'brightness(0)' }} />
+            <a href="#" className="logo">
+              <img src={logoImg} alt="" className="nav-logo" />
               samadhan
             </a>
           </div>
@@ -46,14 +46,14 @@ function App() {
           </div>
 
           <div className={`nav-actions desktop-only`}>
-            <a href="/login" className="btn-hero-dark" style={{borderRadius: '999px', padding: '0.4rem 1.25rem', fontSize: '0.85rem', whiteSpace: 'nowrap'}}>Sign In</a>
-            <a href="/dashboard" className="btn-hero-light" style={{borderRadius: '999px', padding: '0.4rem 1.25rem', fontSize: '0.85rem', background: '#f5f5f5', color: '#111', border: 'none', boxShadow: 'none', whiteSpace: 'nowrap'}}>View Dashboard</a>
+            <a href="/login" className="nav-btn-signin">Sign In</a>
+            <a href="/dashboard" className="nav-btn-dashboard">View Dashboard</a>
           </div>
 
           <div className="mobile-actions">
-            <a href="/login" className="btn-hero-dark" style={{borderRadius: '999px', padding: '0.4rem 1rem', fontSize: '0.8rem', whiteSpace: 'nowrap', textDecoration: 'none'}}>Sign In</a>
-            <a href="/dashboard" className="btn-hero-light" style={{borderRadius: '999px', padding: '0.4rem 1rem', fontSize: '0.8rem', background: '#f5f5f5', color: '#111', border: 'none', boxShadow: 'none', whiteSpace: 'nowrap', textDecoration: 'none'}}>View Dashboard</a>
-            <button className="mobile-menu-btn" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} style={{ background: 'transparent', border: 'none', color: '#111', display: 'flex', alignItems: 'center', marginLeft: '0.25rem' }}>
+            <a href="/login" className="nav-btn-signin">Sign In</a>
+            <a href="/dashboard" className="nav-btn-dashboard">Dashboard</a>
+            <button className="mobile-menu-btn" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 {isMobileMenuOpen ? (
                   <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -349,9 +349,7 @@ function App() {
           </div>
           
           <div className="footer-massive-logo-wrapper">
-            <div className="footer-massive-logo layer-1">samadhan</div>
-            <div className="footer-massive-logo layer-2">samadhan</div>
-            <div className="footer-massive-logo layer-3">samadhan</div>
+            <div className="footer-massive-logo">samadhan</div>
           </div>
         </div>
       </footer>
