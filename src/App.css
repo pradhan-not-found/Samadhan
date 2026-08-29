@@ -722,11 +722,11 @@
   line-height: 0.75;
   text-align: center;
   text-transform: lowercase;
-  background: linear-gradient(180deg, #ff9933 33%, #ffffff 33%, #ffffff 66%, #138808 66%);
+  background: linear-gradient(180deg, rgba(255, 153, 51, 0.3) 0%, rgba(255, 153, 51, 0.05) 40%, rgba(0, 0, 0, 0.02) 50%, rgba(19, 136, 8, 0.05) 60%, rgba(19, 136, 8, 0.3) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  opacity: 0.8;
+  opacity: 0.5;
   letter-spacing: -0.05em;
   pointer-events: none;
   display: flex;
