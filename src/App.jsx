@@ -523,8 +523,8 @@ function App() {
       
         {showCookies && (
           <div className="cookie-banner-wrapper animate-fade-in-up">
-            <div className="cookie-dot-matrix"></div>
             <div className="cookie-banner">
+              <div className="cookie-dot-matrix"></div>
               <div className="cookie-content">
                 <p>We use cookies to keep you signed in. By continuing to use SAMADHAN, you agree to our <a href="/privacy">Privacy Policy</a> and <a href="/terms">Terms of Services</a>.</p>
               </div>

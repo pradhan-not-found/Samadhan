@@ -18,14 +18,18 @@ const MyReportsView = () => {
   const [imageFile, setImageFile] = useState(null);
   const [uploadedImageUrl, setUploadedImageUrl] = useState(null);
   const [pastReports, setPastReports] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const fetchReports = async () => {
+    setIsLoading(true);
     try {
       const res = await fetch(`${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/api/reports`);
       const data = await res.json();
       setPastReports(data);
     } catch (err) {
       console.error(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -186,7 +190,17 @@ const MyReportsView = () => {
         <div className="dashboard-card" style={{ padding: '1.75rem' }}>
           <div style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '1.25rem' }}>My Submissions · {myReports.length} report{myReports.length !== 1 ? 's' : ''}</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', maxHeight: '420px', overflowY: 'auto', paddingRight: '0.25rem' }}>
-            {myReports.length === 0 ? (
+            {isLoading ? (
+              Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="animate-pulse" style={{ display: 'flex', gap: '0.9rem', padding: '1rem 1.1rem', backgroundColor: 'var(--glass-bg)', borderRadius: '12px', border: '1px solid var(--border-light)' }}>
+                  <div style={{ width: '52px', height: '52px', borderRadius: '10px', backgroundColor: 'var(--border-medium)', flexShrink: 0 }}></div>
+                  <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: '0.5rem', justifyContent: 'center' }}>
+                    <div style={{ height: '14px', width: '80%', backgroundColor: 'var(--border-medium)', borderRadius: '4px' }}></div>
+                    <div style={{ height: '10px', width: '40%', backgroundColor: 'var(--border-medium)', borderRadius: '4px' }}></div>
+                  </div>
+                </div>
+              ))
+            ) : myReports.length === 0 ? (
               <div style={{ textAlign: 'center', padding: '3rem 1rem' }}>
                 <div style={{ marginBottom: '0.75rem', display: 'flex', justifyContent: 'center' }}><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--text-faint)" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg></div>
                 <div style={{ color: 'var(--text-main)', fontWeight: 500 }}>No reports yet</div>
@@ -226,17 +240,21 @@ const MyReportsView = () => {
 
 const ImpactScoreView = () => {
   const [reports, setReports] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const { userProfile } = React.useContext(UserContext) || { userProfile: {} };
   const ward = userProfile?.ward || 'Sector 4';
 
   React.useEffect(() => {
     const fetchReports = async () => {
+      setIsLoading(true);
       try {
         const res = await fetch(`${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/api/reports`);
         const data = await res.json();
         setReports(data.filter(r => r.ward === ward));
       } catch (err) {
         console.error(err);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchReports();
@@ -265,7 +283,19 @@ const ImpactScoreView = () => {
         <div className="dashboard-card" style={{ display: 'flex', flexDirection: 'column', padding: '2rem' }}>
           <h3 style={{ fontSize: '1.1rem', marginBottom: '1.5rem', fontWeight: 500, color: 'var(--text-main)' }}>Recent Activity</h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', maxHeight: '300px', overflowY: 'auto', paddingRight: '0.5rem' }}>
-            {reports.map((item, i) => (
+            {isLoading ? (
+              Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="animate-pulse" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', backgroundColor: 'var(--glass-bg)', borderRadius: '12px', border: '1px solid var(--border-light)' }}>
+                  <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                    <div style={{ height: '14px', width: '60%', backgroundColor: 'var(--border-medium)', borderRadius: '4px' }}></div>
+                    <div style={{ height: '10px', width: '30%', backgroundColor: 'var(--border-medium)', borderRadius: '4px' }}></div>
+                  </div>
+                  <div style={{ width: '40px', height: '20px', backgroundColor: 'var(--border-medium)', borderRadius: '999px' }}></div>
+                </div>
+              ))
+            ) : (
+              <>
+                {reports.map((item, i) => (
               <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', backgroundColor: 'var(--glass-bg)', borderRadius: '12px', border: '1px solid var(--border-light)' }}>
                 <div>
                   <div style={{ color: 'var(--text-main)', fontWeight: 500, fontSize: '0.9rem' }}>Reported {item.category}</div>
@@ -294,7 +324,9 @@ const ImpactScoreView = () => {
                 +2
               </div>
             </div>
-          </div>
+          </>
+        )}
+      </div>
         </div>
       </div>
     </div>
