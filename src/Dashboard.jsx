@@ -205,7 +205,7 @@ const MyReportsView = () => {
             <div style={{ marginBottom: '1rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                 <label style={{ display: 'block', color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.03em' }}>Issue Description</label>
-                <button type="button" onClick={() => {
+                <button type="button" title="Fetch Location" onClick={() => {
                   if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition((pos) => {
                       setReportText(prev => prev + (prev ? '\n' : '') + `[Location: ${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)}]`);
@@ -213,9 +213,10 @@ const MyReportsView = () => {
                       setReportText(prev => prev + (prev ? '\n' : '') + `[Location: 22.5726, 88.3639 (Default)]`);
                     });
                   }
-                }} style={{ background: 'none', border: 'none', color: '#6366f1', fontSize: '0.75rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.3rem', cursor: 'pointer', padding: 0 }}>
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                  Fetch Location
+                }} style={{ background: 'var(--glass-bg)', border: '1px solid var(--border-medium)', color: '#6366f1', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '28px', height: '28px', borderRadius: '6px', cursor: 'pointer', padding: 0, transition: 'all 0.2s ease' }}
+                onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#6366f115'; e.currentTarget.style.borderColor = '#6366f1'; }}
+                onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'var(--glass-bg)'; e.currentTarget.style.borderColor = 'var(--border-medium)'; }}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
                 </button>
               </div>
               <textarea placeholder="e.g. Large pothole on Main Street near the school..." value={reportText} onChange={(e) => setReportText(e.target.value)}
