@@ -82,7 +82,7 @@ function App() {
                   onClick={() => setShowDropdown(!showDropdown)}
                 >
                   <div style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: '#6366f1', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', overflow: 'hidden' }}>
-                    <img src={userProfile.avatar_url || getDefaultAvatar(userProfile.name)} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <img src={userProfile.avatar_url || getDefaultAvatar(userProfile.name || userProfile.email || 'User')} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   </div>
                   {showDropdown && (
                     <div style={{ position: 'absolute', top: '100%', right: 0, marginTop: '0.5rem', background: '#fff', border: '1px solid #e5e7eb', borderRadius: '8px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', padding: '0.5rem 0', minWidth: '150px' }}>

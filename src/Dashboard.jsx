@@ -1585,13 +1585,11 @@ const ProfileView = () => {
               width: '110px',
               width: '120px', height: '120px', borderRadius: '50%',
               background: 'transparent',
-              boxShadow: profile.avatar_url
-                ? '0 8px 24px rgba(0,0,0,0.12)'
-                : '0 0 0 6px rgba(99,102,241,0.12), 0 8px 28px rgba(99,102,241,0.35)',
+              boxShadow: 'none',
               border: profile.avatar_url ? '3px solid #6366f1' : '3px solid rgba(255,255,255,0.5)',
               position: 'relative', overflow: 'hidden'
             }}>
-              <img src={profile.avatar_url || getDefaultAvatar(profile.name || 'User')} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              <img src={profile.avatar_url || getDefaultAvatar(profile.name || profile.email || 'User')} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </div>
             <label style={{ position: 'absolute', bottom: 2, right: 2, width: '30px', height: '30px', background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', borderRadius: '50%', display: 'grid', placeItems: 'center', cursor: 'pointer', border: '2.5px solid var(--bg-card)', boxShadow: '0 4px 12px #6366f150' }}>
               <input type="file" accept="image/*" style={{ display: 'none' }} onChange={handleAvatarUpload} />
@@ -1784,9 +1782,6 @@ const Dashboard = () => {
     setTheme(prev => prev === 'dark' ? 'light' : 'dark');
   };
 
-  const getDefaultAvatar = (seed) =>
-    `https://api.dicebear.com/9.x/notionists-neutral/svg?seed=${encodeURIComponent(seed || 'default')}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`;
-
   const AvatarCircle = ({ size = 32, fontSize = '0.85rem' }) => {
     return (
       <div style={{
@@ -1803,7 +1798,7 @@ const Dashboard = () => {
         border: avatarUrl ? '2px solid rgba(99,102,241,0.3)' : '3px solid rgba(255,255,255,0.5)',
         overflow: 'hidden'
       }}>
-        <img src={avatarUrl || getDefaultAvatar(displayName)} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+        <img src={avatarUrl || getDefaultAvatar(displayName || 'User')} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
       </div>
     );
   };
