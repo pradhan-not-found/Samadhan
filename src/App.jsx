@@ -25,8 +25,9 @@ function App() {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
         const { data: profile } = await supabase.from('user_profiles').select('avatar_url, name, role').eq('email', session.user.email).single();
-        if (profile) setUserProfile({ ...profile, email: session.user.email });
-        else setUserProfile({ email: session.user.email, role: 'citizen', name: 'User' });
+        const fallbackName = session.user.user_metadata?.full_name || 'User';
+        if (profile) setUserProfile({ ...profile, name: profile.name || fallbackName, email: session.user.email });
+        else setUserProfile({ email: session.user.email, role: 'citizen', name: fallbackName });
       }
     };
     fetchSession();
@@ -87,9 +88,13 @@ function App() {
                   onMouseEnter={() => setShowDropdown(true)}
                   onMouseLeave={() => setShowDropdown(false)}
                 >
-                  <div style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: '#6366f1', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', overflow: 'hidden', border: '2px solid transparent', transition: 'border-color 0.2s', ...(showDropdown ? { borderColor: '#6366f1' } : {}) }}>
+                  <span style={{ 
+                    display: 'grid', width: '28px', height: '28px', flexShrink: 0, placeItems: 'center', overflow: 'hidden', borderRadius: '50%',
+                    boxShadow: '0 0 0 2px rgba(255,255,255,0.2), 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06)',
+                    backgroundSize: '145%', backgroundPosition: 'center', backgroundColor: '#6366f1'
+                  }}>
                     <img src={userProfile.avatar_url || getDefaultAvatar(userProfile.name || userProfile.email || 'User')} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                  </div>
+                  </span>
                   {showDropdown && (
                     <div style={{ position: 'absolute', top: '100%', right: 0, marginTop: '0', background: '#fff', border: '1px solid #e5e7eb', borderRadius: '12px', boxShadow: '0 10px 25px rgba(0,0,0,0.1)', minWidth: '180px', overflow: 'hidden', animation: 'fadeIn 0.2s ease-out' }}>
                       <div style={{ padding: '0.75rem 1rem', borderBottom: '1px solid #f1f5f9', background: '#f8fafc' }}>
