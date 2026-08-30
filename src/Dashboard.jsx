@@ -1498,6 +1498,12 @@ const ProfileView = () => {
     if (!file || !profile.email) return;
     if (profile.email === 'demo@samadhan.gov.in') return alert("Avatar upload disabled for demo.");
 
+    // Security: validate file type and size
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+    if (!allowedTypes.includes(file.type)) return alert('Only JPG, PNG, WebP, or GIF images are allowed.');
+    if (file.size > 5 * 1024 * 1024) return alert('Image must be under 5MB.');
+
+
     setAvatarLoading(true);
     try {
       const fileExt = file.name.split('.').pop();

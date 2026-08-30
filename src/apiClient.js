@@ -124,9 +124,18 @@ Respond ONLY with a JSON object in this exact format:
     if (url.endsWith('/api/analyze-image') && init && init.method === 'POST') {
       const formData = init.body; // This is a FormData object
       const file = formData.get('file');
-      
+
+      // Security: validate file type and size
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+      if (!allowedTypes.includes(file.type)) {
+        return new Response(JSON.stringify({ error: 'Only JPG, PNG, WebP, or GIF images are allowed.' }), { status: 400 });
+      }
+      if (file.size > 10 * 1024 * 1024) {
+        return new Response(JSON.stringify({ error: 'Image must be under 10MB.' }), { status: 400 });
+      }
+
       // Upload to Supabase Storage
-      const fileExt = file.name.split('.').pop();
+      const fileExt = file.name.split('.').pop().toLowerCase();
       const fileName = `report-${Date.now()}-${Math.random().toString().substring(2)}.${fileExt}`;
       const { error: uploadError } = await supabase.storage.from('reports').upload(fileName, file);
       
