@@ -8,6 +8,7 @@ const AuthPage = () => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [message, setMessage] = useState('');
 
   const handleDemoFill = () => {
     // Just default to citizen for demo in login
@@ -15,9 +16,34 @@ const AuthPage = () => {
     setPassword('password123');
   };
 
+  const handleForgotPassword = async (e) => {
+    e.preventDefault();
+    setError('');
+    setMessage('');
+    
+    if (!email) {
+      setError('Please enter your work email to reset your password.');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: window.location.origin + '/reset-password',
+      });
+      if (error) throw error;
+      setMessage('Password reset link sent to your email.');
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSubmit = async (e) => {
     if (e) e.preventDefault();
     setError('');
+    setMessage('');
     setLoading(true);
 
     try {
@@ -53,6 +79,11 @@ const AuthPage = () => {
           <h1 className="auth-title">Sign in to Samadhan</h1>
           <p className="auth-subtitle">Welcome back! Please enter your details.</p>
 
+          {message && (
+            <div style={{ padding: '0.75rem', marginBottom: '1rem', background: '#dcfce7', color: '#166534', borderRadius: '6px', fontSize: '0.85rem', fontWeight: 500 }}>
+              {message}
+            </div>
+          )}
           {error && (
             <div style={{ padding: '0.75rem', marginBottom: '1rem', background: '#fee2e2', color: '#b91c1c', borderRadius: '6px', fontSize: '0.85rem', fontWeight: 500 }}>
               {error}
@@ -75,7 +106,7 @@ const AuthPage = () => {
             </div>
             
             <div className="auth-forgot-wrapper">
-              <a href="#" className="auth-forgot">Forgot password?</a>
+              <a href="#" className="auth-forgot" onClick={handleForgotPassword}>Forgot password?</a>
             </div>
             
             <div style={{ display: 'flex', gap: '1rem' }}>
