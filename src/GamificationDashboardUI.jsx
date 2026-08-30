@@ -27,7 +27,7 @@ export default function GamificationDashboardUI() {
           <div className="dash-list" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
               <div className="dash-list-item" style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '0.85rem', background: '#f8fafc', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
                  <span style={{ fontWeight: 800, color: '#f59e0b', width: '20px', textAlign: 'center' }}>1</span>
-                 <div style={{ flexShrink: 0, width: '36px', height: '36px', borderRadius: '50%', background: 'linear-gradient(135deg, #3b82f6, #2563eb)', color: 'white', display: 'grid', placeItems: 'center', fontSize: '0.8rem', fontWeight: 'bold' }}>AK</div>
+                 <div style={{ flexShrink: 0, width: '36px', height: '36px', borderRadius: '50%', overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.15)', border: '2px solid rgba(255,255,255,0.85)', outline: '1.5px solid rgba(0,0,0,0.06)' }}><img src="/avatars/grad-red.png" alt="Anita K." style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} /></div>
                  <span style={{ flex: 1, fontSize: '0.95rem', fontWeight: 600, color: '#1e293b', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Anita K.</span>
                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', fontWeight: 700, color: '#059669', flexShrink: 0 }}>
                    2,100 <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>pts</span>
@@ -36,7 +36,7 @@ export default function GamificationDashboardUI() {
               
               <div className="dash-list-item active" style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '0.85rem', background: 'white', borderRadius: '12px', border: '1px solid var(--border-medium)', boxShadow: '0 4px 15px rgba(0,0,0,0.05)' }}>
                  <span style={{ fontWeight: 800, color: '#64748b', width: '20px', textAlign: 'center' }}>2</span>
-                 <div style={{ flexShrink: 0, width: '36px', height: '36px', borderRadius: '50%', background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', color: 'white', display: 'grid', placeItems: 'center', fontSize: '0.8rem', fontWeight: 'bold' }}>VD</div>
+                 <div style={{ flexShrink: 0, width: '36px', height: '36px', borderRadius: '50%', overflow: 'hidden', boxShadow: '0 2px 8px rgba(99,102,241,0.25)', border: '2px solid rgba(255,255,255,0.85)', outline: '1.5px solid rgba(99,102,241,0.2)' }}><img src="/avatars/grad-blue.png" alt="Venkatesh D." style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} /></div>
                  <span style={{ flex: 1, fontSize: '0.95rem', fontWeight: 600, color: '#1e293b', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Venkatesh D. <span style={{ fontSize: '0.75rem', fontWeight: 500, color: '#6366f1' }}>(You)</span></span>
                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', fontWeight: 700, color: '#10b981', flexShrink: 0 }}>
                    1,450 <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>pts</span>

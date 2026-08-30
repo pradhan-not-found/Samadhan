@@ -10,6 +10,7 @@ export default function DashboardUI() {
   const mockUser = {
     name: "Venkatesh D.",
     initials: "VD",
+    avatar: "/avatars/grad-blue.png",
     color: "linear-gradient(135deg, #6366f1, #8b5cf6)",
     impactScore: 1250,
     rank: 42,
@@ -293,18 +294,18 @@ export default function DashboardUI() {
           <div style={{ textAlign: 'right' }}>SCORE</div>
         </div>
         {[
-          { rank: 1, name: "Aarav K.",     score: 4500, initials: "AK", color: "linear-gradient(135deg, #f59e0b, #ef4444)" },
-          { rank: 2, name: "Neha S.",      score: 4120, initials: "NS", color: "linear-gradient(135deg, #ec4899, #8b5cf6)" },
-          { rank: 3, name: "Rahul M.",     score: 3890, initials: "RM", color: "linear-gradient(135deg, #06b6d4, #3b82f6)" },
-          { rank: 42, name: "Venkatesh D.", score: 1250, initials: "VD", color: "linear-gradient(135deg, #6366f1, #8b5cf6)" }
+          { rank: 1, name: "Aarav K.",     score: 4500, initials: "AK", avatar: "/avatars/grad-red.png",   color: "linear-gradient(135deg, #f59e0b, #ef4444)" },
+          { rank: 2, name: "Neha S.",      score: 4120, initials: "NS", avatar: "/avatars/grad-green.png", color: "linear-gradient(135deg, #ec4899, #8b5cf6)" },
+          { rank: 3, name: "Rahul M.",     score: 3890, initials: "RM", avatar: "/avatars/grad-blue.png",  color: "linear-gradient(135deg, #06b6d4, #3b82f6)" },
+          { rank: 42, name: "Venkatesh D.", score: 1250, initials: "VD", avatar: "/avatars/grad-blue.png", color: "linear-gradient(135deg, #6366f1, #8b5cf6)" }
         ].map((user, i) => (
           <div key={user.rank} style={{ padding: '1rem 1.5rem', borderBottom: '1px solid var(--border-light)', display: 'grid', gridTemplateColumns: '60px 1fr 100px', alignItems: 'center', backgroundColor: user.name.includes("Venkatesh") ? '#6366f108' : 'transparent' }}>
             <div style={{ fontWeight: 700, color: user.rank <= 3 ? '#f59e0b' : '#111', fontSize: '1.1rem' }}>
               #{user.rank}
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-              <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: user.color, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 2px 8px rgba(0,0,0,0.15)', border: '2px solid rgba(255,255,255,0.6)' }}>
-                <span style={{ fontSize: '0.65rem', fontWeight: 700, color: '#fff', lineHeight: 1 }}>{user.initials}</span>
+              <div style={{ width: '32px', height: '32px', borderRadius: '50%', overflow: 'hidden', flexShrink: 0, boxShadow: '0 2px 8px rgba(0,0,0,0.15)', border: '2px solid rgba(255,255,255,0.8)' }}>
+                <img src={user.avatar} alt={user.name} style={{ width: '100%', height: '100%', objectFit: 'cover', backgroundSize: '145%', backgroundPosition: 'center' }} />
               </div>
               <div style={{ fontWeight: 600, color: '#111' }}>{user.name} {user.name.includes("Venkatesh") && "(You)"}</div>
             </div>
@@ -319,8 +320,8 @@ export default function DashboardUI() {
     <div className="dashboard-content-scroll" style={{ padding: "2rem", overflowY: "auto", flex: 1 }}>
       <h1 style={{ fontSize: '1.8rem', color: '#111', fontWeight: 600, margin: '0 0 1.5rem 0' }}>My Profile</h1>
       <div style={{ backgroundColor: 'var(--glass-bg)', padding: '2rem', borderRadius: '16px', border: '1px solid var(--border-medium)', display: 'flex', gap: '2rem', alignItems: 'center' }}>
-        <div style={{ width: '120px', height: '120px', borderRadius: '50%', background: mockUser.color, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 8px 24px rgba(99,102,241,0.35)', border: '4px solid white' }}>
-          <span style={{ fontSize: '2.5rem', fontWeight: 700, color: '#fff', lineHeight: 1 }}>{mockUser.initials}</span>
+        <div style={{ width: '120px', height: '120px', borderRadius: '50%', overflow: 'hidden', flexShrink: 0, boxShadow: '0 8px 32px rgba(99,102,241,0.3)', border: '3px solid rgba(255,255,255,0.9)', outline: '2px solid rgba(99,102,241,0.15)' }}>
+          <img src={mockUser.avatar} alt={mockUser.name} style={{ width: '100%', height: '100%', objectFit: 'cover', backgroundSize: '145%', backgroundPosition: 'center', display: 'block' }} />
         </div>
         <div>
           <h2 style={{ fontSize: '1.8rem', color: '#111', margin: '0 0 0.25rem 0' }}>{mockUser.name}</h2>
@@ -420,10 +421,8 @@ export default function DashboardUI() {
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '1rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
               <div onClick={() => setActiveTab('my-profile')} style={{ cursor: 'pointer' }}>
-                <div style={{
-                  width: '32px', height: '32px', borderRadius: '50%', border: '2px solid rgba(99,102,241,0.3)', display: 'grid', placeItems: 'center', background: mockUser.color
-                }}>
-                  <span style={{ fontSize: '0.85rem', fontWeight: 800, color: '#fff' }}>{mockUser.initials}</span>
+                <div style={{ width: '32px', height: '32px', borderRadius: '50%', overflow: 'hidden', border: '2px solid rgba(99,102,241,0.35)', boxShadow: '0 0 0 2px rgba(255,255,255,0.6)' }}>
+                  <img src={mockUser.avatar} alt={mockUser.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
                 </div>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -479,8 +478,8 @@ export default function DashboardUI() {
               <span style={{ position: 'absolute', top: '-2px', right: '-2px', width: '8px', height: '8px', backgroundColor: '#ef4444', borderRadius: '50%' }}></span>
             </button>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', paddingLeft: '0.5rem' }}>
-              <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: mockUser.color, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 2px 8px rgba(99,102,241,0.3)', border: '2px solid rgba(255,255,255,0.5)' }}>
-                <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#fff', lineHeight: 1 }}>{mockUser.initials}</span>
+              <div style={{ width: '36px', height: '36px', borderRadius: '50%', overflow: 'hidden', flexShrink: 0, boxShadow: '0 2px 8px rgba(99,102,241,0.25)', border: '2px solid rgba(255,255,255,0.7)', outline: '1.5px solid rgba(99,102,241,0.2)' }}>
+                <img src={mockUser.avatar} alt={mockUser.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
               </div>
               <div className="desktop-only" style={{ display: 'flex', flexDirection: 'column' }}>
                 <span style={{ fontSize: '0.85rem', fontWeight: 600, color: '#111', lineHeight: 1.2 }}>{mockUser.name}</span>
