@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { supabase } from './supabaseClient';
+import { Classic } from './Loading';
 import './Dashboard.css';
 import logoImg from './assets/logo.png';
 import DashboardUI from './DashboardUI';
@@ -309,6 +310,15 @@ const ImpactScoreView = () => {
     fetchReports();
   }, [ward]);
 
+  if (isLoading) {
+    return (
+      <div className="animate-fade-in" style={{ padding: '4rem 0', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}>
+        <Classic style={{ width: '2.5rem', height: '2.5rem', color: '#6366f1' }} />
+        <div style={{ color: 'var(--text-muted)' }}>Calculating impact...</div>
+      </div>
+    );
+  }
+
   const totalPoints = userProfile?.impact_score || 0;
   const percentage = Math.min(Math.round((totalPoints / 500) * 100), 100);
 
@@ -332,19 +342,7 @@ const ImpactScoreView = () => {
         <div className="dashboard-card" style={{ display: 'flex', flexDirection: 'column', padding: '2rem' }}>
           <h3 style={{ fontSize: '1.1rem', marginBottom: '1.5rem', fontWeight: 500, color: 'var(--text-main)' }}>Recent Activity</h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', maxHeight: '300px', overflowY: 'auto', paddingRight: '0.5rem' }}>
-            {isLoading ? (
-              Array.from({ length: 3 }).map((_, i) => (
-                <div key={i} className="animate-pulse" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', backgroundColor: 'var(--glass-bg)', borderRadius: '12px', border: '1px solid var(--border-light)' }}>
-                  <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                    <div style={{ height: '14px', width: '60%', backgroundColor: 'var(--border-medium)', borderRadius: '4px' }}></div>
-                    <div style={{ height: '10px', width: '30%', backgroundColor: 'var(--border-medium)', borderRadius: '4px' }}></div>
-                  </div>
-                  <div style={{ width: '40px', height: '20px', backgroundColor: 'var(--border-medium)', borderRadius: '999px' }}></div>
-                </div>
-              ))
-            ) : (
-              <>
-                {reports.map((item, i) => (
+            {reports.map((item, i) => (
               <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', backgroundColor: 'var(--glass-bg)', borderRadius: '12px', border: '1px solid var(--border-light)' }}>
                 <div>
                   <div style={{ color: 'var(--text-main)', fontWeight: 500, fontSize: '0.9rem' }}>Reported {item.category}</div>
@@ -373,9 +371,7 @@ const ImpactScoreView = () => {
                 +2
               </div>
             </div>
-          </>
-        )}
-      </div>
+          </div>
         </div>
       </div>
     </div>
@@ -426,16 +422,9 @@ const LeaderboardView = () => {
   const ward  = localStorage.getItem('samadhan_ward')  || 'Sector 4';
   const userName = localStorage.getItem('samadhan_name') || 'You';
 
-  const defaultLeaders = [
-    { rank: 1, name: 'Anjali Sharma',   reports: 142, score: 3250, trend: +12 },
-    { rank: 2, name: 'Rahul Desai',     reports: 128, score: 2900, trend: +8  },
-    { rank: 3, name: 'Priya Patel',     reports: 115, score: 2640, trend: +5  },
-    { rank: 4, name: 'Vikram Singh',    reports: 98,  score: 2100, trend: -2  },
-    { rank: 5, name: userName,          reports: 8,   score: 150,  trend: +3, isYou: true },
-  ];
-
-  const [leaders, setLeaders] = useState(defaultLeaders);
+  const [leaders, setLeaders] = useState([]);
   const [liveMode, setLiveMode] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   React.useEffect(() => {
     supabase.from('profiles').select('full_name, impact_score, email, avatar_url').order('impact_score', { ascending: false }).limit(10)
@@ -451,12 +440,10 @@ const LeaderboardView = () => {
             isYou: d.email === myEmail,
             avatar: d.avatar_url
           }));
-          while (mapped.length < 3) {
-            mapped.push({ rank: mapped.length + 1, name: 'No user yet', score: 0, reports: 0, trend: 0, isYou: false });
-          }
           setLeaders(mapped);
           setLiveMode(true);
         }
+        setIsLoading(false);
       });
   }, []);
 
@@ -483,11 +470,23 @@ const LeaderboardView = () => {
         </div>
       </div>
 
-      {/* Podium Top-3 */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.15fr 1fr', gap: '1rem', marginBottom: '1.5rem', alignItems: 'flex-end' }}>
-        {[leaders[1], leaders[0], leaders[2]].map((user, idx) => {
-          const isCenter = idx === 1;
-          const col = podiumColors[user.rank - 1];
+      {isLoading ? (
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '4rem 0', gap: '1rem' }}>
+          <Classic style={{ width: '2.5rem', height: '2.5rem', color: '#f59e0b' }} />
+          <div style={{ color: 'var(--text-muted)' }}>Loading leaderboard...</div>
+        </div>
+      ) : leaders.length === 0 ? (
+        <div className="dashboard-card" style={{ padding: '4rem', textAlign: 'center' }}>
+          <div style={{ color: 'var(--text-faint)', marginBottom: '1rem' }}>No leaders found yet. Be the first to earn impact points!</div>
+        </div>
+      ) : (
+        <>
+          {/* Podium Top-3 */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.15fr 1fr', gap: '1rem', marginBottom: '1.5rem', alignItems: 'flex-end' }}>
+            {[leaders[1], leaders[0], leaders[2]].map((user, idx) => {
+              if (!user) return <div key={idx}></div>;
+              const isCenter = idx === 1;
+              const col = podiumColors[user.rank - 1];
           return (
             <div key={user.rank} className="dashboard-card" style={{ padding: '1.5rem 1rem', textAlign: 'center', border: `1px solid ${col}30`, background: isCenter ? `linear-gradient(160deg, ${col}12, transparent)` : undefined, transform: isCenter ? 'scale(1.03)' : undefined }}>
               <div style={{ marginBottom: '0.75rem', display: 'flex', justifyContent: 'center' }}>
@@ -580,6 +579,8 @@ const LeaderboardView = () => {
           Scores update weekly. Top 5% of contributors receive recognition badges.
         </div>
       </div>
+      </>
+      )}
     </div>
   );
 };
@@ -1699,7 +1700,7 @@ const Dashboard = () => {
   const [theme, setTheme] = useState('dark');
   const [avatarUrl, setAvatarUrl] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [impactScore, setImpactScore] = useState(150);
+  const [impactScore, setImpactScore] = useState(0);
   const [displayName, setDisplayName] = useState(
     localStorage.getItem('samadhan_name') || (userRole === 'admin' ? 'Administrator' : 'Souradeep')
   );

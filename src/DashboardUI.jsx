@@ -48,7 +48,7 @@ export default function DashboardUI() {
       color: "#10b981",
       bg: "#10b98115",
       icon: <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>,
-      image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Garbage_dumping_near_a_street.jpg/640px-Garbage_dumping_near_a_street.jpg"
+      image: "/report/garbage.png"
     }
   ];
 
@@ -356,7 +356,7 @@ export default function DashboardUI() {
             right: 0,
             bottom: 0,
             backgroundColor: "rgba(0,0,0,0.5)",
-            zIndex: 40,
+            zIndex: 140,
           }}
           onClick={() => setMobileMenuOpen(false)}
         />
@@ -368,7 +368,7 @@ export default function DashboardUI() {
         style={{
           position: "absolute",
           height: "100%",
-          zIndex: 50,
+          zIndex: 150,
           transition: "transform 0.3s ease",
           transform: mobileMenuOpen ? "translateX(0)" : "translateX(-100%)",
         }}
@@ -436,7 +436,6 @@ export default function DashboardUI() {
 
       {/* Main Content Area */}
       <main
-        className="dashboard-main"
         style={{
           display: "flex",
           flexDirection: "column",
@@ -465,9 +464,6 @@ export default function DashboardUI() {
             >
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
             </button>
-            <h2 className="desktop-only" style={{ fontSize: '1.25rem', fontWeight: 600, color: '#111', margin: 0, textTransform: 'capitalize' }}>
-              {activeTab.replace('-', ' ')}
-            </h2>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
             <div style={{ position: 'relative', width: '280px' }} className="desktop-only">
