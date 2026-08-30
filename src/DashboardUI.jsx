@@ -235,7 +235,7 @@ export default function DashboardUI() {
               flexShrink: 0,
               boxShadow: `0 4px 16px ${report.color}25`
             }}>
-              {report.icon}
+              {report.image ? <img src={report.image} alt={report.category} style={{ width: '100%', height: '100%', borderRadius: '13px', objectFit: 'cover' }} /> : report.icon}
             </div>
             <div style={{ flex: 1 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>

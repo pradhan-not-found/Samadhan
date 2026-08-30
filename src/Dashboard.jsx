@@ -1807,7 +1807,12 @@ const Dashboard = () => {
     </div>
   );
 
-  if (loadingSession) return <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'var(--bg-main)', color: 'var(--text-main)' }}>Loading Dashboard...</div>;
+  if (loadingSession) return (
+    <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', backgroundColor: 'var(--bg-main)', gap: '1rem' }}>
+      <Classic style={{ color: 'var(--text-main)', width: '2.5rem', height: '2.5rem' }} />
+      <div style={{ color: 'var(--text-muted)' }}>Loading Dashboard...</div>
+    </div>
+  );
 
   return (
     <UserContext.Provider value={{ userProfile, setUserProfile }}>
