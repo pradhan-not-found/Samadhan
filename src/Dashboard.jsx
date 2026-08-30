@@ -222,14 +222,11 @@ const MyReportsView = () => {
             </div>
             <div style={{ marginTop: 'auto', paddingTop: '1.5rem' }}>
               {hasGemini ? (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.65rem 0.9rem', backgroundColor: '#6366f110', borderRadius: '8px', marginBottom: '1.25rem', border: '1px solid #6366f125' }}>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg><span style={{ fontSize: '0.75rem', color: '#818cf8', fontWeight: 500 }}>Gemini AI will auto-classify category, severity & route to the right department</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 1rem', background: 'linear-gradient(135deg, rgba(99,102,241,0.08), rgba(139,92,246,0.08))', borderRadius: '10px', marginBottom: '1.25rem', border: '1px solid rgba(99,102,241,0.2)', boxShadow: '0 4px 15px rgba(99,102,241,0.05)' }}>
+                  <img src={logoImg} className="animate-spin" alt="AI Active" style={{ width: '22px', height: '22px', filter: 'drop-shadow(0 0 4px rgba(99,102,241,0.6))' }} />
+                  <span style={{ fontSize: '0.8rem', color: '#6366f1', fontWeight: 600, letterSpacing: '0.02em' }}>Samadhan AI is active & will auto-classify your report</span>
                 </div>
-              ) : (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.65rem 0.9rem', backgroundColor: 'var(--glass-bg)', borderRadius: '8px', marginBottom: '1.25rem', border: '1px solid var(--border-medium)' }}>
-                  <span style={{ fontSize: '0.75rem', color: 'var(--text-faint)', fontWeight: 500 }}>AI Auto-Classification is disabled (Add Gemini Key in Profile)</span>
-                </div>
-              )}
+              ) : null}
               <button type="submit" disabled={isSubmitting} style={{ width: '100%', padding: '0.85rem', background: isSubmitting ? 'var(--border-medium)' : 'linear-gradient(135deg, #6366f1, #8b5cf6)', color: '#fff', border: 'none', borderRadius: '10px', fontWeight: 600, fontSize: '0.9rem', cursor: isSubmitting ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', boxShadow: isSubmitting ? 'none' : '0 4px 15px #6366f140' }}>
                 {isSubmitting ? (hasGemini ? 'Gemini is analyzing…' : 'Submitting...') : 'Submit Report'}
               </button>
@@ -490,8 +487,8 @@ const LeaderboardView = () => {
           return (
             <div key={user.rank} className="dashboard-card" style={{ padding: '1.5rem 1rem', textAlign: 'center', border: `1px solid ${col}30`, background: isCenter ? `linear-gradient(160deg, ${col}12, transparent)` : undefined, transform: isCenter ? 'scale(1.03)' : undefined }}>
               <div style={{ marginBottom: '0.75rem', display: 'flex', justifyContent: 'center' }}>
-                <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: user.avatar ? 'transparent' : `linear-gradient(135deg, hsl(${avatarHues[user.rank-1] || 200},70%,35%), hsl(${avatarHues[user.rank-1] || 200},70%,55%))`, display: 'grid', placeItems: 'center', fontWeight: 700, fontSize: '1.2rem', color: '#fff', border: `3px solid ${col}`, boxShadow: `0 0 0 3px ${col}30`, overflow: 'hidden' }}>
-                  {user.avatar ? <img src={user.avatar} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : (user.name ? user.name.charAt(0) : '?')}
+                <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: user.avatar ? 'transparent' : 'var(--avatar-mesh)', display: 'grid', placeItems: 'center', fontWeight: 700, fontSize: '1.2rem', color: '#fff', border: `3px solid ${col}`, boxShadow: `0 0 0 3px ${col}30`, overflow: 'hidden' }}>
+                  {user.avatar && <img src={user.avatar} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />}
                 </div>
               </div>
               <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '0.5rem' }}><MedalIcon rank={user.rank} /></div>
@@ -538,8 +535,8 @@ const LeaderboardView = () => {
 
               {/* Avatar + Name */}
               <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '0.75rem', minWidth: 0 }}>
-                <div style={{ width: '34px', height: '34px', borderRadius: '50%', background: `linear-gradient(135deg, hsl(${avatarHues[i % 5]},65%,35%), hsl(${avatarHues[i % 5]},65%,55%))`, display: 'grid', placeItems: 'center', fontWeight: 700, fontSize: '0.85rem', color: '#fff', flexShrink: 0, overflow: 'hidden' }}>
-                  {user.avatar ? <img src={user.avatar} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : user.name.charAt(0)}
+                <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: user.avatar ? 'transparent' : 'var(--avatar-mesh)', display: 'grid', placeItems: 'center', flexShrink: 0, overflow: 'hidden' }}>
+                  {user.avatar && <img src={user.avatar} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />}
                 </div>
                 <div style={{ fontWeight: 600, color: user.isYou ? '#60a5fa' : 'var(--text-main)', fontSize: '0.9rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {user.name}
@@ -1434,7 +1431,21 @@ const ProfileView = () => {
   const [avatarLoading, setAvatarLoading] = useState(false);
   const [editMode, setEditMode] = useState(false);
 
-  
+  React.useEffect(() => {
+    if (userProfile && Object.keys(userProfile).length > 0) {
+      setProfile(p => ({
+        ...p,
+        email: userProfile.email || p.email,
+        name: userProfile.full_name || userProfile.name || p.name,
+        role: userProfile.role || p.role,
+        ward: userProfile.ward || p.ward,
+        state_region: userProfile.state_region || p.state_region,
+        bio: userProfile.bio || p.bio,
+        avatar_url: userProfile.avatar_url || p.avatar_url,
+      }));
+    }
+  }, [userProfile]);
+
   const handleAvatarUpload = async (e) => {
     const file = e.target.files[0];
     if (!file || !profile.email) return;
@@ -1561,16 +1572,14 @@ const ProfileView = () => {
               margin: '0 auto',
               background: profile.avatar_url
                 ? 'transparent'
-                : 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #06b6d4 100%)',
+                : 'var(--avatar-mesh)',
               boxShadow: profile.avatar_url
                 ? '0 8px 24px rgba(0,0,0,0.12)'
                 : '0 0 0 6px rgba(99,102,241,0.12), 0 8px 28px rgba(99,102,241,0.35)',
               border: '3px solid rgba(255,255,255,0.5)',
             }}>
-              {profile.avatar_url ? (
+              {profile.avatar_url && (
                 <img src={profile.avatar_url} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-              ) : (
-                <span style={{ fontSize: '2.2rem', fontWeight: 800, color: '#fff', letterSpacing: '-0.02em', textShadow: '0 2px 8px rgba(0,0,0,0.2)' }}>{initials}</span>
               )}
             </div>
             <label style={{ position: 'absolute', bottom: 2, right: 2, width: '30px', height: '30px', background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', borderRadius: '50%', display: 'grid', placeItems: 'center', cursor: 'pointer', border: '2.5px solid var(--bg-card)', boxShadow: '0 4px 12px #6366f150' }}>

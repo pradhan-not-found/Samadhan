@@ -15,19 +15,17 @@ export function Classic({ className, ...props }) {
       `}</style>
       <span
         role="status"
-        className={cn("box-border inline-block size-5", className)}
+        className={cn("box-border inline-block", className)}
         style={{ width: '1.25rem', height: '1.25rem' }}
         {...props}
       >
         <span
           aria-hidden="true"
-          className="relative top-1/2 left-1/2 block size-full"
-          style={{ position: 'relative', display: 'block', width: '100%', height: '100%' }}
+          style={{ position: 'relative', display: 'block', width: '100%', height: '100%', top: '50%', left: '50%' }}
         >
           {Array.from({ length: 12 }, (_, index) => (
             <span
               key={index}
-              className="absolute block bg-current"
               style={{
                 position: 'absolute',
                 top: '-3.9%',
@@ -35,9 +33,10 @@ export function Classic({ className, ...props }) {
                 height: '8%',
                 width: '24%',
                 borderRadius: '9999px',
+                backgroundColor: 'currentColor',
                 transform: `rotate(${index * 30}deg) translate(146%)`,
-                animation: "loading-ui-classic-fade var(--duration, 1.2s) linear infinite",
-                animationDelay: `calc(var(--duration, 1.2s) / 12 * ${index - 12})`,
+                animation: "loading-ui-classic-fade 1.2s linear infinite",
+                animationDelay: `calc(1.2s / 12 * ${index - 12})`,
               }}
             />
           ))}
