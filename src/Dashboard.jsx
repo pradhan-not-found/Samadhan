@@ -29,6 +29,7 @@ const MyReportsView = () => {
   const ward = userProfile?.ward || 'Sector 4';
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [reportText, setReportText] = useState('');
+  const [reportLocation, setReportLocation] = useState('');
   const [imageFile, setImageFile] = useState(null);
   const [uploadedImageUrl, setUploadedImageUrl] = useState(null);
   const [pastReports, setPastReports] = useState([]);
@@ -83,10 +84,11 @@ const MyReportsView = () => {
       
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition((pos) => {
-          const loc = `\n[Location: ${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)}]`;
-          setReportText(autoText + loc);
+          setReportLocation(`${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)}`);
+          setReportText(autoText);
         }, () => {
-          setReportText(autoText + `\n[Location: 22.5726, 88.3639 (Default)]`);
+          setReportLocation(`22.5726, 88.3639 (Default)`);
+          setReportText(autoText);
         });
       } else {
         setReportText(autoText);
@@ -105,6 +107,7 @@ const MyReportsView = () => {
 
       const reqBody = { 
         text: reportText || "Photo Report", 
+        location: reportLocation, 
         ward, 
         state_region: state,
         image_url: uploadedImageUrl 
@@ -123,6 +126,7 @@ const MyReportsView = () => {
       const data = await res.json();
       alert(`Issue reported successfully! Gemma categorized it as: ${data.category}`);
       setReportText('');
+      setReportLocation('');
       setImageFile(null);
       setUploadedImageUrl(null);
       fetchReports();
@@ -196,14 +200,21 @@ const MyReportsView = () => {
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
             <div style={{ flex: 1 }}>
             <div style={{ marginBottom: '1rem' }}>
+              <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.03em' }}>Issue Description</label>
+              <textarea placeholder="e.g. Large pothole on Main Street near the school..." value={reportText} onChange={(e) => setReportText(e.target.value)}
+                style={{ width: '100%', height: '80px', padding: '0.9rem 1rem', backgroundColor: 'var(--glass-bg)', borderRadius: '10px', border: '1px solid var(--border-medium)', color: 'var(--text-main)', resize: 'none', fontSize: '0.875rem', outline: 'none', boxSizing: 'border-box', fontFamily: 'inherit' }}
+                onFocus={e => e.target.style.borderColor = '#6366f1'} onBlur={e => e.target.style.borderColor = 'var(--border-medium)'} />
+            </div>
+
+            <div style={{ marginBottom: '1rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                <label style={{ display: 'block', color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.03em' }}>Issue Description</label>
+                <label style={{ display: 'block', color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.03em' }}>Location</label>
                 <button type="button" title="Fetch Location" onClick={() => {
                   if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition((pos) => {
-                      setReportText(prev => prev + (prev ? '\n' : '') + `[Location: ${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)}]`);
+                      setReportLocation(`${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)}`);
                     }, () => {
-                      setReportText(prev => prev + (prev ? '\n' : '') + `[Location: 22.5726, 88.3639 (Default)]`);
+                      setReportLocation(`22.5726, 88.3639 (Default)`);
                     });
                   }
                 }} style={{ background: 'var(--glass-bg)', border: '1px solid var(--border-medium)', color: '#6366f1', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '28px', height: '28px', borderRadius: '6px', cursor: 'pointer', padding: 0, transition: 'all 0.2s ease' }}
@@ -212,8 +223,8 @@ const MyReportsView = () => {
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
                 </button>
               </div>
-              <textarea placeholder="e.g. Large pothole on Main Street near the school..." value={reportText} onChange={(e) => setReportText(e.target.value)}
-                style={{ width: '100%', height: '110px', padding: '0.9rem 1rem', backgroundColor: 'var(--glass-bg)', borderRadius: '10px', border: '1px solid var(--border-medium)', color: 'var(--text-main)', resize: 'none', fontSize: '0.875rem', outline: 'none', boxSizing: 'border-box', fontFamily: 'inherit' }}
+              <input type="text" placeholder="e.g. 123 Main St or fetch automatically..." value={reportLocation} onChange={(e) => setReportLocation(e.target.value)}
+                style={{ width: '100%', padding: '0.8rem 1rem', backgroundColor: 'var(--glass-bg)', borderRadius: '10px', border: '1px solid var(--border-medium)', color: 'var(--text-main)', fontSize: '0.875rem', outline: 'none', boxSizing: 'border-box', fontFamily: 'inherit' }}
                 onFocus={e => e.target.style.borderColor = '#6366f1'} onBlur={e => e.target.style.borderColor = 'var(--border-medium)'} />
             </div>
             <div style={{ marginBottom: '1.5rem' }}>
