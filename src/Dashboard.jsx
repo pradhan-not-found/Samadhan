@@ -10,24 +10,17 @@ export const UserContext = React.createContext(null);
 
 // --- Page Components ---
 
-export const getAvatarStyle = (name) => {
-  const colors = [
-    '#3b82f6', // blue
-    '#22c55e', // green
-    '#ef4444', // red
-    '#a855f7', // purple
-    '#f59e0b', // amber
-  ];
+export const getDefaultAvatar = (str = 'User') => {
   let hash = 0;
-  const str = name || 'User';
   for (let i = 0; i < str.length; i++) {
     hash = str.charCodeAt(i) + ((hash << 5) - hash);
   }
-  const color = colors[Math.abs(hash) % colors.length];
-  return {
-    background: `radial-gradient(ellipse at 50% 115%, ${color} 0%, #ffffff 70%)`,
-    border: '3px solid rgba(255,255,255,0.5)'
-  };
+  const avatars = [
+    '/avatars/grad-blue.png',
+    '/avatars/grad-green.png',
+    '/avatars/grad-red.png'
+  ];
+  return avatars[Math.abs(hash) % avatars.length];
 };
 
 const MyReportsView = () => {
@@ -509,8 +502,8 @@ const LeaderboardView = () => {
           return (
             <div key={user.rank} className="dashboard-card" style={{ padding: '1.5rem 1rem', textAlign: 'center', border: `1px solid ${col}30`, background: isCenter ? `linear-gradient(160deg, ${col}12, transparent)` : undefined, transform: isCenter ? 'scale(1.03)' : undefined }}>
               <div style={{ marginBottom: '0.75rem', display: 'flex', justifyContent: 'center' }}>
-                <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: user.avatar ? 'transparent' : getAvatarStyle(user.name).background, display: 'grid', placeItems: 'center', fontWeight: 700, fontSize: '1.2rem', color: '#fff', border: user.avatar ? `3px solid ${col}` : getAvatarStyle(user.name).border, boxShadow: user.avatar ? `0 0 0 3px ${col}30` : 'none', overflow: 'hidden' }}>
-                  {user.avatar && <img src={user.avatar} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />}
+                <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: 'transparent', display: 'grid', placeItems: 'center', fontWeight: 700, fontSize: '1.2rem', color: '#fff', border: user.avatar ? `3px solid ${col}` : '3px solid rgba(255,255,255,0.5)', boxShadow: user.avatar ? `0 0 0 3px ${col}30` : 'none', overflow: 'hidden' }}>
+                  <img src={user.avatar || getDefaultAvatar(user.name)} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 </div>
               </div>
               <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '0.5rem' }}><MedalIcon rank={user.rank} /></div>
@@ -557,8 +550,8 @@ const LeaderboardView = () => {
 
               {/* Avatar + Name */}
               <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '0.75rem', minWidth: 0 }}>
-                <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: user.avatar ? 'transparent' : getAvatarStyle(user.name).background, display: 'grid', placeItems: 'center', flexShrink: 0, overflow: 'hidden', border: user.avatar ? 'none' : getAvatarStyle(user.name).border }}>
-                  {user.avatar && <img src={user.avatar} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />}
+                <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'transparent', display: 'grid', placeItems: 'center', flexShrink: 0, overflow: 'hidden', border: user.avatar ? 'none' : '3px solid rgba(255,255,255,0.5)' }}>
+                  <img src={user.avatar || getDefaultAvatar(user.name)} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 </div>
                 <div style={{ fontWeight: 600, color: user.isYou ? '#60a5fa' : 'var(--text-main)', fontSize: '0.9rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {user.name}
@@ -1590,23 +1583,15 @@ const ProfileView = () => {
           <div style={{ position: 'relative', display: 'inline-block', marginBottom: '1.25rem' }}>
             <div style={{
               width: '110px',
-              height: '110px',
-              borderRadius: '50%',
-              overflow: 'hidden',
-              display: 'grid',
-              placeItems: 'center',
-              margin: '0 auto',
-              background: profile.avatar_url
-                ? 'transparent'
-                : getAvatarStyle(profile.name || 'User').background,
+              width: '120px', height: '120px', borderRadius: '50%',
+              background: 'transparent',
               boxShadow: profile.avatar_url
                 ? '0 8px 24px rgba(0,0,0,0.12)'
                 : '0 0 0 6px rgba(99,102,241,0.12), 0 8px 28px rgba(99,102,241,0.35)',
-              border: profile.avatar_url ? '3px solid #6366f1' : getAvatarStyle(profile.name || 'User').border,
+              border: profile.avatar_url ? '3px solid #6366f1' : '3px solid rgba(255,255,255,0.5)',
+              position: 'relative', overflow: 'hidden'
             }}>
-              {profile.avatar_url && (
-                <img src={profile.avatar_url} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-              )}
+              <img src={profile.avatar_url || getDefaultAvatar(profile.name || 'User')} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </div>
             <label style={{ position: 'absolute', bottom: 2, right: 2, width: '30px', height: '30px', background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', borderRadius: '50%', display: 'grid', placeItems: 'center', cursor: 'pointer', border: '2.5px solid var(--bg-card)', boxShadow: '0 4px 12px #6366f150' }}>
               <input type="file" accept="image/*" style={{ display: 'none' }} onChange={handleAvatarUpload} />
@@ -1799,27 +1784,26 @@ const Dashboard = () => {
     setTheme(prev => prev === 'dark' ? 'light' : 'dark');
   };
 
-  const getAvatarUrl = (seed) =>
+  const getDefaultAvatar = (seed) =>
     `https://api.dicebear.com/9.x/notionists-neutral/svg?seed=${encodeURIComponent(seed || 'default')}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`;
 
   const AvatarCircle = ({ size = 32, fontSize = '0.85rem' }) => {
-    const avatarStyle = getAvatarStyle(displayName);
     return (
       <div style={{
         width: `${size}px`,
         height: `${size}px`,
         borderRadius: '50%',
-        overflow: 'hidden',
-        flexShrink: 0,
-        border: avatarUrl ? '2px solid rgba(99,102,241,0.3)' : avatarStyle.border,
+        color: '#fff',
         display: 'grid',
         placeItems: 'center',
-        background: avatarUrl ? 'transparent' : avatarStyle.background,
+        background: 'transparent',
         boxShadow: 'none',
         backdropFilter: 'blur(8px)',
         position: 'relative',
+        border: avatarUrl ? '2px solid rgba(99,102,241,0.3)' : '3px solid rgba(255,255,255,0.5)',
+        overflow: 'hidden'
       }}>
-        {avatarUrl && <img src={avatarUrl} alt="avatar" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />}
+        <img src={avatarUrl || getDefaultAvatar(displayName)} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
       </div>
     );
   };

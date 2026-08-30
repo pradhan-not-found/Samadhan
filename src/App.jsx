@@ -39,19 +39,21 @@ function App() {
 
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setScrolled(!entry.isIntersecting);
-      },
-      { threshold: 0 }
-    );
-    const heroElement = document.querySelector('.hero');
-    if (heroElement) observer.observe(heroElement);
-    
-    return () => {
-      if (heroElement) observer.unobserve(heroElement);
+    const onScroll = () => {
+      setScrolled(window.scrollY > 0);
     };
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
+  const getDefaultAvatar = (str = 'User') => {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const avatars = ['/avatars/grad-blue.png', '/avatars/grad-green.png', '/avatars/grad-red.png'];
+    return avatars[Math.abs(hash) % avatars.length];
+  };
 
   return (
     <>
@@ -79,12 +81,12 @@ function App() {
                   style={{ position: 'relative', cursor: 'pointer' }}
                   onClick={() => setShowDropdown(!showDropdown)}
                 >
-                  <div style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: '#6366f1', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>
-                    {(userProfile.full_name || 'U').charAt(0).toUpperCase()}
+                  <div style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: '#6366f1', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', overflow: 'hidden' }}>
+                    <img src={userProfile.avatar_url || getDefaultAvatar(userProfile.name)} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   </div>
                   {showDropdown && (
                     <div style={{ position: 'absolute', top: '100%', right: 0, marginTop: '0.5rem', background: '#fff', border: '1px solid #e5e7eb', borderRadius: '8px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', padding: '0.5rem 0', minWidth: '150px' }}>
-                      <div style={{ padding: '0.5rem 1rem', borderBottom: '1px solid #e5e7eb', fontSize: '0.85rem', color: '#111', fontWeight: 600 }}>{userProfile.full_name}</div>
+                      <div style={{ padding: '0.5rem 1rem', borderBottom: '1px solid #e5e7eb', fontSize: '0.85rem', color: '#111', fontWeight: 600 }}>{userProfile.name}</div>
                       <a href="/dashboard" style={{ display: 'block', padding: '0.5rem 1rem', color: '#4b5563', textDecoration: 'none', fontSize: '0.85rem' }}>Dashboard</a>
                       <div onClick={handleLogout} style={{ display: 'block', padding: '0.5rem 1rem', color: '#ef4444', textDecoration: 'none', fontSize: '0.85rem', cursor: 'pointer' }}>Logout</div>
                     </div>
