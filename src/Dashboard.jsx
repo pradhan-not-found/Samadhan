@@ -502,8 +502,18 @@ const LeaderboardView = () => {
           return (
             <div key={user.rank} className="dashboard-card" style={{ padding: '1.5rem 1rem', textAlign: 'center', border: `1px solid ${col}30`, background: isCenter ? `linear-gradient(160deg, ${col}12, transparent)` : undefined, transform: isCenter ? 'scale(1.03)' : undefined }}>
               <div style={{ marginBottom: '0.75rem', display: 'flex', justifyContent: 'center' }}>
-                <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: 'transparent', display: 'grid', placeItems: 'center', fontWeight: 700, fontSize: '1.2rem', color: '#fff', border: user.avatar ? `3px solid ${col}` : '3px solid rgba(255,255,255,0.5)', boxShadow: user.avatar ? `0 0 0 3px ${col}30` : 'none', overflow: 'hidden' }}>
-                  <img src={user.avatar || getDefaultAvatar(user.name)} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <div style={{
+                  padding: '4px',
+                  background: 'rgba(255,255,255,0.15)',
+                  backdropFilter: 'blur(10px)',
+                  border: `1px solid ${col}80`,
+                  boxShadow: `0 8px 24px ${col}30, inset 0 0 10px rgba(255,255,255,0.3)`,
+                  borderRadius: '50%',
+                  display: 'inline-flex'
+                }}>
+                  <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: 'transparent', display: 'grid', placeItems: 'center', overflow: 'hidden' }}>
+                    <img src={user.avatar || getDefaultAvatar(user.name)} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  </div>
                 </div>
               </div>
               <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '0.5rem' }}><MedalIcon rank={user.rank} /></div>
@@ -550,8 +560,19 @@ const LeaderboardView = () => {
 
               {/* Avatar + Name */}
               <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '0.75rem', minWidth: 0 }}>
-                <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'transparent', display: 'grid', placeItems: 'center', flexShrink: 0, overflow: 'hidden', border: user.avatar ? 'none' : '3px solid rgba(255,255,255,0.5)' }}>
-                  <img src={user.avatar || getDefaultAvatar(user.name)} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <div style={{
+                  padding: '2px',
+                  background: 'rgba(255,255,255,0.15)',
+                  backdropFilter: 'blur(10px)',
+                  border: '1px solid rgba(255,255,255,0.4)',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.08), inset 0 0 5px rgba(255,255,255,0.3)',
+                  borderRadius: '50%',
+                  display: 'inline-flex',
+                  flexShrink: 0
+                }}>
+                  <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'transparent', display: 'grid', placeItems: 'center', overflow: 'hidden' }}>
+                    <img src={user.avatar || getDefaultAvatar(user.name)} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  </div>
                 </div>
                 <div style={{ fontWeight: 600, color: user.isYou ? '#60a5fa' : 'var(--text-main)', fontSize: '0.9rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {user.name}
@@ -1580,17 +1601,23 @@ const ProfileView = () => {
 
         {/* Avatar Card */}
         <div className="dashboard-card" style={{ padding: '2rem', textAlign: 'center' }}>
-          <div style={{ position: 'relative', display: 'inline-block', marginBottom: '1.25rem' }}>
             <div style={{
-              width: '110px',
-              width: '120px', height: '120px', borderRadius: '50%',
-              background: 'transparent',
-              boxShadow: 'none',
-              border: profile.avatar_url ? '3px solid #6366f1' : '3px solid rgba(255,255,255,0.5)',
-              position: 'relative', overflow: 'hidden'
+              padding: '5px',
+              background: 'rgba(255,255,255,0.15)',
+              backdropFilter: 'blur(12px)',
+              border: '1px solid rgba(255,255,255,0.4)',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.15), inset 0 0 15px rgba(255,255,255,0.3)',
+              borderRadius: '50%',
+              display: 'inline-flex',
+              position: 'relative'
             }}>
-              <img src={profile.avatar_url || getDefaultAvatar(profile.name || profile.email || 'User')} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-            </div>
+              <div style={{
+                width: '120px', height: '120px', borderRadius: '50%',
+                background: 'transparent',
+                overflow: 'hidden'
+              }}>
+                <img src={profile.avatar_url || getDefaultAvatar(profile.name || profile.email || 'User')} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              </div>
             <label style={{ position: 'absolute', bottom: 2, right: 2, width: '30px', height: '30px', background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', borderRadius: '50%', display: 'grid', placeItems: 'center', cursor: 'pointer', border: '2.5px solid var(--bg-card)', boxShadow: '0 4px 12px #6366f150' }}>
               <input type="file" accept="image/*" style={{ display: 'none' }} onChange={handleAvatarUpload} />
               {avatarLoading ? <svg className="animate-spin" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
@@ -1785,20 +1812,25 @@ const Dashboard = () => {
   const AvatarCircle = ({ size = 32, fontSize = '0.85rem' }) => {
     return (
       <div style={{
-        width: `${size}px`,
-        height: `${size}px`,
+        padding: '3px',
+        background: 'rgba(255,255,255,0.15)',
+        backdropFilter: 'blur(10px)',
+        border: '1px solid rgba(255,255,255,0.4)',
+        boxShadow: '0 4px 15px rgba(0,0,0,0.1), inset 0 0 10px rgba(255,255,255,0.3)',
         borderRadius: '50%',
-        color: '#fff',
-        display: 'grid',
-        placeItems: 'center',
-        background: 'transparent',
-        boxShadow: 'none',
-        backdropFilter: 'blur(8px)',
-        position: 'relative',
-        border: avatarUrl ? '2px solid rgba(99,102,241,0.3)' : '3px solid rgba(255,255,255,0.5)',
-        overflow: 'hidden'
+        display: 'inline-flex'
       }}>
-        <img src={avatarUrl || getDefaultAvatar(displayName || 'User')} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+        <div style={{
+          width: `${size}px`,
+          height: `${size}px`,
+          borderRadius: '50%',
+          overflow: 'hidden',
+          display: 'grid',
+          placeItems: 'center',
+          background: 'transparent'
+        }}>
+          <img src={avatarUrl || getDefaultAvatar(displayName || 'User')} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+        </div>
       </div>
     );
   };
