@@ -19,6 +19,9 @@ const MyReportsView = () => {
   const [uploadedImageUrl, setUploadedImageUrl] = useState(null);
   const [pastReports, setPastReports] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [manualCategory, setManualCategory] = useState('');
+  const [manualPriority, setManualPriority] = useState('Low');
+  const hasGemini = !!localStorage.getItem('samadhan_gemini_key');
 
   const fetchReports = async () => {
     setIsLoading(true);
@@ -35,6 +38,14 @@ const MyReportsView = () => {
 
   React.useEffect(() => {
     fetchReports();
+    const channel = supabase.channel('custom-all-channel')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'reports' }, () => {
+        fetchReports();
+      })
+      .subscribe();
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   const handleImageUpload = async (e) => {
@@ -77,15 +88,23 @@ const MyReportsView = () => {
     if (!reportText && !imageFile) return alert("Please enter a description or upload a photo");
     setIsSubmitting(true);
     try {
+
+      const reqBody = { 
+        text: reportText || "Photo Report", 
+        ward, 
+        state_region: state,
+        image_url: uploadedImageUrl 
+      };
+      
+      if (!hasGemini) {
+        reqBody.category = manualCategory || 'Uncategorized';
+        reqBody.priority = manualPriority || 'Low';
+      }
+
       const res = await fetch(`${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/api/reports`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-          text: reportText || "Photo Report", 
-          ward, 
-          state_region: state,
-          image_url: uploadedImageUrl 
-        })
+        body: JSON.stringify(reqBody)
       });
       const data = await res.json();
       alert(`Issue reported successfully! Gemma categorized it as: ${data.category}`);
@@ -175,13 +194,43 @@ const MyReportsView = () => {
                 {imageFile ? (<><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6366f1" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><div style={{ fontSize: '0.8rem', color: '#6366f1', fontWeight: 500 }}>{imageFile.name}</div></>) : (<><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{ color: 'var(--text-faint)' }}><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 500 }}>Drop photo or click to upload</div></>)}
               </label>
             </div>
+            
+            {!hasGemini && (
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
+                <div>
+                  <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.03em' }}>Category</label>
+                  <select value={manualCategory} onChange={e => setManualCategory(e.target.value)} style={{ width: '100%', padding: '0.8rem', backgroundColor: 'var(--glass-bg)', borderRadius: '10px', border: '1px solid var(--border-medium)', color: 'var(--text-main)', outline: 'none' }}>
+                    <option value="">Select Category</option>
+                    <option value="Roads/Potholes">Roads/Potholes</option>
+                    <option value="Water/Leakage">Water/Leakage</option>
+                    <option value="Electrical/Streetlight">Electrical/Streetlight</option>
+                    <option value="Sanitation/Garbage">Sanitation/Garbage</option>
+                  </select>
+                </div>
+                <div>
+                  <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.03em' }}>Priority</label>
+                  <select value={manualPriority} onChange={e => setManualPriority(e.target.value)} style={{ width: '100%', padding: '0.8rem', backgroundColor: 'var(--glass-bg)', borderRadius: '10px', border: '1px solid var(--border-medium)', color: 'var(--text-main)', outline: 'none' }}>
+                    <option value="Low">Low</option>
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
+                  </select>
+                </div>
+              </div>
+            )}
+            
             </div>
             <div style={{ marginTop: 'auto', paddingTop: '1.5rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.65rem 0.9rem', backgroundColor: '#6366f110', borderRadius: '8px', marginBottom: '1.25rem', border: '1px solid #6366f125' }}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg><span style={{ fontSize: '0.75rem', color: '#818cf8', fontWeight: 500 }}>Gemma 4 AI will auto-classify category, severity & route to the right department</span>
-              </div>
+              {hasGemini ? (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.65rem 0.9rem', backgroundColor: '#6366f110', borderRadius: '8px', marginBottom: '1.25rem', border: '1px solid #6366f125' }}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg><span style={{ fontSize: '0.75rem', color: '#818cf8', fontWeight: 500 }}>Gemini AI will auto-classify category, severity & route to the right department</span>
+                </div>
+              ) : (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.65rem 0.9rem', backgroundColor: 'var(--glass-bg)', borderRadius: '8px', marginBottom: '1.25rem', border: '1px solid var(--border-medium)' }}>
+                  <span style={{ fontSize: '0.75rem', color: 'var(--text-faint)', fontWeight: 500 }}>AI Auto-Classification is disabled (Add Gemini Key in Profile)</span>
+                </div>
+              )}
               <button type="submit" disabled={isSubmitting} style={{ width: '100%', padding: '0.85rem', background: isSubmitting ? 'var(--border-medium)' : 'linear-gradient(135deg, #6366f1, #8b5cf6)', color: '#fff', border: 'none', borderRadius: '10px', fontWeight: 600, fontSize: '0.9rem', cursor: isSubmitting ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', boxShadow: isSubmitting ? 'none' : '0 4px 15px #6366f140' }}>
-                {isSubmitting ? 'Gemma is analyzing…' : 'Submit Report'}
+                {isSubmitting ? (hasGemini ? 'Gemini is analyzing…' : 'Submitting...') : 'Submit Report'}
               </button>
             </div>
           </form>
@@ -1374,7 +1423,11 @@ const ProfileView = () => {
     state_region: userProfile.state_region || '',
     bio: userProfile.bio || '',
     avatar_url: userProfile.avatar_url || null,
+    gemini_api_key: localStorage.getItem('samadhan_gemini_key') || '',
   });
+  const [apiUsage, setApiUsage] = useState(parseInt(localStorage.getItem('samadhan_api_usage') || '0', 10));
+  const API_LIMIT = 100;
+  const usagePercent = Math.min(Math.round((apiUsage / API_LIMIT) * 100), 100);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [avatarLoading, setAvatarLoading] = useState(false);
@@ -1427,8 +1480,14 @@ const ProfileView = () => {
       
       if (error) throw error;
 
+      if (profile.gemini_api_key) {
+        localStorage.setItem('samadhan_gemini_key', profile.gemini_api_key);
+      } else {
+        localStorage.removeItem('samadhan_gemini_key');
+      }
+
       setUserProfile(p => ({ ...p, ...profile }));
-                        setSaved(true); setEditMode(false);
+      setSaved(true); setEditMode(false);
       setTimeout(() => setSaved(false), 3000);
     } catch (err) { 
       console.error(err);
@@ -1536,7 +1595,58 @@ const ProfileView = () => {
         </div>
 
         {/* Details Form */}
-        <div className="dashboard-card" style={{ padding: '1.75rem' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+          
+          {/* API Key Settings */}
+          <div className="dashboard-card" style={{ padding: '1.75rem' }}>
+            <div style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '1rem', borderBottom: '1px solid var(--border-light)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                <div style={{ width: '30px', height: '30px', borderRadius: '8px', background: 'linear-gradient(135deg, #f59e0b, #ef4444)', display: 'grid', placeItems: 'center' }}>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+                </div>
+                AI Integration (BYOK)
+              </div>
+            </div>
+            
+            <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
+              <div style={{ flex: 1 }}>
+                <div style={{ marginBottom: '1rem' }}>
+                  <label style={{ display: 'block', marginBottom: '0.4rem', fontSize: '0.75rem', fontWeight: 500, color: 'var(--text-faint)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Google Gemini API Key</label>
+                  {editMode ? (
+                    <input
+                      type="password"
+                      value={profile.gemini_api_key}
+                      placeholder="AIzaSy..."
+                      onChange={e => setProfile(p => ({ ...p, gemini_api_key: e.target.value }))}
+                      style={{ width: '100%', padding: '0.75rem 0.9rem', backgroundColor: 'var(--glass-bg)', border: '1px solid var(--border-medium)', borderRadius: '9px', color: 'var(--text-main)', fontSize: '0.875rem', outline: 'none', boxSizing: 'border-box', fontFamily: 'monospace', transition: 'border-color 0.2s' }}
+                      onFocus={e => e.target.style.borderColor = '#6366f1'}
+                      onBlur={e => e.target.style.borderColor = 'var(--border-medium)'}
+                    />
+                  ) : (
+                    <div style={{ padding: '0.75rem 0.9rem', backgroundColor: 'var(--glass-bg)', borderRadius: '9px', border: '1px solid var(--border-light)', fontSize: '0.875rem', color: profile.gemini_api_key ? 'var(--text-main)' : 'var(--text-faint)', minHeight: '42px', fontFamily: 'monospace' }}>
+                      {profile.gemini_api_key ? '••••••••••••••••••••••••••••••••' : <span style={{ opacity: 0.5, fontFamily: 'var(--font-sans)' }}>Not configured (AI features disabled)</span>}
+                    </div>
+                  )}
+                </div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text-faint)', lineHeight: 1.5 }}>
+                  Provide your own Gemini API key to enable auto-categorization and image analysis. Your key is securely stored in this browser only.
+                </div>
+              </div>
+
+              <div style={{ width: '100px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ position: 'relative', width: '70px', height: '70px', borderRadius: '50%', background: `conic-gradient(#f59e0b ${usagePercent}%, var(--border-medium) 0)`, display: 'grid', placeItems: 'center', transition: 'all 0.5s ease' }}>
+                  <div style={{ position: 'absolute', inset: '6px', backgroundColor: 'var(--bg-card)', borderRadius: '50%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                    <span style={{ fontSize: '0.9rem', fontWeight: 'bold', fontFamily: 'var(--font-display)', color: 'var(--text-main)' }}>{usagePercent}%</span>
+                  </div>
+                </div>
+                <div style={{ fontSize: '0.65rem', color: 'var(--text-faint)', marginTop: '0.5rem', textAlign: 'center', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  Token Limit
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="dashboard-card" style={{ padding: '1.75rem' }}>
           <div style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.6rem', paddingBottom: '1rem', borderBottom: '1px solid var(--border-light)' }}>
             <div style={{ width: '30px', height: '30px', borderRadius: '8px', background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', display: 'grid', placeItems: 'center' }}>
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -1573,6 +1683,7 @@ const ProfileView = () => {
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v13a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Changes are saved to the database and synced to localStorage automatically.
             </div>
           )}
+        </div>
         </div>
       </div>
     </div>
