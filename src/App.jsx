@@ -24,9 +24,9 @@ function App() {
     const fetchSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
-        const { data: profile } = await supabase.from('profiles').select('avatar_url, full_name, role').eq('email', session.user.email).single();
+        const { data: profile } = await supabase.from('user_profiles').select('avatar_url, name, role').eq('email', session.user.email).single();
         if (profile) setUserProfile({ ...profile, email: session.user.email });
-        else setUserProfile({ email: session.user.email, role: 'citizen', full_name: 'User' });
+        else setUserProfile({ email: session.user.email, role: 'citizen', name: 'User' });
       }
     };
     fetchSession();

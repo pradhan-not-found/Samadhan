@@ -26,7 +26,7 @@ export const getAvatarStyle = (name) => {
   const color = colors[Math.abs(hash) % colors.length];
   return {
     background: `radial-gradient(ellipse at 50% 115%, ${color} 0%, #ffffff 70%)`,
-    border: '3px solid #333'
+    border: '3px solid rgba(255,255,255,0.5)'
   };
 };
 
@@ -262,7 +262,7 @@ const MyReportsView = () => {
                   <span style={{ fontSize: '0.8rem', color: '#6366f1', fontWeight: 600, letterSpacing: '0.02em' }}>Samadhan AI is active & will auto-classify your report</span>
                 </div>
               ) : null}
-              <button type="submit" disabled={isSubmitting} style={{ width: '100%', padding: '0.85rem', background: isSubmitting ? 'var(--border-medium)' : 'linear-gradient(135deg, #6366f1, #8b5cf6)', color: '#fff', border: 'none', borderRadius: '10px', fontWeight: 600, fontSize: '0.9rem', cursor: isSubmitting ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', boxShadow: isSubmitting ? 'none' : '0 4px 15px #6366f140' }}>
+              <button type="submit" disabled={isSubmitting} style={{ padding: '1rem', background: 'linear-gradient(to bottom, #3a3f5c 0%, #1e2033 100%)', color: '#fff', border: 'none', borderRadius: '30px', fontWeight: 600, fontSize: '1rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', transition: 'all 0.3s ease' }}>
                 {isSubmitting ? (hasGemini ? 'Gemini is analyzing…' : 'Submitting...') : 'Submit Report'}
               </button>
             </div>
@@ -385,24 +385,11 @@ const ImpactScoreView = () => {
                 </div>
               </div>
             ))}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', backgroundColor: 'var(--glass-bg)', borderRadius: '12px', border: '1px solid var(--border-light)' }}>
-              <div>
-                <div style={{ color: 'var(--text-main)', fontWeight: 500, fontSize: '0.9rem' }}>Verified Broken Streetlight</div>
-                <div style={{ color: 'var(--text-faint)', fontSize: '0.75rem', marginTop: '0.25rem' }}>Yesterday</div>
+            {reports.length === 0 && (
+              <div style={{ padding: '1rem', color: 'var(--text-faint)', fontSize: '0.9rem', textAlign: 'center' }}>
+                No recent activity yet.
               </div>
-              <div style={{ color: '#10b981', fontWeight: 'bold', backgroundColor: `#10b98120`, padding: '0.25rem 0.75rem', borderRadius: '999px', fontSize: '0.85rem' }}>
-                +5
-              </div>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', backgroundColor: 'var(--glass-bg)', borderRadius: '12px', border: '1px solid var(--border-light)' }}>
-              <div>
-                <div style={{ color: 'var(--text-main)', fontWeight: 500, fontSize: '0.9rem' }}>Community Upvote on Report</div>
-                <div style={{ color: 'var(--text-faint)', fontSize: '0.75rem', marginTop: '0.25rem' }}>1 week ago</div>
-              </div>
-              <div style={{ color: '#f97316', fontWeight: 'bold', backgroundColor: `#f9731620`, padding: '0.25rem 0.75rem', borderRadius: '999px', fontSize: '0.85rem' }}>
-                +2
-              </div>
-            </div>
+            )}
           </div>
         </div>
       </div>
@@ -459,7 +446,7 @@ const LeaderboardView = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   React.useEffect(() => {
-    supabase.from('profiles').select('full_name, impact_score, email, avatar_url').order('impact_score', { ascending: false }).limit(10)
+    supabase.from('user_profiles').select('name, impact_score, email, avatar_url').order('impact_score', { ascending: false }).limit(10)
       .then(({ data, error }) => {
         if (data && data.length > 0 && !error) {
           const myEmail = localStorage.getItem('samadhan_email');
@@ -1344,7 +1331,7 @@ const TrackReportView = () => {
             onBlur={e => e.target.style.borderColor = 'var(--border-medium)'}
           />
         </div>
-        <button type="submit" disabled={loading} style={{ padding: '0.9rem 2rem', background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', color: '#fff', border: 'none', borderRadius: '12px', fontWeight: 600, fontSize: '0.9rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', boxShadow: '0 4px 15px #6366f140', whiteSpace: 'nowrap' }}>
+        <button type="submit" disabled={loading} style={{ padding: '0.9rem 2rem', background: 'linear-gradient(to bottom, #3a3f5c 0%, #1e2033 100%)', color: '#fff', border: 'none', borderRadius: '30px', fontWeight: 600, fontSize: '0.9rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', boxShadow: 'inset 0 0 0 1px rgba(255, 255, 255, 0.1)', whiteSpace: 'nowrap', transition: 'all 0.3s ease' }}>
           {loading ? <svg className="animate-spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> : <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>}
           Track Report
         </button>
@@ -1471,7 +1458,7 @@ const ProfileView = () => {
       setProfile(p => ({
         ...p,
         email: userProfile.email || p.email,
-        name: userProfile.full_name || userProfile.name || p.name,
+        name: userProfile.name || p.name,
         role: userProfile.role || p.role,
         ward: userProfile.ward || p.ward,
         state_region: userProfile.state_region || p.state_region,
@@ -1496,8 +1483,11 @@ const ProfileView = () => {
       const { data: publicUrlData } = supabase.storage.from('avatars').getPublicUrl(fileName);
       const avatar_url = publicUrlData.publicUrl;
       
-      await supabase.from('profiles').update({ avatar_url }).eq('email', profile.email);
+      await supabase.from('user_profiles').update({ avatar_url }).eq('id', userProfile.id);
       setProfile(p => ({ ...p, avatar_url }));
+      if (setUserProfile) {
+        setUserProfile(prev => ({ ...prev, avatar_url }));
+      }
     } catch (err) { 
       console.error(err);
       alert('Failed to upload avatar.');
@@ -1516,14 +1506,15 @@ const ProfileView = () => {
 
     setSaving(true);
     try {
-      const { error } = await supabase.from('profiles').upsert({
+      const { error } = await supabase.from('user_profiles').upsert({
+        id: userProfile.id,
         email: profile.email,
-        full_name: profile.name,
+        name: profile.name,
         role: profile.role,
         ward: profile.ward,
         state_region: profile.state_region,
         impact_score: profile.impact_score || 0
-      }, { onConflict: 'email' });
+      }, { onConflict: 'id' });
       
       if (error) throw error;
 
@@ -1759,23 +1750,23 @@ const Dashboard = () => {
         const { data: { session } } = await supabase.auth.getSession();
         if (session) {
           const { data: profile, error } = await supabase
-            .from('profiles')
-            .select('avatar_url, full_name, role, impact_score')
+            .from('user_profiles')
+            .select('*')
             .eq('email', session.user.email)
             .single();
             
           if (profile && !error) {
-            setUserProfile({ ...profile, email: session.user.email });
+            setUserProfile({ ...profile, email: session.user.email, id: session.user.id });
             if (profile.impact_score !== undefined && profile.impact_score !== null) {
               setImpactScore(profile.impact_score);
             }
-            if (profile.full_name) {
-              setDisplayName(profile.full_name);
-              localStorage.setItem('samadhan_name', profile.full_name);
+            if (profile.name) {
+              setDisplayName(profile.name);
+              localStorage.setItem('samadhan_name', profile.name);
             }
             if (profile.avatar_url) setAvatarUrl(profile.avatar_url);
           } else {
-            setUserProfile({ email: session.user.email, role: userRole });
+            setUserProfile({ email: session.user.email, role: userRole, id: session.user.id });
           }
         }
       } catch (err) {
@@ -1798,6 +1789,12 @@ const Dashboard = () => {
     return () => window.removeEventListener('storage', onStorage);
   }, []);
 
+  React.useEffect(() => {
+    if (userProfile?.avatar_url) {
+      setAvatarUrl(userProfile.avatar_url);
+    }
+  }, [userProfile?.avatar_url]);
+
   const toggleTheme = () => {
     setTheme(prev => prev === 'dark' ? 'light' : 'dark');
   };
@@ -1818,7 +1815,7 @@ const Dashboard = () => {
         display: 'grid',
         placeItems: 'center',
         background: avatarUrl ? 'transparent' : avatarStyle.background,
-        boxShadow: avatarUrl ? 'none' : '0 2px 8px rgba(0,0,0,0.1)',
+        boxShadow: 'none',
         backdropFilter: 'blur(8px)',
         position: 'relative',
       }}>

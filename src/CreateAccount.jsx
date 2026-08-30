@@ -39,10 +39,10 @@ const CreateAccount = () => {
       
       if (data.user) {
         // Attempt to upsert profile for public leaderboard/display (fails silently if table doesn't exist yet)
-        await supabase.from('profiles').upsert({
+        await supabase.from('user_profiles').upsert({
           id: data.user.id,
           email: email,
-          full_name: fullName,
+          name: fullName,
           role: role,
           state_region: stateRegion || 'West Bengal',
           ward: ward || 'Sector 4',
