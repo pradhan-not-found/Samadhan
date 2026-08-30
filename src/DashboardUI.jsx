@@ -233,6 +233,7 @@ export default function DashboardUI() {
               display: 'grid',
               placeItems: 'center',
               flexShrink: 0,
+              overflow: 'hidden',
               boxShadow: `0 4px 16px ${report.color}25`
             }}>
               {report.image ? <img src={report.image} alt={report.category} style={{ width: '100%', height: '100%', borderRadius: '13px', objectFit: 'cover' }} /> : report.icon}
