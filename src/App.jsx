@@ -71,13 +71,46 @@ function App() {
           </div>
 
           <div className={`nav-actions desktop-only`}>
-            <a href="/login" className="btn-hero-dark" style={{ padding: '0.5rem 1.3rem', fontSize: '0.85rem', borderRadius: '999px', backgroundColor: '#23273b' }}>Sign In</a>
-            <a href="/contact" className="btn-hero-light" style={{ padding: '0.5rem 1.3rem', fontSize: '0.85rem', borderRadius: '999px' }}>Contact Us</a>
+            {userProfile ? (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', position: 'relative' }}>
+                <a href="/dashboard" className="btn-hero-dark" style={{ padding: '0.5rem 1.3rem', fontSize: '0.85rem', borderRadius: '999px', backgroundColor: '#23273b' }}>Dashboard</a>
+                <div 
+                  className="profile-dropdown-container" 
+                  style={{ position: 'relative', cursor: 'pointer' }}
+                  onClick={() => setShowDropdown(!showDropdown)}
+                >
+                  <div style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: '#6366f1', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>
+                    {(userProfile.full_name || 'U').charAt(0).toUpperCase()}
+                  </div>
+                  {showDropdown && (
+                    <div style={{ position: 'absolute', top: '100%', right: 0, marginTop: '0.5rem', background: '#fff', border: '1px solid #e5e7eb', borderRadius: '8px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', padding: '0.5rem 0', minWidth: '150px' }}>
+                      <div style={{ padding: '0.5rem 1rem', borderBottom: '1px solid #e5e7eb', fontSize: '0.85rem', color: '#111', fontWeight: 600 }}>{userProfile.full_name}</div>
+                      <a href="/dashboard" style={{ display: 'block', padding: '0.5rem 1rem', color: '#4b5563', textDecoration: 'none', fontSize: '0.85rem' }}>Dashboard</a>
+                      <div onClick={handleLogout} style={{ display: 'block', padding: '0.5rem 1rem', color: '#ef4444', textDecoration: 'none', fontSize: '0.85rem', cursor: 'pointer' }}>Logout</div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ) : (
+              <>
+                <a href="/login" className="btn-hero-dark" style={{ padding: '0.5rem 1.3rem', fontSize: '0.85rem', borderRadius: '999px', backgroundColor: '#23273b' }}>Sign In</a>
+                <a href="/contact" className="btn-hero-light" style={{ padding: '0.5rem 1.3rem', fontSize: '0.85rem', borderRadius: '999px' }}>Contact Us</a>
+              </>
+            )}
           </div>
 
           <div className="mobile-actions">
-            <a href="/login" className="btn-hero-dark" style={{ padding: '0.4rem 1rem', fontSize: '0.8rem', borderRadius: '999px' }}>Sign In</a>
-            <a href="/contact" className="btn-hero-light" style={{ padding: '0.4rem 1rem', fontSize: '0.8rem', borderRadius: '999px' }}>Contact Us</a>
+            {userProfile ? (
+              <>
+                <a href="/dashboard" className="btn-hero-dark" style={{ padding: '0.4rem 1rem', fontSize: '0.8rem', borderRadius: '999px' }}>Dashboard</a>
+                <div onClick={handleLogout} className="btn-hero-light" style={{ padding: '0.4rem 1rem', fontSize: '0.8rem', borderRadius: '999px', cursor: 'pointer' }}>Logout</div>
+              </>
+            ) : (
+              <>
+                <a href="/login" className="btn-hero-dark" style={{ padding: '0.4rem 1rem', fontSize: '0.8rem', borderRadius: '999px' }}>Sign In</a>
+                <a href="/contact" className="btn-hero-light" style={{ padding: '0.4rem 1rem', fontSize: '0.8rem', borderRadius: '999px' }}>Contact Us</a>
+              </>
+            )}
             <button className="mobile-menu-btn" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 {isMobileMenuOpen ? (

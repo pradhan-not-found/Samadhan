@@ -10,6 +10,26 @@ export const UserContext = React.createContext(null);
 
 // --- Page Components ---
 
+export const getAvatarStyle = (name) => {
+  const colors = [
+    '#3b82f6', // blue
+    '#22c55e', // green
+    '#ef4444', // red
+    '#a855f7', // purple
+    '#f59e0b', // amber
+  ];
+  let hash = 0;
+  const str = name || 'User';
+  for (let i = 0; i < str.length; i++) {
+    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const color = colors[Math.abs(hash) % colors.length];
+  return {
+    background: `radial-gradient(ellipse at 50% 115%, ${color} 0%, #ffffff 70%)`,
+    border: '3px solid #333'
+  };
+};
+
 const MyReportsView = () => {
   const { userProfile } = React.useContext(UserContext) || { userProfile: {} };
   const state = userProfile?.state_region || 'West Bengal';
@@ -183,7 +203,21 @@ const MyReportsView = () => {
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
             <div style={{ flex: 1 }}>
             <div style={{ marginBottom: '1rem' }}>
-              <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.03em' }}>Issue Description</label>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                <label style={{ display: 'block', color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.03em' }}>Issue Description</label>
+                <button type="button" onClick={() => {
+                  if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition((pos) => {
+                      setReportText(prev => prev + (prev ? '\n' : '') + `[Location: ${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)}]`);
+                    }, () => {
+                      setReportText(prev => prev + (prev ? '\n' : '') + `[Location: 22.5726, 88.3639 (Default)]`);
+                    });
+                  }
+                }} style={{ background: 'none', border: 'none', color: '#6366f1', fontSize: '0.75rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.3rem', cursor: 'pointer', padding: 0 }}>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                  Fetch Location
+                </button>
+              </div>
               <textarea placeholder="e.g. Large pothole on Main Street near the school..." value={reportText} onChange={(e) => setReportText(e.target.value)}
                 style={{ width: '100%', height: '110px', padding: '0.9rem 1rem', backgroundColor: 'var(--glass-bg)', borderRadius: '10px', border: '1px solid var(--border-medium)', color: 'var(--text-main)', resize: 'none', fontSize: '0.875rem', outline: 'none', boxSizing: 'border-box', fontFamily: 'inherit' }}
                 onFocus={e => e.target.style.borderColor = '#6366f1'} onBlur={e => e.target.style.borderColor = 'var(--border-medium)'} />
@@ -487,7 +521,7 @@ const LeaderboardView = () => {
           return (
             <div key={user.rank} className="dashboard-card" style={{ padding: '1.5rem 1rem', textAlign: 'center', border: `1px solid ${col}30`, background: isCenter ? `linear-gradient(160deg, ${col}12, transparent)` : undefined, transform: isCenter ? 'scale(1.03)' : undefined }}>
               <div style={{ marginBottom: '0.75rem', display: 'flex', justifyContent: 'center' }}>
-                <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: user.avatar ? 'transparent' : 'var(--avatar-mesh)', display: 'grid', placeItems: 'center', fontWeight: 700, fontSize: '1.2rem', color: '#fff', border: `3px solid ${col}`, boxShadow: `0 0 0 3px ${col}30`, overflow: 'hidden' }}>
+                <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: user.avatar ? 'transparent' : getAvatarStyle(user.name).background, display: 'grid', placeItems: 'center', fontWeight: 700, fontSize: '1.2rem', color: '#fff', border: user.avatar ? `3px solid ${col}` : getAvatarStyle(user.name).border, boxShadow: user.avatar ? `0 0 0 3px ${col}30` : 'none', overflow: 'hidden' }}>
                   {user.avatar && <img src={user.avatar} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />}
                 </div>
               </div>
@@ -535,7 +569,7 @@ const LeaderboardView = () => {
 
               {/* Avatar + Name */}
               <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '0.75rem', minWidth: 0 }}>
-                <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: user.avatar ? 'transparent' : 'var(--avatar-mesh)', display: 'grid', placeItems: 'center', flexShrink: 0, overflow: 'hidden' }}>
+                <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: user.avatar ? 'transparent' : getAvatarStyle(user.name).background, display: 'grid', placeItems: 'center', flexShrink: 0, overflow: 'hidden', border: user.avatar ? 'none' : getAvatarStyle(user.name).border }}>
                   {user.avatar && <img src={user.avatar} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />}
                 </div>
                 <div style={{ fontWeight: 600, color: user.isYou ? '#60a5fa' : 'var(--text-main)', fontSize: '0.9rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
@@ -1572,11 +1606,11 @@ const ProfileView = () => {
               margin: '0 auto',
               background: profile.avatar_url
                 ? 'transparent'
-                : 'var(--avatar-mesh)',
+                : getAvatarStyle(profile.name || 'User').background,
               boxShadow: profile.avatar_url
                 ? '0 8px 24px rgba(0,0,0,0.12)'
                 : '0 0 0 6px rgba(99,102,241,0.12), 0 8px 28px rgba(99,102,241,0.35)',
-              border: '3px solid rgba(255,255,255,0.5)',
+              border: profile.avatar_url ? '3px solid #6366f1' : getAvatarStyle(profile.name || 'User').border,
             }}>
               {profile.avatar_url && (
                 <img src={profile.avatar_url} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
@@ -1771,7 +1805,7 @@ const Dashboard = () => {
     `https://api.dicebear.com/9.x/notionists-neutral/svg?seed=${encodeURIComponent(seed || 'default')}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`;
 
   const AvatarCircle = ({ size = 32, fontSize = '0.85rem' }) => {
-    const initial = (displayName || 'U').charAt(0).toUpperCase();
+    const avatarStyle = getAvatarStyle(displayName);
     return (
       <div style={{
         width: `${size}px`,
@@ -1779,17 +1813,15 @@ const Dashboard = () => {
         borderRadius: '50%',
         overflow: 'hidden',
         flexShrink: 0,
-        border: '2px solid rgba(99,102,241,0.3)',
+        border: avatarUrl ? '2px solid rgba(99,102,241,0.3)' : avatarStyle.border,
         display: 'grid',
         placeItems: 'center',
-        background: avatarUrl ? 'transparent' : 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #06b6d4 100%)',
-        boxShadow: avatarUrl ? 'none' : `0 0 0 ${size/16}px rgba(99,102,241,0.15), 0 4px ${size/2}px rgba(99,102,241,0.25)`,
+        background: avatarUrl ? 'transparent' : avatarStyle.background,
+        boxShadow: avatarUrl ? 'none' : '0 2px 8px rgba(0,0,0,0.1)',
         backdropFilter: 'blur(8px)',
         position: 'relative',
       }}>
-        {avatarUrl
-          ? <img src={avatarUrl} alt="avatar" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-          : <span style={{ fontSize, fontWeight: 800, color: '#fff', lineHeight: 1, letterSpacing: '-0.02em', textShadow: '0 1px 4px rgba(0,0,0,0.2)' }}>{initial}</span>}
+        {avatarUrl && <img src={avatarUrl} alt="avatar" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />}
       </div>
     );
   };
