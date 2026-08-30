@@ -522,14 +522,16 @@ function App() {
       </footer>
       
         {showCookies && (
-          <div className="cookie-banner animate-fade-in-up">
-            <div className="cookie-content">
-              <span className="cookie-title">?? Cookie Preferences</span>
-              <p>We use cookies to ensure you get the best experience on our civic platform. By continuing to use Samadhan, you agree to our policies.</p>
-            </div>
-            <div className="cookie-actions">
-              <button className="cookie-btn-outline" onClick={() => { localStorage.setItem('cookie_consent', 'true'); setShowCookies(false); }}>Manage</button>
-              <button className="cookie-btn-primary" onClick={() => { localStorage.setItem('cookie_consent', 'true'); setShowCookies(false); }}>Accept All</button>
+          <div className="cookie-banner-wrapper animate-fade-in-up">
+            <div className="cookie-dot-matrix"></div>
+            <div className="cookie-banner">
+              <div className="cookie-content">
+                <p>We use cookies to keep you signed in. By continuing to use SAMADHAN, you agree to our <a href="/privacy">Privacy Policy</a> and <a href="/terms">Terms of Services</a>.</p>
+              </div>
+              <div className="cookie-footer">
+                <span className="cookie-brand">SAMADHAN</span>
+                <button className="cookie-btn-primary" onClick={() => { localStorage.setItem('cookie_consent', 'true'); setShowCookies(false); }}>Got it</button>
+              </div>
             </div>
           </div>
         )}

@@ -1559,6 +1559,8 @@ const Dashboard = () => {
   const [displayName, setDisplayName] = useState(
     localStorage.getItem('samadhan_name') || (userRole === 'admin' ? 'Administrator' : 'Souradeep')
   );
+  const [userProfile, setUserProfile] = useState(null);
+  const [loadingSession, setLoadingSession] = useState(false);
 
   // Load profile from Supabase so avatar & name are always fresh
   
