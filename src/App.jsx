@@ -83,17 +83,27 @@ function App() {
                 <a href="/dashboard" className="btn-hero-dark" style={{ padding: '0.5rem 1.3rem', fontSize: '0.85rem', borderRadius: '999px', backgroundColor: '#23273b' }}>Dashboard</a>
                 <div 
                   className="profile-dropdown-container" 
-                  style={{ position: 'relative', cursor: 'pointer' }}
-                  onClick={() => setShowDropdown(!showDropdown)}
+                  style={{ position: 'relative', cursor: 'pointer', padding: '0.5rem 0' }}
+                  onMouseEnter={() => setShowDropdown(true)}
+                  onMouseLeave={() => setShowDropdown(false)}
                 >
-                  <div style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: '#6366f1', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', overflow: 'hidden' }}>
+                  <div style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: '#6366f1', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', overflow: 'hidden', border: '2px solid transparent', transition: 'border-color 0.2s', ...(showDropdown ? { borderColor: '#6366f1' } : {}) }}>
                     <img src={userProfile.avatar_url || getDefaultAvatar(userProfile.name || userProfile.email || 'User')} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   </div>
                   {showDropdown && (
-                    <div style={{ position: 'absolute', top: '100%', right: 0, marginTop: '0.5rem', background: '#fff', border: '1px solid #e5e7eb', borderRadius: '8px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', padding: '0.5rem 0', minWidth: '150px' }}>
-                      <div style={{ padding: '0.5rem 1rem', borderBottom: '1px solid #e5e7eb', fontSize: '0.85rem', color: '#111', fontWeight: 600 }}>{userProfile.name}</div>
-                      <a href="/dashboard" style={{ display: 'block', padding: '0.5rem 1rem', color: '#4b5563', textDecoration: 'none', fontSize: '0.85rem' }}>Dashboard</a>
-                      <div onClick={handleLogout} style={{ display: 'block', padding: '0.5rem 1rem', color: '#ef4444', textDecoration: 'none', fontSize: '0.85rem', cursor: 'pointer' }}>Logout</div>
+                    <div style={{ position: 'absolute', top: '100%', right: 0, marginTop: '0', background: '#fff', border: '1px solid #e5e7eb', borderRadius: '12px', boxShadow: '0 10px 25px rgba(0,0,0,0.1)', minWidth: '180px', overflow: 'hidden', animation: 'fadeIn 0.2s ease-out' }}>
+                      <div style={{ padding: '0.75rem 1rem', borderBottom: '1px solid #f1f5f9', background: '#f8fafc' }}>
+                        <div style={{ fontSize: '0.85rem', color: '#0f172a', fontWeight: 600 }}>{userProfile.name || 'User'}</div>
+                        <div style={{ fontSize: '0.75rem', color: '#64748b' }}>{userProfile.email}</div>
+                      </div>
+                      <a href="/dashboard" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.75rem 1rem', color: '#334155', textDecoration: 'none', fontSize: '0.85rem', transition: 'background 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.background = '#f1f5f9'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>
+                        Dashboard
+                      </a>
+                      <div onClick={handleLogout} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.75rem 1rem', color: '#ef4444', textDecoration: 'none', fontSize: '0.85rem', cursor: 'pointer', transition: 'background 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.background = '#fef2f2'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                        Logout
+                      </div>
                     </div>
                   )}
                 </div>
