@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+# Disallow private/auth pages from indexing
+Disallow: /dashboard
+Disallow: /login
+Disallow: /signup
+
+# Sitemap location
+Sitemap: https://samadhan-in.vercel.app/sitemap.xml
