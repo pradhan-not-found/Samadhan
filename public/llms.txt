@@ -1,0 +1,42 @@
+# Samadhan
+
+> Samadhan is an AI-powered civic issue reporting and resolution platform built for Indian citizens. It bridges the gap between citizens and their local government by providing a transparent, accountable, and data-driven channel for reporting, tracking, and resolving everyday civic problems.
+
+## What is Samadhan?
+
+Samadhan (Sanskrit: समाधान, meaning "resolution") allows any Indian citizen to submit a civic complaint — a broken streetlight, overflowing garbage, damaged road, or water shortage — and have it automatically classified, prioritized, and routed to the correct government department using AI.
+
+## Key Features
+
+- AI-powered report classification (category, severity, priority, department routing)
+- Real-time citizen dashboard for tracking report status
+- Location-aware routing by ward and state
+- Civic gamification with impact scores and leaderboards
+- Secure authentication with role-based access (Citizen / Official / Admin)
+- Avatar-based user profiles with Supabase storage
+- Fully responsive, production-deployed on Vercel
+
+## Tech Stack
+
+- Frontend: React 18, Vite, Vanilla CSS, Framer Motion
+- Backend / Auth / Database: Supabase (PostgreSQL, Auth, Storage)
+- AI Engine: Google Gemini (via API)
+- Deployment: Vercel
+
+## Who built this?
+
+Samadhan was built by Souradeep Pradhan, a 3rd-year Computer Science student, as a submission for the "Build What Moves India" hackathon.
+
+## Live URL
+
+https://samadhan-in.vercel.app/
+
+## Pages
+
+- [Home](https://samadhan-in.vercel.app/): Landing page with feature overview, AI demo sections, and civic stats
+- [Sign Up](https://samadhan-in.vercel.app/signup): Create a citizen account
+- [Login](https://samadhan-in.vercel.app/login): Existing user login
+- [Dashboard](https://samadhan-in.vercel.app/dashboard): Authenticated citizen workspace — submit reports, track status, view leaderboard
+- [Contact](https://samadhan-in.vercel.app/contact): Contact form and support
+- [Privacy Policy](https://samadhan-in.vercel.app/privacy): Data handling and privacy information
+- [Terms of Service](https://samadhan-in.vercel.app/terms): Platform usage terms
