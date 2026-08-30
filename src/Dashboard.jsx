@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { supabase } from './supabaseClient';
 import './Dashboard.css';
 import logoImg from './assets/logo.png';
 import DashboardUI from './DashboardUI';
@@ -1563,6 +1564,41 @@ const Dashboard = () => {
   const [loadingSession, setLoadingSession] = useState(false);
 
   // Load profile from Supabase so avatar & name are always fresh
+  React.useEffect(() => {
+    const fetchSessionAndProfile = async () => {
+      setLoadingSession(true);
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) {
+          const { data: profile, error } = await supabase
+            .from('profiles')
+            .select('avatar_url, full_name, role, impact_score')
+            .eq('email', session.user.email)
+            .single();
+            
+          if (profile && !error) {
+            setUserProfile({ ...profile, email: session.user.email });
+            if (profile.impact_score !== undefined && profile.impact_score !== null) {
+              setImpactScore(profile.impact_score);
+            }
+            if (profile.full_name) {
+              setDisplayName(profile.full_name);
+              localStorage.setItem('samadhan_name', profile.full_name);
+            }
+            if (profile.avatar_url) setAvatarUrl(profile.avatar_url);
+          } else {
+            setUserProfile({ email: session.user.email, role: userRole });
+          }
+        }
+      } catch (err) {
+        console.error("Error fetching session:", err);
+      } finally {
+        setLoadingSession(false);
+      }
+    };
+    
+    fetchSessionAndProfile();
+  }, [userRole]);
   
   // Re-read avatar when profile tab is saved (listen for storage events)
   React.useEffect(() => {

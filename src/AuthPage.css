@@ -244,6 +244,27 @@
   color: #999;
 }
 
+.auth-password-toggle {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+  transition: color 0.2s;
+}
+
+.auth-password-toggle:hover {
+  color: #4b5563;
+}
+
+.auth-password-toggle:focus {
+  outline: none;
+  color: #4b5563;
+}
+
 .auth-forgot-wrapper {
   display: flex;
   justify-content: flex-end;

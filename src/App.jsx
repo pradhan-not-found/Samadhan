@@ -60,7 +60,7 @@ function App() {
           <div className="nav-logo-container">
             <a href="#" className="logo">
               <img src={logoImg} alt="" className="nav-logo" />
-              samadhan
+              Samadhan
             </a>
           </div>
           
@@ -529,7 +529,10 @@ function App() {
                 <p>We use cookies to keep you signed in. By continuing to use SAMADHAN, you agree to our <a href="/privacy">Privacy Policy</a> and <a href="/terms">Terms of Services</a>.</p>
               </div>
               <div className="cookie-footer">
-                <span className="cookie-brand">SAMADHAN</span>
+                <span className="cookie-brand">
+                  <img src={logoImg} alt="" style={{ height: '20px', width: 'auto', filter: 'grayscale(1) opacity(0.6)' }} />
+                  Samadhan
+                </span>
                 <button className="cookie-btn-primary" onClick={() => { localStorage.setItem('cookie_consent', 'true'); setShowCookies(false); }}>Got it</button>
               </div>
             </div>
